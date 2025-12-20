@@ -1,0 +1,8 @@
+/Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/App.java
+/Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/applications/security/PasswordHash.java
+/Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/applications/usecase/RegisterUserUseCase.java
+/Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/domain/user/UserRepository.java
+/Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/domain/user/entity/RegisterUser.java
+/Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/domain/user/entity/RegisteredUser.java
+/Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/infrastructure/repository/UserRepositoryImpl.java
+/Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/infrastructure/security/PasswordHashImpl.java
