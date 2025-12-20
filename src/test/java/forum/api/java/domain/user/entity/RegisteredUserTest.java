@@ -26,7 +26,7 @@ public class RegisteredUserTest {
     @DisplayName("should throw error when payload did not contain needed property")
     @MethodSource("provideInvalidMissingData")
     public void testNotContainNeededProperty(UUID id, String username, String fullname) {
-        IllegalStateException exception = Assertions.assertThrows(IllegalStateException.class, () -> {
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
             new RegisteredUser(id, username, fullname);
         });
 
@@ -38,7 +38,7 @@ public class RegisteredUserTest {
     public void testUsernameLimitCharacter() {
         String invalidUsername = "invalidusernameinvalidusernameinvalidusernameinvalidusername";
 
-        IllegalStateException exception = Assertions.assertThrows(IllegalStateException.class, () -> {
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
             new RegisteredUser(UUID.randomUUID(), invalidUsername, "Fullname");
         });
 
@@ -50,7 +50,7 @@ public class RegisteredUserTest {
     public void testNotContainRestrictedCharacter() {
         String invalidUsername = "Invalid Username";
 
-        IllegalStateException exception = Assertions.assertThrows(IllegalStateException.class, () -> {
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
             new RegisteredUser(UUID.randomUUID(), invalidUsername, "Fullname");
         });
 

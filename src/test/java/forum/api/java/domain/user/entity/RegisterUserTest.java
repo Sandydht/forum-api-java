@@ -17,7 +17,7 @@ public class RegisterUserTest {
             "user, Fullname, ''"          // Password kosong
     })
     public void testNotContainNeededProperty(String username, String fullname, String password) {
-        IllegalStateException exception = Assertions.assertThrows(IllegalStateException.class, () -> {
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
             new RegisterUser(username, fullname, password);
         });
 
@@ -29,7 +29,7 @@ public class RegisterUserTest {
     public void testUsernameLimitCharacter() {
         String invalidUsername = "invalidusernameinvalidusernameinvalidusernameinvalidusername";
 
-        IllegalStateException exception = Assertions.assertThrows(IllegalStateException.class, () -> {
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
             new RegisterUser(invalidUsername, "User", "Password");
         });
 
@@ -41,7 +41,7 @@ public class RegisterUserTest {
     public void testNotContainRestrictedCharacter() {
         String invalidUsername = "Invalid Username";
 
-        IllegalStateException exception = Assertions.assertThrows(IllegalStateException.class, () -> {
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
             new RegisterUser(invalidUsername, "User", "Password");
         });
 

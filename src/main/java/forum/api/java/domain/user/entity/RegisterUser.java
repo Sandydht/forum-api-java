@@ -22,15 +22,15 @@ public class RegisterUser {
 
     private static void verifyPayload(String username, String fullname, String password) {
         if (username == null || username.isBlank() || fullname == null || fullname.isBlank() || password == null || password.isBlank()) {
-            throw new IllegalStateException("REGISTER_USER.NOT_CONTAIN_NEEDED_PROPERTY");
+            throw new IllegalArgumentException("REGISTER_USER.NOT_CONTAIN_NEEDED_PROPERTY");
         }
 
         if (username.length() > 50) {
-            throw new IllegalStateException("REGISTER_USER.USERNAME_LIMIT_CHAR");
+            throw new IllegalArgumentException("REGISTER_USER.USERNAME_LIMIT_CHAR");
         }
 
         if (!USERNAME_PATTERN.matcher(username).matches()) {
-            throw new IllegalStateException("REGISTER_USER.USERNAME_CONTAIN_RESTRICTED_CHARACTER");
+            throw new IllegalArgumentException("REGISTER_USER.USERNAME_CONTAIN_RESTRICTED_CHARACTER");
         }
     }
 

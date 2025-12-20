@@ -20,15 +20,15 @@ public class RegisteredUser {
 
     private static void verifyPayload(UUID id, String username, String fullname) {
         if (id == null || username == null || username.isBlank() || fullname == null || fullname.isBlank()) {
-            throw new IllegalStateException("REGISTERED_USER.NOT_CONTAIN_NEEDED_PROPERTY");
+            throw new IllegalArgumentException("REGISTERED_USER.NOT_CONTAIN_NEEDED_PROPERTY");
         }
 
         if (username.length() > 50) {
-            throw new IllegalStateException("REGISTERED_USER.USERNAME_LIMIT_CHAR");
+            throw new IllegalArgumentException("REGISTERED_USER.USERNAME_LIMIT_CHAR");
         }
 
         if (!USERNAME_PATTERN.matcher(username).matches()) {
-            throw new IllegalStateException("REGISTERED_USER.USERNAME_CONTAIN_RESTRICTED_CHARACTER");
+            throw new IllegalArgumentException("REGISTERED_USER.USERNAME_CONTAIN_RESTRICTED_CHARACTER");
         }
     }
 
