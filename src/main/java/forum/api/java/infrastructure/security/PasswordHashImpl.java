@@ -6,7 +6,7 @@ import org.mindrot.jbcrypt.BCrypt;
 public class PasswordHashImpl implements PasswordHash {
     @Override
     public String hashPassword(String password) {
-        return BCrypt.hashpw(password, BCrypt.gensalt());
+        return BCrypt.hashpw(password, BCrypt.gensalt(10));
     }
 
     @Override
