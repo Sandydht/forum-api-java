@@ -10,4 +10,8 @@ public interface AuthenticationTokenManager {
     default String createRefreshToken(UUID id) {
         throw new UnsupportedOperationException("AUTHENTICATION_TOKEN_MANAGER.METHOD_NOT_IMPLEMENTED");
     }
+
+    default UUID decodeJWTPayload(String token) {
+        throw new UnsupportedOperationException("AUTHENTICATION_TOKEN_MANAGER.METHOD_NOT_IMPLEMENTED");
+    }
 }
