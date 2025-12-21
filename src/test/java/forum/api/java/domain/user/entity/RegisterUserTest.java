@@ -11,10 +11,10 @@ public class RegisterUserTest {
     @ParameterizedTest
     @DisplayName("should throw error when payload did not contain needed property")
     @CsvSource({
-            ", Fullname, password",       // Username null
-            "'', Fullname, password",     // Username kosong
-            "user, , password",           // Fullname null
-            "user, Fullname, ''"          // Password kosong
+            ", Fullname, password",
+            "'', Fullname, password",
+            "user, , password",
+            "user, Fullname, ''"
     })
     public void testNotContainNeededProperty(String username, String fullname, String password) {
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {

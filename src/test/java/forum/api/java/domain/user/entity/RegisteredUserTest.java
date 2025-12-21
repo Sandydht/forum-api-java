@@ -14,11 +14,11 @@ import java.util.stream.Stream;
 public class RegisteredUserTest {
     private static Stream<Arguments> provideInvalidMissingData() {
         return Stream.of(
-                Arguments.of(null, "user", "Fullname"),            // ID null
-                Arguments.of(UUID.randomUUID(), null, "Fullname"), // Username null
-                Arguments.of(UUID.randomUUID(), "", "Fullname"),   // Username kosong
-                Arguments.of(UUID.randomUUID(), "user", null), // Fullname null
-                Arguments.of(UUID.randomUUID(), "user", "  ")  // Fullname blank
+                Arguments.of(null, "user", "Fullname"),
+                Arguments.of(UUID.randomUUID(), null, "Fullname"),
+                Arguments.of(UUID.randomUUID(), "", "Fullname"),
+                Arguments.of(UUID.randomUUID(), "user", null),
+                Arguments.of(UUID.randomUUID(), "user", "  ")
         );
     }
 

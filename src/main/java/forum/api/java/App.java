@@ -12,7 +12,7 @@ public class App {
         PasswordHashImpl passwordHashImpl = new PasswordHashImpl();
 
         RegisterUserUseCase registerUserUseCase = new RegisterUserUseCase(userRepositoryImpl, passwordHashImpl);
-        RegisterUser registerUser = new RegisterUser("Invalid", "password", "Sandy");
+        RegisterUser registerUser = new RegisterUser("user", "password", "Fullname");
 
         RegisteredUser registeredUser = registerUserUseCase.execute(registerUser);
 
