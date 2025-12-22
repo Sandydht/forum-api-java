@@ -1,6 +1,7 @@
 /Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/App.java
 /Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/applications/security/AuthenticationTokenManager.java
 /Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/applications/security/PasswordHash.java
+/Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/applications/usecase/LoginUserUseCase.java
 /Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/applications/usecase/RegisterUserUseCase.java
 /Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/domain/authentication/AuthenticationRepository.java
 /Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/domain/authentication/entity/NewAuth.java

@@ -1,6 +1,7 @@
 /Users/sandy/Development/project-belajar/forum-api-java/src/test/java/forum/api/java/AppTest.java
 /Users/sandy/Development/project-belajar/forum-api-java/src/test/java/forum/api/java/applications/security/AuthenticationTokenManagerTest.java
 /Users/sandy/Development/project-belajar/forum-api-java/src/test/java/forum/api/java/applications/security/PasswordHashTest.java
+/Users/sandy/Development/project-belajar/forum-api-java/src/test/java/forum/api/java/applications/usecase/LoginUserUseCaseTest.java
 /Users/sandy/Development/project-belajar/forum-api-java/src/test/java/forum/api/java/applications/usecase/RegisterUserUseCaseTest.java
 /Users/sandy/Development/project-belajar/forum-api-java/src/test/java/forum/api/java/domain/authentication/AuthenticationRepositoryTest.java
 /Users/sandy/Development/project-belajar/forum-api-java/src/test/java/forum/api/java/domain/authentication/entity/NewAuthTest.java

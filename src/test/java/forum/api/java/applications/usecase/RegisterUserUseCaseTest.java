@@ -1,9 +1,9 @@
 package forum.api.java.applications.usecase;
 
+import forum.api.java.applications.security.PasswordHash;
+import forum.api.java.domain.user.UserRepository;
 import forum.api.java.domain.user.entity.RegisterUser;
 import forum.api.java.domain.user.entity.RegisteredUser;
-import forum.api.java.infrastructure.repository.UserRepositoryImpl;
-import forum.api.java.infrastructure.security.PasswordHashImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,10 +20,10 @@ import java.util.UUID;
 @ExtendWith(MockitoExtension.class)
 public class RegisterUserUseCaseTest {
     @Mock
-    private UserRepositoryImpl userRepositoryImpl;
+    private UserRepository userRepository;
 
     @Mock
-    private PasswordHashImpl passwordHashImpl;
+    private PasswordHash passwordHash;
 
     @InjectMocks
     private RegisterUserUseCase registerUserUseCase;
@@ -38,9 +38,9 @@ public class RegisterUserUseCaseTest {
 
         RegisterUser registerUser = new RegisterUser(username, fullname, password);
 
-        Mockito.when(userRepositoryImpl.verifyAvailableUsername(username)).thenReturn(false);
-        Mockito.when(passwordHashImpl.hashPassword(password)).thenReturn("hashedPassword");
-        Mockito.when(userRepositoryImpl.addUser(registerUser)).thenReturn(
+        Mockito.when(userRepository.verifyAvailableUsername(username)).thenReturn(false);
+        Mockito.when(passwordHash.hashPassword(password)).thenReturn("hashedPassword");
+        Mockito.when(userRepository.addUser(registerUser)).thenReturn(
                 Optional.of(new RegisteredUser(
                         id,
                         username,
@@ -48,15 +48,14 @@ public class RegisterUserUseCaseTest {
                 ))
         );
 
-       registerUserUseCase.execute(registerUser)
-               .ifPresent(registeredUser -> {
-                   Assertions.assertEquals(id, registeredUser.getId());
-                   Assertions.assertEquals(username, registeredUser.getUsername());
-                   Assertions.assertEquals(fullname, registeredUser.getFullname());
-               });
+       RegisteredUser registeredUser = registerUserUseCase.execute(registerUser).orElseThrow();
 
-        Mockito.verify(userRepositoryImpl, Mockito.times(1)).verifyAvailableUsername(username);
-        Mockito.verify(passwordHashImpl, Mockito.times(1)).hashPassword(password);
-        Mockito.verify(userRepositoryImpl, Mockito.times(1)).addUser(registerUser);
+        Assertions.assertEquals(id, registeredUser.getId());
+        Assertions.assertEquals(username, registeredUser.getUsername());
+        Assertions.assertEquals(fullname, registeredUser.getFullname());
+
+        Mockito.verify(userRepository, Mockito.times(1)).verifyAvailableUsername(username);
+        Mockito.verify(passwordHash, Mockito.times(1)).hashPassword(password);
+        Mockito.verify(userRepository, Mockito.times(1)).addUser(registerUser);
     }
 }

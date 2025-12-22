@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.1" name="forum.api.java.infrastructure.repository.UserRepositoryImplTest" time="1.624" tests="3" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.1" name="forum.api.java.infrastructure.repository.UserRepositoryImplTest" time="1.756" tests="3" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="25"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
-    <property name="java.class.path" value="/Users/sandy/Development/project-belajar/forum-api-java/target/test-classes:/Users/sandy/Development/project-belajar/forum-api-java/target/classes:/Users/sandy/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.11.0/junit-jupiter-api-5.11.0.jar:/Users/sandy/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/Users/sandy/.m2/repository/org/junit/platform/junit-platform-commons/1.11.0/junit-platform-commons-1.11.0.jar:/Users/sandy/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/Users/sandy/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.11.0/junit-jupiter-params-5.11.0.jar:/Users/sandy/.m2/repository/org/mindrot/jbcrypt/0.4/jbcrypt-0.4.jar:/Users/sandy/.m2/repository/org/mockito/mockito-junit-jupiter/5.21.0/mockito-junit-jupiter-5.21.0.jar:/Users/sandy/.m2/repository/org/mockito/mockito-core/5.21.0/mockito-core-5.21.0.jar:/Users/sandy/.m2/repository/net/bytebuddy/byte-buddy/1.17.7/byte-buddy-1.17.7.jar:/Users/sandy/.m2/repository/net/bytebuddy/byte-buddy-agent/1.17.7/byte-buddy-agent-1.17.7.jar:/Users/sandy/.m2/repository/org/objenesis/objenesis/3.3/objenesis-3.3.jar:/Users/sandy/.m2/repository/com/auth0/java-jwt/4.4.0/java-jwt-4.4.0.jar:/Users/sandy/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.14.2/jackson-databind-2.14.2.jar:/Users/sandy/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.14.2/jackson-annotations-2.14.2.jar:/Users/sandy/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.14.2/jackson-core-2.14.2.jar:/Users/sandy/.m2/repository/mysql/mysql-connector-java/8.0.28/mysql-connector-java-8.0.28.jar:/Users/sandy/.m2/repository/com/google/protobuf/protobuf-java/3.11.4/protobuf-java-3.11.4.jar:/Users/sandy/.m2/repository/com/zaxxer/HikariCP/3.4.5/HikariCP-3.4.5.jar:/Users/sandy/.m2/repository/org/slf4j/slf4j-api/2.0.13/slf4j-api-2.0.13.jar:/Users/sandy/.m2/repository/ch/qos/logback/logback-classic/1.5.13/logback-classic-1.5.13.jar:/Users/sandy/.m2/repository/ch/qos/logback/logback-core/1.5.13/logback-core-1.5.13.jar:"/>
+    <property name="java.class.path" value="/Users/sandy/Development/project-belajar/forum-api-java/target/test-classes:/Users/sandy/Development/project-belajar/forum-api-java/target/classes:/Users/sandy/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.11.0/junit-jupiter-api-5.11.0.jar:/Users/sandy/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/Users/sandy/.m2/repository/org/junit/platform/junit-platform-commons/1.11.0/junit-platform-commons-1.11.0.jar:/Users/sandy/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/Users/sandy/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.11.0/junit-jupiter-params-5.11.0.jar:/Users/sandy/.m2/repository/org/mindrot/jbcrypt/0.4/jbcrypt-0.4.jar:/Users/sandy/.m2/repository/org/mockito/mockito-junit-jupiter/5.21.0/mockito-junit-jupiter-5.21.0.jar:/Users/sandy/.m2/repository/org/mockito/mockito-core/5.21.0/mockito-core-5.21.0.jar:/Users/sandy/.m2/repository/net/bytebuddy/byte-buddy/1.17.7/byte-buddy-1.17.7.jar:/Users/sandy/.m2/repository/net/bytebuddy/byte-buddy-agent/1.17.7/byte-buddy-agent-1.17.7.jar:/Users/sandy/.m2/repository/org/objenesis/objenesis/3.3/objenesis-3.3.jar:/Users/sandy/.m2/repository/com/auth0/java-jwt/4.4.0/java-jwt-4.4.0.jar:/Users/sandy/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.14.2/jackson-databind-2.14.2.jar:/Users/sandy/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.14.2/jackson-annotations-2.14.2.jar:/Users/sandy/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.14.2/jackson-core-2.14.2.jar:/Users/sandy/.m2/repository/mysql/mysql-connector-java/8.0.28/mysql-connector-java-8.0.28.jar:/Users/sandy/.m2/repository/com/google/protobuf/protobuf-java/3.11.4/protobuf-java-3.11.4.jar:/Users/sandy/.m2/repository/com/zaxxer/HikariCP/3.4.5/HikariCP-3.4.5.jar:/Users/sandy/.m2/repository/org/slf4j/slf4j-api/2.0.13/slf4j-api-2.0.13.jar:/Users/sandy/.m2/repository/ch/qos/logback/logback-classic/1.5.13/logback-classic-1.5.13.jar:/Users/sandy/.m2/repository/ch/qos/logback/logback-core/1.5.13/logback-core-1.5.13.jar:/Users/sandy/.m2/repository/com/google/code/gson/gson/2.8.6/gson-2.8.6.jar:"/>
     <property name="java.vm.vendor" value="Oracle Corporation"/>
     <property name="sun.arch.data.model" value="64"/>
     <property name="java.vendor.url" value="https://java.oracle.com/"/>
@@ -13,10 +13,10 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="ID"/>
     <property name="sun.boot.library.path" value="/Users/sandy/Library/Java/JavaVirtualMachines/jdk-25.0.1.jdk/Contents/Home/lib"/>
-    <property name="sun.java.command" value="/Users/sandy/Development/project-belajar/forum-api-java/target/surefire/surefirebooter-20251222185600160_3.jar /Users/sandy/Development/project-belajar/forum-api-java/target/surefire 2025-12-22T18-55-59_942-jvmRun1 surefire-20251222185600160_1tmp surefire_0-20251222185600160_2tmp"/>
+    <property name="sun.java.command" value="/Users/sandy/Development/project-belajar/forum-api-java/target/surefire/surefirebooter-20251222202504057_3.jar /Users/sandy/Development/project-belajar/forum-api-java/target/surefire 2025-12-22T20-25-03_878-jvmRun1 surefire-20251222202504057_1tmp surefire_0-20251222202504057_2tmp"/>
     <property name="http.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="jdk.debug" value="release"/>
-    <property name="surefire.test.class.path" value="/Users/sandy/Development/project-belajar/forum-api-java/target/test-classes:/Users/sandy/Development/project-belajar/forum-api-java/target/classes:/Users/sandy/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.11.0/junit-jupiter-api-5.11.0.jar:/Users/sandy/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/Users/sandy/.m2/repository/org/junit/platform/junit-platform-commons/1.11.0/junit-platform-commons-1.11.0.jar:/Users/sandy/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/Users/sandy/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.11.0/junit-jupiter-params-5.11.0.jar:/Users/sandy/.m2/repository/org/mindrot/jbcrypt/0.4/jbcrypt-0.4.jar:/Users/sandy/.m2/repository/org/mockito/mockito-junit-jupiter/5.21.0/mockito-junit-jupiter-5.21.0.jar:/Users/sandy/.m2/repository/org/mockito/mockito-core/5.21.0/mockito-core-5.21.0.jar:/Users/sandy/.m2/repository/net/bytebuddy/byte-buddy/1.17.7/byte-buddy-1.17.7.jar:/Users/sandy/.m2/repository/net/bytebuddy/byte-buddy-agent/1.17.7/byte-buddy-agent-1.17.7.jar:/Users/sandy/.m2/repository/org/objenesis/objenesis/3.3/objenesis-3.3.jar:/Users/sandy/.m2/repository/com/auth0/java-jwt/4.4.0/java-jwt-4.4.0.jar:/Users/sandy/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.14.2/jackson-databind-2.14.2.jar:/Users/sandy/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.14.2/jackson-annotations-2.14.2.jar:/Users/sandy/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.14.2/jackson-core-2.14.2.jar:/Users/sandy/.m2/repository/mysql/mysql-connector-java/8.0.28/mysql-connector-java-8.0.28.jar:/Users/sandy/.m2/repository/com/google/protobuf/protobuf-java/3.11.4/protobuf-java-3.11.4.jar:/Users/sandy/.m2/repository/com/zaxxer/HikariCP/3.4.5/HikariCP-3.4.5.jar:/Users/sandy/.m2/repository/org/slf4j/slf4j-api/2.0.13/slf4j-api-2.0.13.jar:/Users/sandy/.m2/repository/ch/qos/logback/logback-classic/1.5.13/logback-classic-1.5.13.jar:/Users/sandy/.m2/repository/ch/qos/logback/logback-core/1.5.13/logback-core-1.5.13.jar:"/>
+    <property name="surefire.test.class.path" value="/Users/sandy/Development/project-belajar/forum-api-java/target/test-classes:/Users/sandy/Development/project-belajar/forum-api-java/target/classes:/Users/sandy/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.11.0/junit-jupiter-api-5.11.0.jar:/Users/sandy/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/Users/sandy/.m2/repository/org/junit/platform/junit-platform-commons/1.11.0/junit-platform-commons-1.11.0.jar:/Users/sandy/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/Users/sandy/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.11.0/junit-jupiter-params-5.11.0.jar:/Users/sandy/.m2/repository/org/mindrot/jbcrypt/0.4/jbcrypt-0.4.jar:/Users/sandy/.m2/repository/org/mockito/mockito-junit-jupiter/5.21.0/mockito-junit-jupiter-5.21.0.jar:/Users/sandy/.m2/repository/org/mockito/mockito-core/5.21.0/mockito-core-5.21.0.jar:/Users/sandy/.m2/repository/net/bytebuddy/byte-buddy/1.17.7/byte-buddy-1.17.7.jar:/Users/sandy/.m2/repository/net/bytebuddy/byte-buddy-agent/1.17.7/byte-buddy-agent-1.17.7.jar:/Users/sandy/.m2/repository/org/objenesis/objenesis/3.3/objenesis-3.3.jar:/Users/sandy/.m2/repository/com/auth0/java-jwt/4.4.0/java-jwt-4.4.0.jar:/Users/sandy/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.14.2/jackson-databind-2.14.2.jar:/Users/sandy/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.14.2/jackson-annotations-2.14.2.jar:/Users/sandy/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.14.2/jackson-core-2.14.2.jar:/Users/sandy/.m2/repository/mysql/mysql-connector-java/8.0.28/mysql-connector-java-8.0.28.jar:/Users/sandy/.m2/repository/com/google/protobuf/protobuf-java/3.11.4/protobuf-java-3.11.4.jar:/Users/sandy/.m2/repository/com/zaxxer/HikariCP/3.4.5/HikariCP-3.4.5.jar:/Users/sandy/.m2/repository/org/slf4j/slf4j-api/2.0.13/slf4j-api-2.0.13.jar:/Users/sandy/.m2/repository/ch/qos/logback/logback-classic/1.5.13/logback-classic-1.5.13.jar:/Users/sandy/.m2/repository/ch/qos/logback/logback-core/1.5.13/logback-core-1.5.13.jar:/Users/sandy/.m2/repository/com/google/code/gson/gson/2.8.6/gson-2.8.6.jar:"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="user.home" value="/Users/sandy"/>
     <property name="user.language" value="en"/>
@@ -30,7 +30,7 @@
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="apple.awt.application.name" value="ForkedBooter"/>
-    <property name="surefire.real.class.path" value="/Users/sandy/Development/project-belajar/forum-api-java/target/surefire/surefirebooter-20251222185600160_3.jar"/>
+    <property name="surefire.real.class.path" value="/Users/sandy/Development/project-belajar/forum-api-java/target/surefire/surefirebooter-20251222202504057_3.jar"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="java.runtime.version" value="25.0.1+8-27"/>
@@ -60,67 +60,67 @@
     <property name="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="java.class.version" value="69.0"/>
   </properties>
-  <testcase name="testPersistRegisterUserAndReturnRegisteredUserCorrectly" classname="forum.api.java.infrastructure.repository.UserRepositoryImplTest" time="0.308">
-    <system-out><![CDATA[18:56:03.501 [main] DEBUG com.zaxxer.hikari.HikariConfig -- Driver class com.mysql.cj.jdbc.Driver found in Thread context class loader jdk.internal.loader.ClassLoaders$AppClassLoader@7a8c5397
-18:56:03.524 [main] DEBUG com.zaxxer.hikari.HikariConfig -- HikariPool-1 - configuration:
-18:56:03.533 [main] DEBUG com.zaxxer.hikari.HikariConfig -- allowPoolSuspension.............false
-18:56:03.534 [main] DEBUG com.zaxxer.hikari.HikariConfig -- autoCommit......................true
-18:56:03.534 [main] DEBUG com.zaxxer.hikari.HikariConfig -- catalog.........................none
-18:56:03.534 [main] DEBUG com.zaxxer.hikari.HikariConfig -- connectionInitSql...............none
-18:56:03.534 [main] DEBUG com.zaxxer.hikari.HikariConfig -- connectionTestQuery.............none
-18:56:03.537 [main] DEBUG com.zaxxer.hikari.HikariConfig -- connectionTimeout...............30000
-18:56:03.538 [main] DEBUG com.zaxxer.hikari.HikariConfig -- dataSource......................none
-18:56:03.538 [main] DEBUG com.zaxxer.hikari.HikariConfig -- dataSourceClassName.............none
-18:56:03.538 [main] DEBUG com.zaxxer.hikari.HikariConfig -- dataSourceJNDI..................none
-18:56:03.541 [main] DEBUG com.zaxxer.hikari.HikariConfig -- dataSourceProperties............{password=<masked>}
-18:56:03.542 [main] DEBUG com.zaxxer.hikari.HikariConfig -- driverClassName................."com.mysql.cj.jdbc.Driver"
-18:56:03.550 [main] DEBUG com.zaxxer.hikari.HikariConfig -- exceptionOverrideClassName......none
-18:56:03.555 [main] DEBUG com.zaxxer.hikari.HikariConfig -- healthCheckProperties...........{}
-18:56:03.556 [main] DEBUG com.zaxxer.hikari.HikariConfig -- healthCheckRegistry.............none
-18:56:03.557 [main] DEBUG com.zaxxer.hikari.HikariConfig -- idleTimeout.....................60000
-18:56:03.557 [main] DEBUG com.zaxxer.hikari.HikariConfig -- initializationFailTimeout.......1
-18:56:03.558 [main] DEBUG com.zaxxer.hikari.HikariConfig -- isolateInternalQueries..........false
-18:56:03.558 [main] DEBUG com.zaxxer.hikari.HikariConfig -- jdbcUrl.........................jdbc:mysql://localhost:3306/forum_api_java?serverTimezone=Asia/Jakarta
-18:56:03.558 [main] DEBUG com.zaxxer.hikari.HikariConfig -- leakDetectionThreshold..........0
-18:56:03.558 [main] DEBUG com.zaxxer.hikari.HikariConfig -- maxLifetime.....................600000
-18:56:03.559 [main] DEBUG com.zaxxer.hikari.HikariConfig -- maximumPoolSize.................10
-18:56:03.559 [main] DEBUG com.zaxxer.hikari.HikariConfig -- metricRegistry..................none
-18:56:03.559 [main] DEBUG com.zaxxer.hikari.HikariConfig -- metricsTrackerFactory...........none
-18:56:03.559 [main] DEBUG com.zaxxer.hikari.HikariConfig -- minimumIdle.....................5
-18:56:03.560 [main] DEBUG com.zaxxer.hikari.HikariConfig -- password........................<masked>
-18:56:03.561 [main] DEBUG com.zaxxer.hikari.HikariConfig -- poolName........................"HikariPool-1"
-18:56:03.563 [main] DEBUG com.zaxxer.hikari.HikariConfig -- readOnly........................false
-18:56:03.564 [main] DEBUG com.zaxxer.hikari.HikariConfig -- registerMbeans..................false
-18:56:03.566 [main] DEBUG com.zaxxer.hikari.HikariConfig -- scheduledExecutor...............none
-18:56:03.567 [main] DEBUG com.zaxxer.hikari.HikariConfig -- schema..........................none
-18:56:03.567 [main] DEBUG com.zaxxer.hikari.HikariConfig -- threadFactory...................internal
-18:56:03.567 [main] DEBUG com.zaxxer.hikari.HikariConfig -- transactionIsolation............default
-18:56:03.567 [main] DEBUG com.zaxxer.hikari.HikariConfig -- username........................"root"
-18:56:03.568 [main] DEBUG com.zaxxer.hikari.HikariConfig -- validationTimeout...............5000
-18:56:03.593 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-1 - Starting...
-18:56:04.558 [main] DEBUG com.zaxxer.hikari.pool.HikariPool -- HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@444cc791
-18:56:04.565 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-1 - Start completed.
-18:56:04.649 [main] INFO forum.api.java.helpers.UsersHelper -- User table truncated successfully
-18:56:04.669 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool -- HikariPool-1 - Before cleanup stats (total=1, active=1, idle=0, waiting=0)
-18:56:04.675 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool -- HikariPool-1 - After cleanup  stats (total=1, active=1, idle=0, waiting=0)
-18:56:04.792 [HikariPool-1 connection adder] DEBUG com.zaxxer.hikari.pool.HikariPool -- HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@59feb76d
-18:56:04.864 [HikariPool-1 connection adder] DEBUG com.zaxxer.hikari.pool.HikariPool -- HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@18c3bd56
-18:56:04.877 [main] INFO forum.api.java.infrastructure.repository.UserRepositoryImpl -- Failed to save user data
+  <testcase name="testPersistRegisterUserAndReturnRegisteredUserCorrectly" classname="forum.api.java.infrastructure.repository.UserRepositoryImplTest" time="0.327">
+    <system-out><![CDATA[20:25:07.567 [main] DEBUG com.zaxxer.hikari.HikariConfig -- Driver class com.mysql.cj.jdbc.Driver found in Thread context class loader jdk.internal.loader.ClassLoaders$AppClassLoader@7a8c5397
+20:25:07.589 [main] DEBUG com.zaxxer.hikari.HikariConfig -- HikariPool-1 - configuration:
+20:25:07.598 [main] DEBUG com.zaxxer.hikari.HikariConfig -- allowPoolSuspension.............false
+20:25:07.599 [main] DEBUG com.zaxxer.hikari.HikariConfig -- autoCommit......................true
+20:25:07.600 [main] DEBUG com.zaxxer.hikari.HikariConfig -- catalog.........................none
+20:25:07.601 [main] DEBUG com.zaxxer.hikari.HikariConfig -- connectionInitSql...............none
+20:25:07.601 [main] DEBUG com.zaxxer.hikari.HikariConfig -- connectionTestQuery.............none
+20:25:07.603 [main] DEBUG com.zaxxer.hikari.HikariConfig -- connectionTimeout...............30000
+20:25:07.603 [main] DEBUG com.zaxxer.hikari.HikariConfig -- dataSource......................none
+20:25:07.604 [main] DEBUG com.zaxxer.hikari.HikariConfig -- dataSourceClassName.............none
+20:25:07.604 [main] DEBUG com.zaxxer.hikari.HikariConfig -- dataSourceJNDI..................none
+20:25:07.605 [main] DEBUG com.zaxxer.hikari.HikariConfig -- dataSourceProperties............{password=<masked>}
+20:25:07.605 [main] DEBUG com.zaxxer.hikari.HikariConfig -- driverClassName................."com.mysql.cj.jdbc.Driver"
+20:25:07.605 [main] DEBUG com.zaxxer.hikari.HikariConfig -- exceptionOverrideClassName......none
+20:25:07.605 [main] DEBUG com.zaxxer.hikari.HikariConfig -- healthCheckProperties...........{}
+20:25:07.605 [main] DEBUG com.zaxxer.hikari.HikariConfig -- healthCheckRegistry.............none
+20:25:07.605 [main] DEBUG com.zaxxer.hikari.HikariConfig -- idleTimeout.....................60000
+20:25:07.606 [main] DEBUG com.zaxxer.hikari.HikariConfig -- initializationFailTimeout.......1
+20:25:07.606 [main] DEBUG com.zaxxer.hikari.HikariConfig -- isolateInternalQueries..........false
+20:25:07.607 [main] DEBUG com.zaxxer.hikari.HikariConfig -- jdbcUrl.........................jdbc:mysql://localhost:3306/forum_api_java?serverTimezone=Asia/Jakarta
+20:25:07.608 [main] DEBUG com.zaxxer.hikari.HikariConfig -- leakDetectionThreshold..........0
+20:25:07.608 [main] DEBUG com.zaxxer.hikari.HikariConfig -- maxLifetime.....................600000
+20:25:07.608 [main] DEBUG com.zaxxer.hikari.HikariConfig -- maximumPoolSize.................10
+20:25:07.608 [main] DEBUG com.zaxxer.hikari.HikariConfig -- metricRegistry..................none
+20:25:07.609 [main] DEBUG com.zaxxer.hikari.HikariConfig -- metricsTrackerFactory...........none
+20:25:07.610 [main] DEBUG com.zaxxer.hikari.HikariConfig -- minimumIdle.....................5
+20:25:07.610 [main] DEBUG com.zaxxer.hikari.HikariConfig -- password........................<masked>
+20:25:07.612 [main] DEBUG com.zaxxer.hikari.HikariConfig -- poolName........................"HikariPool-1"
+20:25:07.613 [main] DEBUG com.zaxxer.hikari.HikariConfig -- readOnly........................false
+20:25:07.614 [main] DEBUG com.zaxxer.hikari.HikariConfig -- registerMbeans..................false
+20:25:07.614 [main] DEBUG com.zaxxer.hikari.HikariConfig -- scheduledExecutor...............none
+20:25:07.614 [main] DEBUG com.zaxxer.hikari.HikariConfig -- schema..........................none
+20:25:07.614 [main] DEBUG com.zaxxer.hikari.HikariConfig -- threadFactory...................internal
+20:25:07.614 [main] DEBUG com.zaxxer.hikari.HikariConfig -- transactionIsolation............default
+20:25:07.614 [main] DEBUG com.zaxxer.hikari.HikariConfig -- username........................"root"
+20:25:07.614 [main] DEBUG com.zaxxer.hikari.HikariConfig -- validationTimeout...............5000
+20:25:07.630 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-1 - Starting...
+20:25:08.692 [main] DEBUG com.zaxxer.hikari.pool.HikariPool -- HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@34b27915
+20:25:08.701 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-1 - Start completed.
+20:25:08.806 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool -- HikariPool-1 - Before cleanup stats (total=1, active=1, idle=0, waiting=0)
+20:25:08.809 [HikariPool-1 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool -- HikariPool-1 - After cleanup  stats (total=1, active=1, idle=0, waiting=0)
+20:25:08.879 [HikariPool-1 connection adder] DEBUG com.zaxxer.hikari.pool.HikariPool -- HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2913356b
+20:25:08.924 [HikariPool-1 connection adder] DEBUG com.zaxxer.hikari.pool.HikariPool -- HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@682e3f50
+20:25:08.947 [main] INFO forum.api.java.helpers.UsersHelper -- User table truncated successfully
+20:25:08.961 [HikariPool-1 connection adder] DEBUG com.zaxxer.hikari.pool.HikariPool -- HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@598c9655
+20:25:09.021 [HikariPool-1 connection adder] DEBUG com.zaxxer.hikari.pool.HikariPool -- HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@433d60ba
+20:25:09.038 [main] INFO forum.api.java.infrastructure.repository.UserRepositoryImpl -- user data has been saved successfully
 ]]></system-out>
   </testcase>
-  <testcase name="testReturnFalseWhenUsernameNotAvailable" classname="forum.api.java.infrastructure.repository.UserRepositoryImplTest" time="0.098">
-    <system-out><![CDATA[18:56:04.913 [HikariPool-1 connection adder] DEBUG com.zaxxer.hikari.pool.HikariPool -- HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2991012a
-18:56:04.950 [main] INFO forum.api.java.helpers.UsersHelper -- User table truncated successfully
-18:56:04.963 [HikariPool-1 connection adder] DEBUG com.zaxxer.hikari.pool.HikariPool -- HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@398cdf10
-18:56:04.985 [main] INFO forum.api.java.infrastructure.repository.UserRepositoryImpl -- User user does not exist
+  <testcase name="testReturnFalseWhenUsernameNotAvailable" classname="forum.api.java.infrastructure.repository.UserRepositoryImplTest" time="0.119">
+    <system-out><![CDATA[20:25:09.066 [HikariPool-1 connection adder] DEBUG com.zaxxer.hikari.pool.HikariPool -- HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@24df2534
+20:25:09.066 [HikariPool-1 connection adder] DEBUG com.zaxxer.hikari.pool.HikariPool -- HikariPool-1 - After adding stats (total=6, active=1, idle=5, waiting=0)
+20:25:09.092 [main] INFO forum.api.java.helpers.UsersHelper -- User table truncated successfully
+20:25:09.170 [main] INFO forum.api.java.infrastructure.repository.UserRepositoryImpl -- User user does not exist
 ]]></system-out>
   </testcase>
-  <testcase name="testReturnTrueWhenUsernameAvailable" classname="forum.api.java.infrastructure.repository.UserRepositoryImplTest" time="0.08">
-    <system-out><![CDATA[18:56:05.048 [HikariPool-1 connection adder] DEBUG com.zaxxer.hikari.pool.HikariPool -- HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2389fa9f
-18:56:05.048 [HikariPool-1 connection adder] DEBUG com.zaxxer.hikari.pool.HikariPool -- HikariPool-1 - After adding stats (total=6, active=1, idle=5, waiting=0)
-18:56:05.070 [main] INFO forum.api.java.helpers.UsersHelper -- User table truncated successfully
-18:56:05.078 [main] INFO forum.api.java.helpers.UsersHelper -- User user data has been saved successfully
-18:56:05.081 [main] INFO forum.api.java.infrastructure.repository.UserRepositoryImpl -- User user is already exist
+  <testcase name="testReturnTrueWhenUsernameAvailable" classname="forum.api.java.infrastructure.repository.UserRepositoryImplTest" time="0.046">
+    <system-out><![CDATA[20:25:09.214 [main] INFO forum.api.java.helpers.UsersHelper -- User table truncated successfully
+20:25:09.218 [main] INFO forum.api.java.helpers.UsersHelper -- User user data has been saved successfully
+20:25:09.221 [main] INFO forum.api.java.infrastructure.repository.UserRepositoryImpl -- User user is already exist
 ]]></system-out>
   </testcase>
 </testsuite>
