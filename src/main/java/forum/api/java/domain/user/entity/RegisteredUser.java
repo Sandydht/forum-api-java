@@ -1,16 +1,15 @@
 package forum.api.java.domain.user.entity;
 
-import java.util.UUID;
 import java.util.regex.Pattern;
 
 public class RegisteredUser {
-    private final UUID id;
+    private final String id;
     private final String username;
     private final String fullname;
 
     private static final Pattern USERNAME_PATTERN = Pattern.compile("^[\\w]+$");
 
-    public RegisteredUser(UUID id, String username, String fullname) {
+    public RegisteredUser(String id, String username, String fullname) {
         verifyPayload(id, username, fullname);
 
         this.id = id;
@@ -18,10 +17,10 @@ public class RegisteredUser {
         this.fullname = fullname;
     }
 
-    private static void verifyPayload(UUID id, String username, String fullname) {
-        if (id == null || username == null || username.isBlank() || fullname == null || fullname.isBlank()) {
-            throw new IllegalArgumentException("REGISTERED_USER.NOT_CONTAIN_NEEDED_PROPERTY");
-        }
+    private static void verifyPayload(String id, String username, String fullname) {
+        requireNotBlank(id);
+        requireNotBlank(username);
+        requireNotBlank(fullname);
 
         if (username.length() > 50) {
             throw new IllegalArgumentException("REGISTERED_USER.USERNAME_LIMIT_CHAR");
@@ -32,7 +31,13 @@ public class RegisteredUser {
         }
     }
 
-    public UUID getId() {
+    private static void requireNotBlank(String value) {
+        if (value == null || value.isBlank()) {
+            throw new IllegalArgumentException("REGISTERED_USER.NOT_CONTAIN_NEEDED_PROPERTY");
+        }
+    }
+
+    public String getId() {
         return id;
     }
 

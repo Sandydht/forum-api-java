@@ -1,6 +1,6 @@
-package forum.api.java.infrastructure.database.users;
+package forum.api.java.infrastructure.persistence.users;
 
-import forum.api.java.infrastructure.database.users.entity.UserEntity;
+import forum.api.java.infrastructure.persistence.users.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

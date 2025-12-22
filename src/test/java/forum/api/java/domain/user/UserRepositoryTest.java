@@ -1,18 +1,12 @@
 package forum.api.java.domain.user;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("UserRepository interface")
 public class UserRepositoryTest {
-    private UserRepository userRepository;
-
-    @BeforeEach
-    public void setUp() {
-        userRepository = new UserRepository() {};
-    }
+    private final UserRepository userRepository = new UserRepository() {};;
 
     @Test
     @DisplayName("should throw error when invoke abstract behavior")

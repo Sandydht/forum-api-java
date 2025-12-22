@@ -1,5 +1,4 @@
 forum/api/java/applications/usecase/RegisterUserUseCase.class
-forum/api/java/infrastructure/database/ConnectionUtil.class
 forum/api/java/infrastructure/repository/AuthenticationRepositoryImpl.class
 forum/api/java/infrastructure/security/AuthenticationTokenManagerImpl.class
 forum/api/java/domain/authentication/AuthenticationRepository.class
@@ -8,6 +7,7 @@ forum/api/java/domain/authentication/entity/NewAuth.class
 forum/api/java/infrastructure/repository/UserRepositoryImpl.class
 forum/api/java/infrastructure/security/PasswordHashImpl.class
 forum/api/java/domain/user/entity/RegisterUser.class
+forum/api/java/infrastructure/config/UseCaseConfig.class
 forum/api/java/domain/user/UserRepository.class
 forum/api/java/App.class
 forum/api/java/applications/security/AuthenticationTokenManager.class

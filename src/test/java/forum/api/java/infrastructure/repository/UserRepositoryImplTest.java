@@ -2,8 +2,8 @@ package forum.api.java.infrastructure.repository;
 
 import forum.api.java.domain.user.entity.RegisterUser;
 import forum.api.java.domain.user.entity.RegisteredUser;
-import forum.api.java.infrastructure.database.users.UserJpaRepository;
-import forum.api.java.infrastructure.database.users.entity.UserEntity;
+import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
+import forum.api.java.infrastructure.persistence.users.entity.UserEntity;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -18,10 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 @DisplayName("UserRepositoryImpl")
 public class UserRepositoryImplTest {
     @Autowired
-    private UserRepositoryImpl userRepositoryImpl;
+    private UserJpaRepository userJpaRepository;
 
     @Autowired
-    private UserJpaRepository userJpaRepository;
+    private UserRepositoryImpl userRepositoryImpl;
 
     @Test
     @DisplayName("should throw IllegalStateException when username available")

@@ -3,8 +3,8 @@ package forum.api.java.infrastructure.repository;
 import forum.api.java.domain.user.UserRepository;
 import forum.api.java.domain.user.entity.RegisterUser;
 import forum.api.java.domain.user.entity.RegisteredUser;
-import forum.api.java.infrastructure.database.users.UserJpaRepository;
-import forum.api.java.infrastructure.database.users.entity.UserEntity;
+import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
+import forum.api.java.infrastructure.persistence.users.entity.UserEntity;
 import org.springframework.stereotype.Repository;
 
 @Repository

@@ -21,9 +21,9 @@ public class RegisterUser {
     }
 
     private static void verifyPayload(String username, String fullname, String password) {
-        if (username == null || username.isBlank() || fullname == null || fullname.isBlank() || password == null || password.isBlank()) {
-            throw new IllegalArgumentException("REGISTER_USER.NOT_CONTAIN_NEEDED_PROPERTY");
-        }
+        requireNotBlank(username);
+        requireNotBlank(fullname);
+        requireNotBlank(password);
 
         if (username.length() > 50) {
             throw new IllegalArgumentException("REGISTER_USER.USERNAME_LIMIT_CHAR");
@@ -31,6 +31,12 @@ public class RegisterUser {
 
         if (!USERNAME_PATTERN.matcher(username).matches()) {
             throw new IllegalArgumentException("REGISTER_USER.USERNAME_CONTAIN_RESTRICTED_CHARACTER");
+        }
+    }
+
+    private static void requireNotBlank(String value) {
+        if (value == null || value.isBlank()) {
+            throw new IllegalArgumentException("REGISTER_USER.NOT_CONTAIN_NEEDED_PROPERTY");
         }
     }
 

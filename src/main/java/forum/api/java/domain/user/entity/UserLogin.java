@@ -16,15 +16,20 @@ public class UserLogin {
     }
 
     private static void verifyPayload(String username, String password) {
-        if (username == null || username.isBlank() || password == null || password.isBlank()) {
-            throw new IllegalArgumentException("USER_LOGIN.NOT_CONTAIN_NEEDED_PROPERTY");
-        }
+        requireNotBlank(username);
+        requireNotBlank(password);
 
         if (username.length() > 50) {
             throw new IllegalArgumentException("USER_LOGIN.USERNAME_LIMIT_CHAR");
         }
 
         if (!USERNAME_PATTERN.matcher(username).matches()) {
+            throw new IllegalArgumentException("USER_LOGIN.USERNAME_CONTAIN_RESTRICTED_CHARACTER");
+        }
+    }
+
+    private static void requireNotBlank(String value) {
+        if (value == null || value.isBlank()) {
             throw new IllegalArgumentException("USER_LOGIN.USERNAME_CONTAIN_RESTRICTED_CHARACTER");
         }
     }

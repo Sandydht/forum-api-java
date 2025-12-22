@@ -4,9 +4,7 @@ import forum.api.java.applications.security.PasswordHash;
 import forum.api.java.domain.user.entity.RegisterUser;
 import forum.api.java.domain.user.UserRepository;
 import forum.api.java.domain.user.entity.RegisteredUser;
-import org.springframework.stereotype.Service;
 
-@Service
 public class RegisterUserUseCase {
     private final UserRepository userRepository;
     private final PasswordHash passwordHash;

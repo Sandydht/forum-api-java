@@ -1,18 +1,12 @@
 package forum.api.java.applications.security;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("PasswordHash interface")
 public class PasswordHashTest {
-    private PasswordHash passwordHash;
-
-    @BeforeEach
-    public void setUp() {
-        passwordHash = new PasswordHash() {};
-    }
+    private PasswordHash passwordHash = new PasswordHash() {};;
 
     @Test
     @DisplayName("should throw error when invoke abstract behavior")

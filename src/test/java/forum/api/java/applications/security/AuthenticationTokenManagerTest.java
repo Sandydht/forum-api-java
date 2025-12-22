@@ -1,18 +1,12 @@
 package forum.api.java.applications.security;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("AuthenticationTokenManager interface")
 public class AuthenticationTokenManagerTest {
-    private AuthenticationTokenManager authenticationTokenManager;
-
-    @BeforeEach
-    public void setUp() {
-        authenticationTokenManager = new AuthenticationTokenManager() {};
-    }
+    private final AuthenticationTokenManager authenticationTokenManager = new AuthenticationTokenManager() {};
 
     @Test
     @DisplayName("should throw error when invoke unimplemented method")

@@ -13,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @DisplayName("Register user use case")
@@ -40,11 +39,11 @@ public class RegisterUserUseCaseTest {
 
         Mockito.doNothing().when(userRepository).verifyAvailableUsername(username);
         Mockito.when(passwordHash.hashPassword(password)).thenReturn("hashedPassword");
-        Mockito.when(userRepository.addUser(registerUser)).thenReturn(new RegisteredUser(id, username, fullname));
+        Mockito.when(userRepository.addUser(registerUser)).thenReturn(new RegisteredUser(id.toString(), username, fullname));
 
         RegisteredUser registeredUser = registerUserUseCase.execute(registerUser);
 
-        Assertions.assertEquals(id, registeredUser.getId());
+        Assertions.assertEquals(id.toString(), registeredUser.getId());
         Assertions.assertEquals(username, registeredUser.getUsername());
         Assertions.assertEquals(fullname, registeredUser.getFullname());
 

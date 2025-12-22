@@ -1,8 +1,6 @@
-package forum.api.java.infrastructure.database.users.entity;
+package forum.api.java.infrastructure.persistence.users.entity;
 
 import jakarta.persistence.*;
-
-import java.util.UUID;
 
 @Entity
 @Table(name = "users")
@@ -20,9 +18,7 @@ public class UserEntity {
     @Column(nullable = false)
     private String password;
 
-    protected UserEntity() {
-
-    }
+    protected UserEntity() {}
 
     public UserEntity(String username, String fullname, String password) {
         this.username = username;
@@ -30,8 +26,8 @@ public class UserEntity {
         this.password = password;
     }
 
-    public UUID getId() {
-        return UUID.fromString(id);
+    public String getId() {
+        return id;
     }
 
     public String getUsername() {

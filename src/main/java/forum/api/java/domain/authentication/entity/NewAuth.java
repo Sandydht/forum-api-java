@@ -12,7 +12,12 @@ public class NewAuth {
     }
 
     private void verifyPayload(String accessToken, String refreshToken) {
-        if (accessToken == null || accessToken.isBlank() || refreshToken == null || refreshToken.isBlank()) {
+        requireNotBlank(accessToken);
+        requireNotBlank(refreshToken);
+    }
+
+    private static void requireNotBlank(String value) {
+        if (value == null || value.isBlank()) {
             throw new IllegalArgumentException("NEW_AUTH.NOT_CONTAIN_NEEDED_PROPERTY");
         }
     }
