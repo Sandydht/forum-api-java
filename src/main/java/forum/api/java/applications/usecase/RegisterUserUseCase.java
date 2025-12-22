@@ -22,12 +22,13 @@ public class RegisterUserUseCase {
         String encryptedPassword = passwordHash.hashPassword(registerUser.getPassword());
         registerUser.setPassword(encryptedPassword);
 
-        RegisterUser newUser = userRepository.addUser(registerUser);
+        userRepository.addUser(registerUser);
+        RegisteredUser registeredUser = userRepository.getUserByUsername(registerUser.getUsername());
 
         return new RegisteredUser(
-                newUser.getId(),
-                newUser.getUsername(),
-                newUser.getFullname()
+                registeredUser.getId(),
+                registeredUser.getUsername(),
+                registeredUser.getFullname()
         );
     }
 }

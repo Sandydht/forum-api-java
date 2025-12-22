@@ -29,16 +29,10 @@ public class UserRepositoryTest {
         );
         Assertions.assertEquals("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED", verifyAvailableUsernameError.getMessage());
 
-        UnsupportedOperationException getPasswordByUsernameError = Assertions.assertThrows(
+        UnsupportedOperationException getUserByUsernameError = Assertions.assertThrows(
                 UnsupportedOperationException.class,
-                () -> userRepository.getPasswordByUsername("")
+                () -> userRepository.getUserByUsername("")
         );
-        Assertions.assertEquals("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED", getPasswordByUsernameError.getMessage());
-
-        UnsupportedOperationException getIdByUsernameError = Assertions.assertThrows(
-                UnsupportedOperationException.class,
-                () -> userRepository.getIdByUsername("")
-        );
-        Assertions.assertEquals("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED", getIdByUsernameError.getMessage());
+        Assertions.assertEquals("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED", getUserByUsernameError.getMessage());
     }
 }
