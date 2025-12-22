@@ -1,53 +1,51 @@
 package forum.api.java.infrastructure.repository;
 
-import com.zaxxer.hikari.HikariDataSource;
 import forum.api.java.domain.user.entity.RegisterUser;
 import forum.api.java.domain.user.entity.RegisteredUser;
-import forum.api.java.helpers.UsersHelper;
-import forum.api.java.helpers.models.UsersHelperModel;
-import forum.api.java.infrastructure.database.ConnectionUtil;
+import forum.api.java.infrastructure.database.users.UserJpaRepository;
+import forum.api.java.infrastructure.database.users.entity.UserEntity;
 import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
+@DataJpaTest
+@Transactional
+@Rollback
+@Import(UserRepositoryImpl.class)
 @DisplayName("UserRepositoryImpl")
 public class UserRepositoryImplTest {
+    @Autowired
     private UserRepositoryImpl userRepositoryImpl;
-    private final UsersHelper usersHelper = new UsersHelper();
-    private final HikariDataSource connectionUtil = ConnectionUtil.getDataSource();
 
-    @BeforeEach
-    public void setUp() {
-        usersHelper.truncateUserTable();
-        userRepositoryImpl = new UserRepositoryImpl(connectionUtil);
-    }
-
-    @AfterAll
-    public static void tearDown() {
-        ConnectionUtil.getDataSource().close();
-    }
+    @Autowired
+    private UserJpaRepository userJpaRepository;
 
     @Test
-    @DisplayName("should return true when username available")
+    @DisplayName("should throw IllegalStateException when username available")
     public void testReturnTrueWhenUsernameAvailable() {
         String username = "user";
         String password = "password";
         String fullname = "Fullname";
 
-        usersHelper.addUserData(username, fullname, password);
-        boolean isAvailable = userRepositoryImpl.verifyAvailableUsername(username);
+        UserEntity userEntity = new UserEntity(username, fullname, password);
+        userJpaRepository.save(userEntity);
 
-        Assertions.assertTrue(isAvailable);
+        IllegalStateException verifyAvailableUsernameError = Assertions.assertThrows(
+                IllegalStateException.class,
+                () -> userRepositoryImpl.verifyAvailableUsername(username)
+        );
+
+        Assertions.assertEquals("USER_REPOSITORY_IMPL.USER_ALREADY_EXIST", verifyAvailableUsernameError.getMessage());
     }
 
     @Test
-    @DisplayName("should false when username not available")
+    @DisplayName("should not throw IllegalStateException when username not available")
     public void testReturnFalseWhenUsernameNotAvailable() {
         String username = "user";
-
-        boolean isAvailable = userRepositoryImpl.verifyAvailableUsername(username);
-
-        Assertions.assertFalse(isAvailable);
+        Assertions.assertDoesNotThrow(() -> userRepositoryImpl.verifyAvailableUsername(username));
     }
 
     @Test
@@ -58,11 +56,10 @@ public class UserRepositoryImplTest {
         String fullname = "Fullname";
 
         RegisterUser registerUser = new RegisterUser(username, fullname, password);
-        userRepositoryImpl.addUser(registerUser)
-                .ifPresent(registeredUser -> {
-                    Assertions.assertNotNull(registeredUser.getId());
-                    Assertions.assertEquals(username, registeredUser.getUsername());
-                    Assertions.assertEquals(fullname, registeredUser.getFullname());
-                });
+        RegisteredUser registeredUser = userRepositoryImpl.addUser(registerUser);
+
+        Assertions.assertNotNull(registeredUser.getId());
+        Assertions.assertEquals(username, registeredUser.getUsername());
+        Assertions.assertEquals(fullname, registeredUser.getFullname());
     }
 }

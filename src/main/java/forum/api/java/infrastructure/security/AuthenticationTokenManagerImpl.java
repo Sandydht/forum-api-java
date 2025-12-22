@@ -12,17 +12,11 @@ public class AuthenticationTokenManagerImpl implements AuthenticationTokenManage
     private final static String secretKey = "secret-key";
     private final static Algorithm algorithm = Algorithm.HMAC256(secretKey);
 
-    private final JWT jwt;
-
-    public AuthenticationTokenManagerImpl(JWT jwt) {
-        this.jwt = jwt;
-    }
-
     @Override
     public String createAccessToken(UUID id) {
         Date expiredDate = new Date(System.currentTimeMillis() + (24 * 60 * 60 * 1000L));
 
-        return jwt.create()
+        return JWT.create()
                 .withSubject(id.toString())
                 .withExpiresAt(expiredDate)
                 .sign(algorithm);
@@ -32,7 +26,7 @@ public class AuthenticationTokenManagerImpl implements AuthenticationTokenManage
     public String createRefreshToken(UUID id) {
         Date expiredDate = new Date(System.currentTimeMillis() + (7 * 24 * 60 * 60 * 1000L));
 
-        return jwt.create()
+        return JWT.create()
                 .withSubject(id.toString())
                 .withExpiresAt(expiredDate)
                 .sign(algorithm);
@@ -40,7 +34,7 @@ public class AuthenticationTokenManagerImpl implements AuthenticationTokenManage
 
     @Override
     public UUID decodeJWTPayload(String token) {
-        DecodedJWT decodedToken = jwt.decode(token);
+        DecodedJWT decodedToken = JWT.decode(token);
         return UUID.fromString(decodedToken.getSubject());
     }
 }

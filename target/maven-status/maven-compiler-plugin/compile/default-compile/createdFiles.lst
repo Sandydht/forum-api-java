@@ -3,6 +3,7 @@ forum/api/java/infrastructure/database/ConnectionUtil.class
 forum/api/java/infrastructure/repository/AuthenticationRepositoryImpl.class
 forum/api/java/infrastructure/security/AuthenticationTokenManagerImpl.class
 forum/api/java/domain/authentication/AuthenticationRepository.class
+forum/api/java/interfaces/http/api/UsersController.class
 forum/api/java/domain/authentication/entity/NewAuth.class
 forum/api/java/infrastructure/repository/UserRepositoryImpl.class
 forum/api/java/infrastructure/security/PasswordHashImpl.class

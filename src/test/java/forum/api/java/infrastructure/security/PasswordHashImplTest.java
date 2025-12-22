@@ -16,7 +16,7 @@ public class PasswordHashImplTest {
     @BeforeEach
     public void setUp() {
         mockedBcrypt = Mockito.mockStatic(BCrypt.class);
-        passwordHashImpl = new PasswordHashImpl(new BCrypt());
+        passwordHashImpl = new PasswordHashImpl();
     }
 
     @AfterEach

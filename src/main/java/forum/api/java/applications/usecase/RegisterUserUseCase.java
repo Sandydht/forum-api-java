@@ -4,9 +4,9 @@ import forum.api.java.applications.security.PasswordHash;
 import forum.api.java.domain.user.entity.RegisterUser;
 import forum.api.java.domain.user.UserRepository;
 import forum.api.java.domain.user.entity.RegisteredUser;
+import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
+@Service
 public class RegisterUserUseCase {
     private final UserRepository userRepository;
     private final PasswordHash passwordHash;
@@ -16,14 +16,10 @@ public class RegisterUserUseCase {
         this.passwordHash = passwordHash;
     }
 
-    public Optional<RegisteredUser> execute(RegisterUser registerUser) {
-        if (userRepository.verifyAvailableUsername(registerUser.getUsername())) {
-            throw new IllegalStateException("User already exist");
-        }
-
+    public RegisteredUser execute(RegisterUser registerUser) {
+        userRepository.verifyAvailableUsername(registerUser.getUsername());
         String encryptedPassword = passwordHash.hashPassword(registerUser.getPassword());
         registerUser.setPassword(encryptedPassword);
-
         return userRepository.addUser(registerUser);
     }
 }

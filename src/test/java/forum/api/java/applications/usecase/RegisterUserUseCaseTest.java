@@ -38,17 +38,11 @@ public class RegisterUserUseCaseTest {
 
         RegisterUser registerUser = new RegisterUser(username, fullname, password);
 
-        Mockito.when(userRepository.verifyAvailableUsername(username)).thenReturn(false);
+        Mockito.doNothing().when(userRepository).verifyAvailableUsername(username);
         Mockito.when(passwordHash.hashPassword(password)).thenReturn("hashedPassword");
-        Mockito.when(userRepository.addUser(registerUser)).thenReturn(
-                Optional.of(new RegisteredUser(
-                        id,
-                        username,
-                        fullname
-                ))
-        );
+        Mockito.when(userRepository.addUser(registerUser)).thenReturn(new RegisteredUser(id, username, fullname));
 
-       RegisteredUser registeredUser = registerUserUseCase.execute(registerUser).orElseThrow();
+        RegisteredUser registeredUser = registerUserUseCase.execute(registerUser);
 
         Assertions.assertEquals(id, registeredUser.getId());
         Assertions.assertEquals(username, registeredUser.getUsername());

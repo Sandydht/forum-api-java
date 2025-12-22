@@ -25,7 +25,7 @@ public class AuthenticationTokenManagerImplTest {
     @BeforeEach
     public void setUp() {
         mockedJWT = Mockito.mockStatic(JWT.class);
-        authenticationTokenManagerImpl = new AuthenticationTokenManagerImpl(new JWT());
+        authenticationTokenManagerImpl = new AuthenticationTokenManagerImpl();
     }
 
     @AfterEach

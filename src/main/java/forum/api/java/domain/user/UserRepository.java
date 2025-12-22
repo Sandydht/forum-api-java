@@ -7,11 +7,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface UserRepository {
-    default Optional<RegisteredUser> addUser(RegisterUser registerUser) {
+    default RegisteredUser addUser(RegisterUser registerUser) {
         throw new UnsupportedOperationException("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED");
     }
 
-    default boolean verifyAvailableUsername(String username) {
+    default void verifyAvailableUsername(String username) {
         throw new UnsupportedOperationException("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED");
     }
 

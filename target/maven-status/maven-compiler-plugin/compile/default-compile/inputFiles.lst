@@ -10,8 +10,10 @@
 /Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/domain/user/entity/RegisteredUser.java
 /Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/domain/user/entity/UserLogin.java
 /Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/infrastructure/database/ConnectionUtil.java
+/Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/infrastructure/database/users/UserJpaRepository.java
+/Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/infrastructure/database/users/entity/UserEntity.java
 /Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/infrastructure/repository/AuthenticationRepositoryImpl.java
 /Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/infrastructure/repository/UserRepositoryImpl.java
 /Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/infrastructure/security/AuthenticationTokenManagerImpl.java
 /Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/infrastructure/security/PasswordHashImpl.java
-/Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/interfaces/http/api/UsersApp.java
+/Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/interfaces/http/api/UsersController.java
