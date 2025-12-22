@@ -5,6 +5,8 @@ import forum.api.java.domain.user.entity.RegisterUser;
 import forum.api.java.domain.user.UserRepository;
 import forum.api.java.domain.user.entity.RegisteredUser;
 
+import java.util.Optional;
+
 public class RegisterUserUseCase {
     private final UserRepository userRepository;
     private final PasswordHash passwordHash;
@@ -14,21 +16,14 @@ public class RegisterUserUseCase {
         this.passwordHash = passwordHash;
     }
 
-    public RegisteredUser execute(RegisterUser registerUser) {
-        if (!userRepository.verifyAvailableUsername(registerUser.getUsername())) {
+    public Optional<RegisteredUser> execute(RegisterUser registerUser) {
+        if (userRepository.verifyAvailableUsername(registerUser.getUsername())) {
             throw new IllegalStateException("User already exist");
         }
 
         String encryptedPassword = passwordHash.hashPassword(registerUser.getPassword());
         registerUser.setPassword(encryptedPassword);
 
-        userRepository.addUser(registerUser);
-        RegisteredUser registeredUser = userRepository.getUserByUsername(registerUser.getUsername());
-
-        return new RegisteredUser(
-                registeredUser.getId(),
-                registeredUser.getUsername(),
-                registeredUser.getFullname()
-        );
+        return userRepository.addUser(registerUser);
     }
 }

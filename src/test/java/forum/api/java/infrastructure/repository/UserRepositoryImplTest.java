@@ -1,28 +1,30 @@
 package forum.api.java.infrastructure.repository;
 
+import com.zaxxer.hikari.HikariDataSource;
 import forum.api.java.domain.user.entity.RegisterUser;
+import forum.api.java.domain.user.entity.RegisteredUser;
+import forum.api.java.helpers.UsersHelper;
+import forum.api.java.helpers.models.UsersHelperModel;
 import forum.api.java.infrastructure.database.ConnectionUtil;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
-import java.sql.*;
+import java.util.Optional;
 
 @DisplayName("UserRepositoryImpl")
 public class UserRepositoryImplTest {
     private UserRepositoryImpl userRepositoryImpl;
+    private final UsersHelper usersHelper = new UsersHelper();
+    private final HikariDataSource connectionUtil = ConnectionUtil.getDataSource();
 
     @BeforeEach
-    public void setUp() throws SQLException {
-        String sql = "TRUNCATE TABLE users";
-        try (Connection connection = ConnectionUtil.getDataSource().getConnection()) {
-            try (Statement statement = connection.createStatement()) {
-                statement.execute(sql);
-            }
-        }
+    public void setUp() {
+        usersHelper.truncateUserTable();
+        userRepositoryImpl = new UserRepositoryImpl(connectionUtil);
+    }
 
-        userRepositoryImpl = new UserRepositoryImpl(new ConnectionUtil());
+    @AfterAll
+    public static void tearDown() {
+        ConnectionUtil.getDataSource().close();
     }
 
     @Test
@@ -32,9 +34,7 @@ public class UserRepositoryImplTest {
         String password = "password";
         String fullname = "Fullname";
 
-        RegisterUser registerUser = new RegisterUser(username, fullname, password);
-        userRepositoryImpl.addUser(registerUser);
-
+        usersHelper.addUserData(username, fullname, password);
         boolean isAvailable = userRepositoryImpl.verifyAvailableUsername(username);
 
         Assertions.assertTrue(isAvailable);
@@ -58,22 +58,11 @@ public class UserRepositoryImplTest {
         String fullname = "Fullname";
 
         RegisterUser registerUser = new RegisterUser(username, fullname, password);
-        userRepositoryImpl.addUser(registerUser);
-
-        String sql = "SELECT * FROM users WHERE username = ?";
-        try (Connection connection = ConnectionUtil.getDataSource().getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setString(1, username);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    if (resultSet.next()) {
-                        Assertions.assertEquals(username, resultSet.getString("username"));
-                        Assertions.assertEquals(fullname, resultSet.getString("fullname"));
-                        Assertions.assertEquals(password, resultSet.getString("password"));
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        userRepositoryImpl.addUser(registerUser)
+                .ifPresent(registeredUser -> {
+                    Assertions.assertNotNull(registeredUser.getId());
+                    Assertions.assertEquals(username, registeredUser.getUsername());
+                    Assertions.assertEquals(fullname, registeredUser.getFullname());
+                });
     }
 }

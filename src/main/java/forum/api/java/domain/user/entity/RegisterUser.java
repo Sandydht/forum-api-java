@@ -34,7 +34,7 @@ public class RegisterUser {
         }
     }
 
-    public UUID getID() {
+    public UUID getId() {
         return id;
     }
 

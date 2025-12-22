@@ -13,3 +13,4 @@
 /Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/infrastructure/repository/UserRepositoryImpl.java
 /Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/infrastructure/security/AuthenticationTokenManagerImpl.java
 /Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/infrastructure/security/PasswordHashImpl.java
+/Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/interfaces/http/api/UsersApp.java

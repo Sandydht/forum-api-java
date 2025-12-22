@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @DisplayName("Register user use case")
@@ -37,24 +38,25 @@ public class RegisterUserUseCaseTest {
 
         RegisterUser registerUser = new RegisterUser(username, fullname, password);
 
-        Mockito.when(userRepositoryImpl.verifyAvailableUsername(username)).thenReturn(true);
+        Mockito.when(userRepositoryImpl.verifyAvailableUsername(username)).thenReturn(false);
         Mockito.when(passwordHashImpl.hashPassword(password)).thenReturn("hashedPassword");
-        Mockito.doNothing().when(userRepositoryImpl).addUser(registerUser);
-        Mockito.when(userRepositoryImpl.getUserByUsername(username)).thenReturn(new RegisteredUser(
-                id,
-                username,
-                fullname
-        ));
+        Mockito.when(userRepositoryImpl.addUser(registerUser)).thenReturn(
+                Optional.of(new RegisteredUser(
+                        id,
+                        username,
+                        fullname
+                ))
+        );
 
-        RegisteredUser registeredUser = registerUserUseCase.execute(registerUser);
-
-        Assertions.assertEquals(id, registeredUser.getId());
-        Assertions.assertEquals(username, registeredUser.getUsername());
-        Assertions.assertEquals(fullname, registeredUser.getFullname());
+       registerUserUseCase.execute(registerUser)
+               .ifPresent(registeredUser -> {
+                   Assertions.assertEquals(id, registeredUser.getId());
+                   Assertions.assertEquals(username, registeredUser.getUsername());
+                   Assertions.assertEquals(fullname, registeredUser.getFullname());
+               });
 
         Mockito.verify(userRepositoryImpl, Mockito.times(1)).verifyAvailableUsername(username);
         Mockito.verify(passwordHashImpl, Mockito.times(1)).hashPassword(password);
         Mockito.verify(userRepositoryImpl, Mockito.times(1)).addUser(registerUser);
-        Mockito.verify(userRepositoryImpl, Mockito.times(1)).getUserByUsername(username);
     }
 }
