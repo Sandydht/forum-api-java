@@ -12,7 +12,9 @@ public class PasswordHashImpl implements PasswordHash {
     }
 
     @Override
-    public Boolean passwordCompare(String plainPassword, String encryptedPassword) {
-        return BCrypt.checkpw(plainPassword, encryptedPassword);
+    public void passwordCompare(String plainPassword, String encryptedPassword) {
+        if (!BCrypt.checkpw(plainPassword, encryptedPassword)) {
+            throw new IllegalStateException("PASSWORD_HASH_IMPL.INCORRECT_CREDENTIALS");
+        }
     }
 }

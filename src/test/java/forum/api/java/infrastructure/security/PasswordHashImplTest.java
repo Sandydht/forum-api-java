@@ -20,8 +20,13 @@ public class PasswordHashImplTest {
     public void testThrowErrorIfPasswordNotMatch() {
         String plainPassword = "plainPassword";
         String fakeHashedPassword = "$2a$10$8K1p/a0dL1LXMIg7OTcl9e7y.S77R9U9.fD8WvJv1i7./6L.T6G1y";
-        Boolean isValidPassword = passwordHashImpl.passwordCompare(plainPassword, fakeHashedPassword);
-        Assertions.assertFalse(isValidPassword);
+
+        IllegalStateException isValidPasswordError = Assertions.assertThrows(
+                IllegalStateException.class,
+                () -> passwordHashImpl.passwordCompare(plainPassword, fakeHashedPassword)
+        );
+
+        Assertions.assertEquals("PASSWORD_HASH_IMPL.INCORRECT_CREDENTIALS", isValidPasswordError.getMessage());
     }
 
     @Test
@@ -29,7 +34,7 @@ public class PasswordHashImplTest {
     public void testPasswordMatch() {
         String plainPassword = "plainPassword";
         String hashedPassword = passwordHashImpl.hashPassword(plainPassword);
-        Boolean isValidPassword = passwordHashImpl.passwordCompare(plainPassword, hashedPassword);
-        Assertions.assertTrue(isValidPassword);
+
+        Assertions.assertDoesNotThrow(() -> passwordHashImpl.passwordCompare(plainPassword, hashedPassword));
     }
 }

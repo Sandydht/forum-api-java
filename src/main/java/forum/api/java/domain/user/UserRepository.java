@@ -1,10 +1,10 @@
 package forum.api.java.domain.user;
 
+import forum.api.java.domain.user.entity.UserDetail;
 import forum.api.java.domain.user.entity.RegisterUser;
 import forum.api.java.domain.user.entity.RegisteredUser;
 
 import java.util.Optional;
-import java.util.UUID;
 
 public interface UserRepository {
     default RegisteredUser addUser(RegisterUser registerUser) {
@@ -15,11 +15,7 @@ public interface UserRepository {
         throw new UnsupportedOperationException("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED");
     }
 
-    default Optional<String> getPasswordByUsername(String username) {
-        throw new UnsupportedOperationException("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED");
-    }
-
-    default Optional<UUID> getIdByUsername(String username) {
+    default Optional<UserDetail> getUserByUsername(String username) {
         throw new UnsupportedOperationException("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED");
     }
 }

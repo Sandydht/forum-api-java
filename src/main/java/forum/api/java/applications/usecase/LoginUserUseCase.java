@@ -5,9 +5,11 @@ import forum.api.java.applications.security.PasswordHash;
 import forum.api.java.domain.authentication.AuthenticationRepository;
 import forum.api.java.domain.authentication.entity.NewAuth;
 import forum.api.java.domain.user.UserRepository;
+import forum.api.java.domain.user.entity.UserDetail;
 import forum.api.java.domain.user.entity.UserLogin;
 
-import java.util.Optional;
+import java.time.Duration;
+import java.time.Instant;
 
 public class LoginUserUseCase {
     private final UserRepository userRepository;
@@ -15,31 +17,28 @@ public class LoginUserUseCase {
     private final PasswordHash passwordHash;
     private final AuthenticationTokenManager authenticationTokenManager;
 
-    public LoginUserUseCase(UserRepository userRepository, AuthenticationRepository authenticationRepository, PasswordHash passwordHash, AuthenticationTokenManager authenticationTokenManager) {
+    public LoginUserUseCase(
+            UserRepository userRepository,
+            AuthenticationRepository authenticationRepository,
+            PasswordHash passwordHash,
+            AuthenticationTokenManager authenticationTokenManager
+    ) {
         this.userRepository = userRepository;
         this.authenticationRepository = authenticationRepository;
         this.passwordHash = passwordHash;
         this.authenticationTokenManager = authenticationTokenManager;
     }
 
-    public Optional<NewAuth> execute(UserLogin userLogin) {
-        String hashedPassword = userRepository.getPasswordByUsername(userLogin.getUsername()).orElseThrow();
+    public NewAuth execute(UserLogin userLogin) {
+        UserDetail userDetail = userRepository.getUserByUsername(userLogin.getUsername()).orElseThrow();
+        passwordHash.passwordCompare(userLogin.getPassword(), userDetail.getPassword());
 
-        if (!passwordHash.passwordCompare(userLogin.getPassword(), hashedPassword)) {
-            throw new IllegalStateException("The credentials you entered are incorrect.");
-        }
+        String accessToken = authenticationTokenManager.createAccessToken(userDetail.getId());
+        String refreshToken = authenticationTokenManager.createRefreshToken(userDetail.getId());
 
-        return userRepository.getIdByUsername(userLogin.getUsername())
-                .map(userId -> {
-                    String accessToken = authenticationTokenManager.createAccessToken(userId);
-                    String refreshToken = authenticationTokenManager.createRefreshToken(userId);
+        Instant expiresAt = Instant.now().plus(Duration.ofDays(7));
+        authenticationRepository.addToken(userDetail, refreshToken, expiresAt);
 
-                    authenticationRepository.addToken(refreshToken);
-
-                    return new NewAuth(
-                        accessToken,
-                        refreshToken
-                    );
-                });
+        return new NewAuth(accessToken, refreshToken);
     }
 }

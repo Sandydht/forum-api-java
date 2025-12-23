@@ -5,7 +5,7 @@ public interface PasswordHash {
         throw new UnsupportedOperationException("PASSWORD_HASH.METHOD_NOT_IMPLEMENTED");
     }
 
-    default Boolean passwordCompare(String plainPassword, String encryptedPassword) {
+    default void passwordCompare(String plainPassword, String encryptedPassword) {
         throw new UnsupportedOperationException("PASSWORD_HASH.METHOD_NOT_IMPLEMENTED");
     }
 }

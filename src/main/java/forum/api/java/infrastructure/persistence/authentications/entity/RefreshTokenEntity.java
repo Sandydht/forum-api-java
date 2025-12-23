@@ -23,10 +23,9 @@ public class RefreshTokenEntity {
     @Column(name = "expires_at", nullable = false)
     private Instant expiresAt;
 
-    public RefreshTokenEntity() {}
+    protected RefreshTokenEntity() {}
 
     public RefreshTokenEntity(UserEntity user, String token, Instant expiresAt) {
-        this.id = UUID.randomUUID().toString();
         this.user = user;
         this.token = token;
         this.expiresAt = expiresAt;

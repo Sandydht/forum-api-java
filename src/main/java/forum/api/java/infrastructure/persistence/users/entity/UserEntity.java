@@ -37,4 +37,8 @@ public class UserEntity {
     public String getFullname() {
         return fullname;
     }
+
+    public String getPassword() {
+        return password;
+    }
 }

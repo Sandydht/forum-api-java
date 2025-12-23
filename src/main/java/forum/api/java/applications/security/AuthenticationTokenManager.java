@@ -1,17 +1,15 @@
 package forum.api.java.applications.security;
 
-import java.util.UUID;
-
 public interface AuthenticationTokenManager {
-    default String createAccessToken(UUID id) {
+    default String createAccessToken(String id) {
         throw new UnsupportedOperationException("AUTHENTICATION_TOKEN_MANAGER.METHOD_NOT_IMPLEMENTED");
     }
 
-    default String createRefreshToken(UUID id) {
+    default String createRefreshToken(String id) {
         throw new UnsupportedOperationException("AUTHENTICATION_TOKEN_MANAGER.METHOD_NOT_IMPLEMENTED");
     }
 
-    default UUID decodeJWTPayload(String token) {
+    default String decodeJWTPayload(String token) {
         throw new UnsupportedOperationException("AUTHENTICATION_TOKEN_MANAGER.METHOD_NOT_IMPLEMENTED");
     }
 }
