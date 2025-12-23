@@ -24,7 +24,7 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
     public void addToken(UserDetail userDetail, String token, Instant expiresAt) {
         UserEntity userEntity = userJpaRepository
                 .findByUsername(userDetail.getUsername())
-                .orElseThrow(() -> new IllegalStateException("User not found"));
+                .orElseThrow(() -> new IllegalStateException("AUTHENTICATION_REPOSITORY_IMPL.USER_NOT_FOUND"));
 
         RefreshTokenEntity refreshTokenEntity =
                 new RefreshTokenEntity(userEntity, token, expiresAt);

@@ -8,4 +8,8 @@ public interface AuthenticationRepository {
     default void addToken(UserDetail userDetail, String token, Instant expiresAt) {
         throw new UnsupportedOperationException("AUTHENTICATION_REPOSITORY.METHOD_NOT_IMPLEMENTED");
     }
+
+    default void deleteExpiredTokens(Instant now) {
+        throw new UnsupportedOperationException("AUTHENTICATION_REPOSITORY.METHOD_NOT_IMPLEMENTED");
+    }
 }

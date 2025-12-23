@@ -49,7 +49,6 @@ public class LoginUserUseCaseTest {
         String hashedPassword = "hashedPassword";
         String fakeAccessToken = "fake-access-token";
         String fakeRefreshToken = "fake-refresh-token";
-        Instant expiresAt = Instant.now().plus(Duration.ofDays(7));
 
         UserLogin userLogin = new UserLogin(username, password);
         UserDetail userDetail = new UserDetail(id, username, fullname, hashedPassword);
