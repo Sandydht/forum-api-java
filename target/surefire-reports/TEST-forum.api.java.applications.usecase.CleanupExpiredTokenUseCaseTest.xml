@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.1" name="forum.api.java.domain.user.entity.RegisterUserTest" time="0.074" tests="7" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.1" name="forum.api.java.applications.usecase.CleanupExpiredTokenUseCaseTest" time="0.001" tests="1" errors="0" skipped="1" failures="0">
   <properties>
     <property name="java.specification.version" value="25"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
@@ -7,8 +7,6 @@
     <property name="java.vm.vendor" value="Oracle Corporation"/>
     <property name="sun.arch.data.model" value="64"/>
     <property name="java.vendor.url" value="https://java.oracle.com/"/>
-    <property name="user.timezone" value="Asia/Jakarta"/>
-    <property name="org.jboss.logging.provider" value="slf4j"/>
     <property name="os.name" value="Mac OS X"/>
     <property name="java.vm.specification.version" value="25"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
@@ -30,8 +28,6 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="FILE_LOG_CHARSET" value="UTF-8"/>
-    <property name="java.awt.headless" value="true"/>
     <property name="apple.awt.application.name" value="ForkedBooter"/>
     <property name="surefire.real.class.path" value="/Users/sandy/Development/project-belajar/forum-api-java/target/surefire/surefirebooter-20251223160723666_3.jar"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
@@ -51,8 +47,6 @@
     <property name="user.dir" value="/Users/sandy/Development/project-belajar/forum-api-java"/>
     <property name="os.arch" value="x86_64"/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
-    <property name="PID" value="23128"/>
-    <property name="CONSOLE_LOG_CHARSET" value="UTF-8"/>
     <property name="native.encoding" value="UTF-8"/>
     <property name="java.library.path" value="/Users/sandy/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:."/>
     <property name="java.vm.info" value="mixed mode, sharing"/>
@@ -64,11 +58,7 @@
     <property name="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="java.class.version" value="69.0"/>
   </properties>
-  <testcase name="testObjectCorrectly" classname="forum.api.java.domain.user.entity.RegisterUserTest" time="0.001"/>
-  <testcase name="testNotContainRestrictedCharacter" classname="forum.api.java.domain.user.entity.RegisterUserTest" time="0.003"/>
-  <testcase name="testUsernameLimitCharacter" classname="forum.api.java.domain.user.entity.RegisterUserTest" time="0.002"/>
-  <testcase name="testNotContainNeededProperty(String, String, String)[1]" classname="forum.api.java.domain.user.entity.RegisterUserTest" time="0.011"/>
-  <testcase name="testNotContainNeededProperty(String, String, String)[2]" classname="forum.api.java.domain.user.entity.RegisterUserTest" time="0.001"/>
-  <testcase name="testNotContainNeededProperty(String, String, String)[3]" classname="forum.api.java.domain.user.entity.RegisterUserTest" time="0.0"/>
-  <testcase name="testNotContainNeededProperty(String, String, String)[4]" classname="forum.api.java.domain.user.entity.RegisterUserTest" time="0.001"/>
+  <testcase name="testDeleteExpiredTokensActionCorrectly" classname="forum.api.java.applications.usecase.CleanupExpiredTokenUseCaseTest" time="0.0">
+    <skipped message="Work in progress"/>
+  </testcase>
 </testsuite>

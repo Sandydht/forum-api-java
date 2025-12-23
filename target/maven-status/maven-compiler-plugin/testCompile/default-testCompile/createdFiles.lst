@@ -8,6 +8,7 @@ forum/api/java/domain/authentication/AuthenticationRepositoryTest.class
 forum/api/java/infrastructure/repository/UserRepositoryImplTest.class
 forum/api/java/domain/user/UserRepositoryTest.class
 forum/api/java/infrastructure/security/AuthenticationTokenManagerImplTest.class
+forum/api/java/applications/usecase/CleanupExpiredTokenUseCaseTest.class
 forum/api/java/domain/authentication/entity/NewAuthTest.class
 forum/api/java/domain/user/UserRepositoryTest$1.class
 forum/api/java/applications/security/PasswordHashTest$1.class

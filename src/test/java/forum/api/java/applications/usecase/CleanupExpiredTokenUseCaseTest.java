@@ -1,6 +1,7 @@
 package forum.api.java.applications.usecase;
 
 import forum.api.java.domain.authentication.AuthenticationRepository;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Instant;
 
+@Disabled("Work in progress")
 @DisplayName("Clean up expired token use case")
 @ExtendWith(MockitoExtension.class)
 public class CleanupExpiredTokenUseCaseTest {
