@@ -1,8 +1,10 @@
 forum/api/java/applications/usecase/RegisterUserUseCase.class
 forum/api/java/interfaces/http/api/authentications/AuthenticationsController.class
+forum/api/java/applications/scheduler/AuthenticationScheduler.class
 forum/api/java/interfaces/http/api/users/dto/UserRegisterRequest.class
 forum/api/java/infrastructure/security/AuthenticationTokenManagerImpl.class
 forum/api/java/infrastructure/security/PasswordHashImpl.class
+forum/api/java/infrastructure/scheduler/AuthenticationSchedulerImpl.class
 forum/api/java/domain/user/entity/RegisterUser.class
 forum/api/java/infrastructure/persistence/users/UserJpaRepository.class
 forum/api/java/domain/user/UserRepository.class
@@ -20,6 +22,7 @@ forum/api/java/domain/authentication/entity/NewAuth.class
 forum/api/java/infrastructure/repository/UserRepositoryImpl.class
 forum/api/java/applications/usecase/LoginUserUseCase.class
 forum/api/java/interfaces/http/api/users/dto/UserRegisterResponse.class
+forum/api/java/infrastructure/config/SchedulerConfig.class
 forum/api/java/infrastructure/config/UseCaseConfig.class
 forum/api/java/domain/user/entity/UserDetail.class
 forum/api/java/infrastructure/persistence/authentications/AuthenticationJpaRepository.class

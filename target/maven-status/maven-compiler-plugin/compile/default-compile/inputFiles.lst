@@ -1,4 +1,5 @@
 /Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/App.java
+/Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/applications/scheduler/AuthenticationScheduler.java
 /Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/applications/security/AuthenticationTokenManager.java
 /Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/applications/security/PasswordHash.java
 /Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/applications/usecase/CleanupExpiredTokenUseCase.java
@@ -11,6 +12,7 @@
 /Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/domain/user/entity/RegisteredUser.java
 /Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/domain/user/entity/UserDetail.java
 /Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/domain/user/entity/UserLogin.java
+/Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/infrastructure/config/SchedulerConfig.java
 /Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/infrastructure/config/UseCaseConfig.java
 /Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/infrastructure/persistence/authentications/AuthenticationJpaRepository.java
 /Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/infrastructure/persistence/authentications/entity/RefreshTokenEntity.java
@@ -18,6 +20,7 @@
 /Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/infrastructure/persistence/users/entity/UserEntity.java
 /Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/infrastructure/repository/AuthenticationRepositoryImpl.java
 /Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/infrastructure/repository/UserRepositoryImpl.java
+/Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/infrastructure/scheduler/AuthenticationSchedulerImpl.java
 /Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/infrastructure/security/AuthenticationTokenManagerImpl.java
 /Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/infrastructure/security/PasswordHashImpl.java
 /Users/sandy/Development/project-belajar/forum-api-java/src/main/java/forum/api/java/interfaces/http/api/authentications/AuthenticationsController.java
