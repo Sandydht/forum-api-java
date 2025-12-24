@@ -60,4 +60,33 @@ public class AuthenticationRepositoryImplTest {
         Assertions.assertEquals(expiresAt, refreshTokenEntity.getExpiresAt());
         Assertions.assertEquals(fakeRefreshToken, refreshTokenEntity.getToken());
     }
+
+    @Test
+    @DisplayName("should delete expired tokens from database")
+    public void testDeleteExpiredTokensFromDatabase() {
+        Instant now = Instant.now();
+
+        UserEntity user = userJpaRepository.save(new UserEntity(
+                "user",
+                "Fullname",
+                "password"
+        ));
+
+        authenticationJpaRepository.save(new RefreshTokenEntity(
+            user,
+            "expired-token",
+            now.minus(Duration.ofDays(1))
+        ));
+
+        authenticationJpaRepository.save(new RefreshTokenEntity(
+                user,
+                "valid-token",
+                now.plus(Duration.ofDays(1))
+        ));
+
+        authenticationRepositoryImpl.deleteExpiredTokens(now);
+
+        Assertions.assertTrue(authenticationJpaRepository.findByToken("expired-token").isEmpty());
+        Assertions.assertTrue(authenticationJpaRepository.findByToken("valid-token").isPresent());
+    }
 }

@@ -12,7 +12,6 @@ public class CleanupExpiredTokenUseCase {
     }
 
     public void execute() {
-        Instant now = Instant.now();
-        authenticationRepository.deleteExpiredTokens(now);
+        authenticationRepository.deleteExpiredTokens(Instant.now());
     }
 }

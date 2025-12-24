@@ -31,4 +31,9 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
         authenticationJpaRepository.save(refreshTokenEntity);
     }
+
+    @Override
+    public void deleteExpiredTokens(Instant now) {
+        authenticationJpaRepository.deleteExpiredTokens(now);
+    }
 }

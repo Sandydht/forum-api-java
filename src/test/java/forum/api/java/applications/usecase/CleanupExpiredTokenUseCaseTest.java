@@ -25,12 +25,7 @@ public class CleanupExpiredTokenUseCaseTest {
     @Test
     @DisplayName("should orchestrating the delete expired tokens action correctly")
     public void testDeleteExpiredTokensActionCorrectly() {
-        Instant now = Instant.now();
-
-        Mockito.doNothing().when(authenticationRepository).deleteExpiredTokens(now);
-
         cleanupExpiredTokenUseCase.execute();
-
-
+        Mockito.verify(authenticationRepository, Mockito.times(1)).deleteExpiredTokens(Mockito.any(Instant.class));
     }
 }

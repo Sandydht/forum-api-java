@@ -1,6 +1,7 @@
 forum/api/java/applications/security/AuthenticationTokenManagerTest.class
 forum/api/java/domain/user/entity/RegisteredUserTest.class
 forum/api/java/applications/security/PasswordHashTest.class
+forum/api/java/applications/usecase/LoginUserUseCaseTest.class
 forum/api/java/domain/user/entity/RegisterUserTest.class
 forum/api/java/infrastructure/security/PasswordHashImplTest.class
 forum/api/java/applications/security/AuthenticationTokenManagerTest$1.class
@@ -10,6 +11,7 @@ forum/api/java/domain/user/UserRepositoryTest.class
 forum/api/java/infrastructure/security/AuthenticationTokenManagerImplTest.class
 forum/api/java/applications/usecase/CleanupExpiredTokenUseCaseTest.class
 forum/api/java/domain/authentication/entity/NewAuthTest.class
+forum/api/java/infrastructure/repository/AuthenticationRepositoryImplTest.class
 forum/api/java/domain/user/UserRepositoryTest$1.class
 forum/api/java/applications/security/PasswordHashTest$1.class
 forum/api/java/domain/authentication/AuthenticationRepositoryTest$1.class
