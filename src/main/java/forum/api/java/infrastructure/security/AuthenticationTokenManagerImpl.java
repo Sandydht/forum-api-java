@@ -10,8 +10,11 @@ import java.util.Date;
 
 @Component
 public class AuthenticationTokenManagerImpl implements AuthenticationTokenManager {
-    private final static String secretKey = "secret-key";
-    private final static Algorithm algorithm = Algorithm.HMAC256(secretKey);
+    private final Algorithm algorithm;
+
+    public AuthenticationTokenManagerImpl(Algorithm algorithm) {
+        this.algorithm = algorithm;
+    }
 
     @Override
     public String createAccessToken(String id) {
