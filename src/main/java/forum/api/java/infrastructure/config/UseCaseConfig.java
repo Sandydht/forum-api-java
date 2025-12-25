@@ -1,5 +1,6 @@
 package forum.api.java.infrastructure.config;
 
+import forum.api.java.applications.usecase.CleanupExpiredTokenUseCase;
 import forum.api.java.applications.usecase.LoginUserUseCase;
 import forum.api.java.applications.usecase.RegisterUserUseCase;
 import forum.api.java.infrastructure.repository.AuthenticationRepositoryImpl;
@@ -35,5 +36,10 @@ public class UseCaseConfig {
                 passwordHashImpl,
                 authenticationTokenManagerImpl
         );
+    }
+
+    @Bean
+    public CleanupExpiredTokenUseCase cleanupExpiredTokenUseCase(AuthenticationRepositoryImpl authenticationRepositoryImpl) {
+        return new CleanupExpiredTokenUseCase(authenticationRepositoryImpl);
     }
 }

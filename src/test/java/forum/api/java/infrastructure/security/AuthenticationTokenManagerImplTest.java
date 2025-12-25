@@ -1,27 +1,20 @@
 package forum.api.java.infrastructure.security;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import forum.api.java.infrastructure.properties.JwtProperties;
 import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.UUID;
 
-@SpringBootTest
 @DisplayName("AuthenticationTokenManagerImpl")
 public class AuthenticationTokenManagerImplTest {
-    @Autowired
-    private JwtProperties jwtProperties;
-
-    @Autowired
-    private AuthenticationTokenManagerImpl authenticationTokenManagerImpl;
+    private final Algorithm algorithm = Algorithm.HMAC256("secret-key-test");
+    private final AuthenticationTokenManagerImpl authenticationTokenManagerImpl = new AuthenticationTokenManagerImpl(algorithm);
 
     @Test
     @DisplayName("should create accessToken correctly")
     public void testCreateAccessTokenCorrectly() {
-        System.out.println("secret key: " + jwtProperties.getSecretKey());
         String id = UUID.randomUUID().toString();
 
         String accessToken = authenticationTokenManagerImpl.createAccessToken(id);
