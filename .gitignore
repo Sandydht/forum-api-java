@@ -43,5 +43,5 @@ Thumbs.db
 *.swp
 *~
 
-# .env file
-.env
+# application.properties file
+application.properties
