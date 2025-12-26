@@ -1,5 +1,6 @@
 package forum.api.java.infrastructure.security;
 
+import forum.api.java.applications.security.AuthenticationTokenManager;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,10 +15,10 @@ import java.util.ArrayList;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    private final AuthenticationTokenManagerImpl authenticationTokenManagerImpl;
+    private final AuthenticationTokenManager authenticationTokenManager;
 
-    public JwtAuthenticationFilter(AuthenticationTokenManagerImpl authenticationTokenManagerImpl) {
-        this.authenticationTokenManagerImpl = authenticationTokenManagerImpl;
+    public JwtAuthenticationFilter(AuthenticationTokenManager authenticationTokenManager) {
+        this.authenticationTokenManager = authenticationTokenManager;
     }
 
     @Override
@@ -28,7 +29,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String token = authHeader.substring(7);
 
             try {
-                String userId = authenticationTokenManagerImpl.decodeJWTPayload(token);
+                String userId = authenticationTokenManager.decodeJWTPayload(token);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userId, null, new ArrayList<>());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } catch (Exception exception) {

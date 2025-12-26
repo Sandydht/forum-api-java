@@ -1,39 +1,16 @@
 package forum.api.java.interfaces.http.api.users.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class UserRegisterResponse {
     private String id;
     private String username;
     private String fullname;
-
-    public UserRegisterResponse() {}
-
-    public UserRegisterResponse(String id, String username, String fullname) {
-        this.id = id;
-        this.username = username;
-        this.fullname = fullname;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getFullname() {
-        return fullname;
-    }
-
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
-    }
 }

@@ -1,39 +1,21 @@
 package forum.api.java.interfaces.http.api.users.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
+
+@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class UserRegisterRequest {
+    @NotBlank(message = "Username is required")
     private String username;
+
+    @NotBlank(message = "Fullname is required")
     private String fullname;
+
+    @NotBlank(message = "Password is required")
     private String password;
-
-    public UserRegisterRequest() {}
-
-    public UserRegisterRequest(String username, String fullname, String password) {
-        this.username = username;
-        this.fullname = fullname;
-        this.password = password;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getFullname() {
-        return fullname;
-    }
-
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

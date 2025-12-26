@@ -1,5 +1,6 @@
 package forum.api.java.infrastructure.repository;
 
+import forum.api.java.commons.exceptions.ClientException;
 import forum.api.java.domain.user.entity.RegisterUser;
 import forum.api.java.domain.user.entity.RegisteredUser;
 import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
@@ -24,7 +25,7 @@ public class UserRepositoryImplTest {
     private UserRepositoryImpl userRepositoryImpl;
 
     @Test
-    @DisplayName("should throw IllegalStateException when username available")
+    @DisplayName("should throw ClientException when username available")
     public void testReturnTrueWhenUsernameAvailable() {
         String username = "user";
         String password = "password";
@@ -33,16 +34,16 @@ public class UserRepositoryImplTest {
         UserEntity userEntity = new UserEntity(username, fullname, password);
         userJpaRepository.save(userEntity);
 
-        IllegalStateException verifyAvailableUsernameError = Assertions.assertThrows(
-                IllegalStateException.class,
+        ClientException verifyAvailableUsernameError = Assertions.assertThrows(
+                ClientException.class,
                 () -> userRepositoryImpl.verifyAvailableUsername(username)
         );
 
-        Assertions.assertEquals("USER_REPOSITORY_IMPL.USER_ALREADY_EXIST", verifyAvailableUsernameError.getMessage());
+        Assertions.assertEquals("CLIENT_EXCEPTION.USER_ALREADY_EXIST", verifyAvailableUsernameError.getMessage());
     }
 
     @Test
-    @DisplayName("should not throw IllegalStateException when username not available")
+    @DisplayName("should not throw ClientException when username not available")
     public void testReturnFalseWhenUsernameNotAvailable() {
         String username = "user";
         Assertions.assertDoesNotThrow(() -> userRepositoryImpl.verifyAvailableUsername(username));

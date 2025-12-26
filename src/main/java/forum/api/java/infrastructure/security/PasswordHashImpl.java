@@ -1,6 +1,7 @@
 package forum.api.java.infrastructure.security;
 
 import forum.api.java.applications.security.PasswordHash;
+import forum.api.java.commons.exceptions.AuthenticationException;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +15,7 @@ public class PasswordHashImpl implements PasswordHash {
     @Override
     public void passwordCompare(String plainPassword, String encryptedPassword) {
         if (!BCrypt.checkpw(plainPassword, encryptedPassword)) {
-            throw new IllegalStateException("PASSWORD_HASH_IMPL.INCORRECT_CREDENTIALS");
+            throw new AuthenticationException("INCORRECT_CREDENTIALS");
         }
     }
 }

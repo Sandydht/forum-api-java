@@ -1,5 +1,6 @@
 package forum.api.java.infrastructure.security;
 
+import forum.api.java.commons.exceptions.AuthenticationException;
 import org.junit.jupiter.api.*;
 
 @DisplayName("PasswordHashImpl")
@@ -21,12 +22,12 @@ public class PasswordHashImplTest {
         String plainPassword = "plainPassword";
         String fakeHashedPassword = "$2a$10$8K1p/a0dL1LXMIg7OTcl9e7y.S77R9U9.fD8WvJv1i7./6L.T6G1y";
 
-        IllegalStateException isValidPasswordError = Assertions.assertThrows(
-                IllegalStateException.class,
+        AuthenticationException isValidPasswordError = Assertions.assertThrows(
+                AuthenticationException.class,
                 () -> passwordHashImpl.passwordCompare(plainPassword, fakeHashedPassword)
         );
 
-        Assertions.assertEquals("PASSWORD_HASH_IMPL.INCORRECT_CREDENTIALS", isValidPasswordError.getMessage());
+        Assertions.assertEquals("AUTHENTICATION_EXCEPTION.INCORRECT_CREDENTIALS", isValidPasswordError.getMessage());
     }
 
     @Test
