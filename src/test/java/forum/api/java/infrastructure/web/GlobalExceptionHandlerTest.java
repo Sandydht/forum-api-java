@@ -17,8 +17,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -42,13 +42,18 @@ public class GlobalExceptionHandlerTest {
     @Test
     @DisplayName("should return 400 when client error is thrown")
     public void shouldReturn400WhenClientErrorIsThrown() throws Exception {
-        UserRegisterRequest request = new UserRegisterRequest("user", "Fullname", "password");
+        String username = "username";
+        String fullname = "Fullname";
+        String password = "password";
+
+        UserRegisterRequest request = new UserRegisterRequest(username, fullname, password);
 
         Mockito.when(registerUserUseCase.execute(Mockito.any())).thenThrow(new ClientException("USER_ALREADY_EXIST"));
 
         mockMvc.perform(post("/api/users/register-account")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)).with(csrf()))
+                .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(400))
                 .andExpect(jsonPath("$.message").value("CLIENT_EXCEPTION.USER_ALREADY_EXIST"));
