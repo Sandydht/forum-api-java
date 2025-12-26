@@ -30,7 +30,7 @@ public class UserLogin {
 
     private static void requireNotBlank(String value) {
         if (value == null || value.isBlank()) {
-            throw new IllegalArgumentException("USER_LOGIN.USERNAME_CONTAIN_RESTRICTED_CHARACTER");
+            throw new IllegalArgumentException("USER_LOGIN.NOT_CONTAIN_NEEDED_PROPERTY");
         }
     }
 
