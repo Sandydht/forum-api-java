@@ -28,5 +28,11 @@ public class UserRepositoryTest {
                 () -> userRepository.getUserByUsername("")
         );
         Assertions.assertEquals("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED", getUserByUsernameError.getMessage());
+
+        UnsupportedOperationException getUserByIdError = Assertions.assertThrows(
+                UnsupportedOperationException.class,
+                () -> userRepository.getUserById("")
+        );
+        Assertions.assertEquals("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED", getUserByIdError.getMessage());
     }
 }

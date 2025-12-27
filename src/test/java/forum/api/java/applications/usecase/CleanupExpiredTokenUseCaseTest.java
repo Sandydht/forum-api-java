@@ -1,7 +1,6 @@
 package forum.api.java.applications.usecase;
 
 import forum.api.java.domain.authentication.AuthenticationRepository;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

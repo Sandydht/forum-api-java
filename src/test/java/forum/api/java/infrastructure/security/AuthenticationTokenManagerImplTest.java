@@ -12,41 +12,53 @@ public class AuthenticationTokenManagerImplTest {
     private final Algorithm algorithm = Algorithm.HMAC256("secret-key-test");
     private final AuthenticationTokenManagerImpl authenticationTokenManagerImpl = new AuthenticationTokenManagerImpl(algorithm);
 
-    @Test
-    @DisplayName("should create accessToken correctly")
-    public void testCreateAccessTokenCorrectly() {
-        String id = UUID.randomUUID().toString();
+    @Nested
+    @DisplayName("createAccessToken function")
+    public class CreateAccessToken {
+        @Test
+        @DisplayName("should create accessToken correctly")
+        public void testCreateAccessTokenCorrectly() {
+            String id = UUID.randomUUID().toString();
 
-        String accessToken = authenticationTokenManagerImpl.createAccessToken(id);
-        DecodedJWT decodeAccessToken = JWT.decode(accessToken);
+            String accessToken = authenticationTokenManagerImpl.createAccessToken(id);
+            DecodedJWT decodeAccessToken = JWT.decode(accessToken);
 
-        Assertions.assertNotNull(accessToken);
-        Assertions.assertEquals(id, decodeAccessToken.getSubject());
+            Assertions.assertNotNull(accessToken);
+            Assertions.assertEquals(id, decodeAccessToken.getSubject());
+        }
     }
 
-    @Test
-    @DisplayName("should create refreshToken correctly")
-    public void testCreateRefreshTokenCorrectly() {
-        String id = UUID.randomUUID().toString();
+    @Nested
+    @DisplayName("createRefreshToken function")
+    public class CreateRefreshToken {
+        @Test
+        @DisplayName("should create refreshToken correctly")
+        public void testCreateRefreshTokenCorrectly() {
+            String id = UUID.randomUUID().toString();
 
-        String refreshToken = authenticationTokenManagerImpl.createRefreshToken(id);
-        DecodedJWT decodeRefreshToken = JWT.decode(refreshToken);
+            String refreshToken = authenticationTokenManagerImpl.createRefreshToken(id);
+            DecodedJWT decodeRefreshToken = JWT.decode(refreshToken);
 
-        Assertions.assertNotNull(refreshToken);
-        Assertions.assertEquals(id, decodeRefreshToken.getSubject());
+            Assertions.assertNotNull(refreshToken);
+            Assertions.assertEquals(id, decodeRefreshToken.getSubject());
+        }
     }
 
-    @Test
-    @DisplayName("should decode token correctly")
-    public void testDecodeTokeCorrectly() {
-        String id = UUID.randomUUID().toString();
+    @Nested
+    @DisplayName("decodeJWTPayload")
+    public class DecodeJWTPayload {
+        @Test
+        @DisplayName("should decode token correctly")
+        public void testDecodeTokeCorrectly() {
+            String id = UUID.randomUUID().toString();
 
-        String accessToken = authenticationTokenManagerImpl.createAccessToken(id);
-        DecodedJWT decodeAccessToken = JWT.decode(accessToken);
-        Assertions.assertEquals(id, decodeAccessToken.getSubject());
+            String accessToken = authenticationTokenManagerImpl.createAccessToken(id);
+            String decodeAccessToken = authenticationTokenManagerImpl.decodeJWTPayload(accessToken);
+            Assertions.assertEquals(id, decodeAccessToken);
 
-        String refreshToken = authenticationTokenManagerImpl.createRefreshToken(id);
-        DecodedJWT decodeRefreshToken = JWT.decode(refreshToken);
-        Assertions.assertEquals(id, decodeRefreshToken.getSubject());
+            String refreshToken = authenticationTokenManagerImpl.createRefreshToken(id);
+            String decodeRefreshToken = authenticationTokenManagerImpl.decodeJWTPayload(refreshToken);
+            Assertions.assertEquals(id, decodeRefreshToken);
+        }
     }
 }

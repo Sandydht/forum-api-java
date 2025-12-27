@@ -18,4 +18,8 @@ public interface UserRepository {
     default Optional<UserDetail> getUserByUsername(String username) {
         throw new UnsupportedOperationException("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED");
     }
+
+    default Optional<UserDetail> getUserById(String id) {
+        throw new UnsupportedOperationException("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED");
+    }
 }

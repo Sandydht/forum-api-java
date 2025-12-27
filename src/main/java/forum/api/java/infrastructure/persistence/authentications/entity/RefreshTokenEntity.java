@@ -4,7 +4,6 @@ import forum.api.java.infrastructure.persistence.users.entity.UserEntity;
 import jakarta.persistence.*;
 
 import java.time.Instant;
-import java.util.UUID;
 
 @Entity
 @Table(name = "refresh_tokens")

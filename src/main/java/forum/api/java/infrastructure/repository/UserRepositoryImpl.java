@@ -1,6 +1,7 @@
 package forum.api.java.infrastructure.repository;
 
 import forum.api.java.commons.exceptions.ClientException;
+import forum.api.java.commons.exceptions.NotFoundException;
 import forum.api.java.domain.user.UserRepository;
 import forum.api.java.domain.user.entity.RegisterUser;
 import forum.api.java.domain.user.entity.RegisteredUser;
@@ -40,11 +41,29 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Optional<UserDetail> getUserByUsername(String username) {
+        if (userJpaRepository.findByUsername(username).isEmpty()) {
+            throw new NotFoundException("USER_NOT_FOUND");
+        }
+
         return userJpaRepository.findByUsername(username).map(userEntity -> new UserDetail(
             userEntity.getId(),
             userEntity.getUsername(),
             userEntity.getFullname(),
             userEntity.getPassword()
+        ));
+    }
+
+    @Override
+    public Optional<UserDetail> getUserById(String id) {
+        if (userJpaRepository.findById(id).isEmpty()) {
+            throw new NotFoundException("USER_NOT_FOUND");
+        }
+
+        return userJpaRepository.findById(id).map(userEntity -> new UserDetail(
+                userEntity.getId(),
+                userEntity.getUsername(),
+                userEntity.getFullname(),
+                userEntity.getPassword()
         ));
     }
 }

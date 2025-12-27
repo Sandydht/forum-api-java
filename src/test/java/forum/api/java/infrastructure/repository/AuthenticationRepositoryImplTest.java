@@ -7,6 +7,7 @@ import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
 import forum.api.java.infrastructure.persistence.users.entity.UserEntity;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -32,61 +33,69 @@ public class AuthenticationRepositoryImplTest {
     @Autowired
     private AuthenticationRepositoryImpl authenticationRepositoryImpl;
 
-    @Test
-    @DisplayName("should add token to database")
-    public void testAddTokenToDatabase() {
-        String username = "user";
-        String fullname = "Fullname";
-        String password = "password";
-        String fakeRefreshToken = "fake-refresh-token";
-        Instant expiresAt = Instant.now().plus(Duration.ofDays(7));
+    @Nested
+    @DisplayName("addToken function")
+    public class AddTokenFunction {
+        @Test
+        @DisplayName("should add token to database")
+        public void testAddTokenToDatabase() {
+            String username = "user";
+            String fullname = "Fullname";
+            String password = "password";
+            String fakeRefreshToken = "fake-refresh-token";
+            Instant expiresAt = Instant.now().plus(Duration.ofDays(7));
 
-        UserEntity userEntity = new UserEntity(username, fullname, password);
-        UserEntity savedUser = userJpaRepository.save(userEntity);
+            UserEntity userEntity = new UserEntity(username, fullname, password);
+            UserEntity savedUser = userJpaRepository.save(userEntity);
 
-        UserDetail userDetail = new UserDetail(
-                savedUser.getId(),
-                savedUser.getUsername(),
-                savedUser.getFullname(),
-                savedUser.getPassword()
-        );
-        authenticationRepositoryImpl.addToken(userDetail, fakeRefreshToken, expiresAt);
+            UserDetail userDetail = new UserDetail(
+                    savedUser.getId(),
+                    savedUser.getUsername(),
+                    savedUser.getFullname(),
+                    savedUser.getPassword()
+            );
+            authenticationRepositoryImpl.addToken(userDetail, fakeRefreshToken, expiresAt);
 
-        RefreshTokenEntity refreshTokenEntity = authenticationJpaRepository.findByToken(fakeRefreshToken).orElseThrow();
+            RefreshTokenEntity refreshTokenEntity = authenticationJpaRepository.findByToken(fakeRefreshToken).orElseThrow();
 
-        Assertions.assertEquals(savedUser.getId(), refreshTokenEntity.getUser().getId());
-        Assertions.assertEquals(savedUser.getUsername(), refreshTokenEntity.getUser().getUsername());
-        Assertions.assertEquals(savedUser.getFullname(), refreshTokenEntity.getUser().getFullname());
-        Assertions.assertEquals(expiresAt, refreshTokenEntity.getExpiresAt());
-        Assertions.assertEquals(fakeRefreshToken, refreshTokenEntity.getToken());
+            Assertions.assertEquals(savedUser.getId(), refreshTokenEntity.getUser().getId());
+            Assertions.assertEquals(savedUser.getUsername(), refreshTokenEntity.getUser().getUsername());
+            Assertions.assertEquals(savedUser.getFullname(), refreshTokenEntity.getUser().getFullname());
+            Assertions.assertEquals(expiresAt, refreshTokenEntity.getExpiresAt());
+            Assertions.assertEquals(fakeRefreshToken, refreshTokenEntity.getToken());
+        }
     }
 
-    @Test
-    @DisplayName("should delete expired tokens from database")
-    public void testDeleteExpiredTokensFromDatabase() {
-        Instant now = Instant.now();
+    @Nested
+    @DisplayName("deleteExpiredTokens function")
+    public class DeleteExpiredTokensFunction {
+        @Test
+        @DisplayName("should delete expired tokens from database")
+        public void testDeleteExpiredTokensFromDatabase() {
+            Instant now = Instant.now();
 
-        UserEntity user = userJpaRepository.save(new UserEntity(
-                "user",
-                "Fullname",
-                "password"
-        ));
+            UserEntity user = userJpaRepository.save(new UserEntity(
+                    "user",
+                    "Fullname",
+                    "password"
+            ));
 
-        authenticationJpaRepository.save(new RefreshTokenEntity(
-            user,
-            "expired-token",
-            now.minus(Duration.ofDays(1))
-        ));
+            authenticationJpaRepository.save(new RefreshTokenEntity(
+                    user,
+                    "expired-token",
+                    now.minus(Duration.ofDays(1))
+            ));
 
-        authenticationJpaRepository.save(new RefreshTokenEntity(
-                user,
-                "valid-token",
-                now.plus(Duration.ofDays(1))
-        ));
+            authenticationJpaRepository.save(new RefreshTokenEntity(
+                    user,
+                    "valid-token",
+                    now.plus(Duration.ofDays(1))
+            ));
 
-        authenticationRepositoryImpl.deleteExpiredTokens(now);
+            authenticationRepositoryImpl.deleteExpiredTokens(now);
 
-        Assertions.assertTrue(authenticationJpaRepository.findByToken("expired-token").isEmpty());
-        Assertions.assertTrue(authenticationJpaRepository.findByToken("valid-token").isPresent());
+            Assertions.assertTrue(authenticationJpaRepository.findByToken("expired-token").isEmpty());
+            Assertions.assertTrue(authenticationJpaRepository.findByToken("valid-token").isPresent());
+        }
     }
 }

@@ -1,9 +1,11 @@
 package forum.api.java.infrastructure.config;
 
+import forum.api.java.applications.usecase.AddThreadUseCase;
 import forum.api.java.applications.usecase.CleanupExpiredTokenUseCase;
 import forum.api.java.applications.usecase.LoginUserUseCase;
 import forum.api.java.applications.usecase.RegisterUserUseCase;
 import forum.api.java.infrastructure.repository.AuthenticationRepositoryImpl;
+import forum.api.java.infrastructure.repository.ThreadRepositoryImpl;
 import forum.api.java.infrastructure.repository.UserRepositoryImpl;
 import forum.api.java.infrastructure.security.AuthenticationTokenManagerImpl;
 import forum.api.java.infrastructure.security.PasswordHashImpl;
@@ -41,5 +43,13 @@ public class UseCaseConfig {
     @Bean
     public CleanupExpiredTokenUseCase cleanupExpiredTokenUseCase(AuthenticationRepositoryImpl authenticationRepositoryImpl) {
         return new CleanupExpiredTokenUseCase(authenticationRepositoryImpl);
+    }
+
+    @Bean
+    public AddThreadUseCase addThreadUseCase(
+            UserRepositoryImpl userRepositoryImpl,
+            ThreadRepositoryImpl threadRepositoryImpl
+    ) {
+        return new AddThreadUseCase(userRepositoryImpl, threadRepositoryImpl);
     }
 }

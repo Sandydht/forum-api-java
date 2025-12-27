@@ -4,7 +4,7 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 public class RegisterUser {
-    private final UUID id;
+    private final String id;
     private final String username;
     private final String fullname;
     private String password;
@@ -14,7 +14,7 @@ public class RegisterUser {
     public RegisterUser(String username, String fullname, String password) {
         verifyPayload(username, fullname, password);
 
-        this.id = UUID.randomUUID();
+        this.id = UUID.randomUUID().toString();
         this.username = username;
         this.fullname = fullname;
         this.password = password;
@@ -40,9 +40,7 @@ public class RegisterUser {
         }
     }
 
-    public UUID getId() {
-        return id;
-    }
+    public String getId() { return id; }
 
     public String getUsername() {
         return username;

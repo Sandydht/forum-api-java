@@ -43,48 +43,52 @@ public class JwtAuthenticationFilterTest {
         SecurityContextHolder.clearContext();
     }
 
-    @Test
-    @DisplayName("should set authentication when token is valid")
-    public void testSetAuthenticationWhenTokenIsValid() throws ServletException, IOException {
-        String token = "valid-token";
-        String userId = "user-123";
+    @Nested
+    @DisplayName("doFilterInternal function")
+    public class DoFilterInternal {
+        @Test
+        @DisplayName("should set authentication when token is valid")
+        public void testSetAuthenticationWhenTokenIsValid() throws ServletException, IOException {
+            String token = "valid-token";
+            String userId = "user-123";
 
-        Mockito.when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
-        Mockito.when(authenticationTokenManager.decodeJWTPayload(token)).thenReturn(userId);
+            Mockito.when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
+            Mockito.when(authenticationTokenManager.decodeJWTPayload(token)).thenReturn(userId);
 
-        jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
+            jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
 
-        Assertions.assertNotNull(SecurityContextHolder.getContext().getAuthentication());
-        Assertions.assertEquals(userId, SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+            Assertions.assertNotNull(SecurityContextHolder.getContext().getAuthentication());
+            Assertions.assertEquals(userId, SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 
-        Mockito.verify(filterChain).doFilter(request, response);
-    }
+            Mockito.verify(filterChain).doFilter(request, response);
+        }
 
-    @Test
-    @DisplayName("should not set authentication when header is missing")
-    public void shouldNotSetAuthenticationWhenHeaderIsMissing() throws ServletException, IOException {
-        Mockito.when(request.getHeader("Authorization")).thenReturn(null);
+        @Test
+        @DisplayName("should not set authentication when header is missing")
+        public void shouldNotSetAuthenticationWhenHeaderIsMissing() throws ServletException, IOException {
+            Mockito.when(request.getHeader("Authorization")).thenReturn(null);
 
-        jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
+            jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
 
-        Assertions.assertNull(SecurityContextHolder.getContext().getAuthentication());
+            Assertions.assertNull(SecurityContextHolder.getContext().getAuthentication());
 
-        Mockito.verify(filterChain).doFilter(request, response);
-        Mockito.verifyNoInteractions(authenticationTokenManager);
-    }
+            Mockito.verify(filterChain).doFilter(request, response);
+            Mockito.verifyNoInteractions(authenticationTokenManager);
+        }
 
-    @Test
-    @DisplayName("should clear context when token is invalid or exception occurs")
-    public void shouldClearContectWhenTokenIsInvalid() throws ServletException, IOException {
-        String token = "invalid-token";
+        @Test
+        @DisplayName("should clear context when token is invalid or exception occurs")
+        public void shouldClearContectWhenTokenIsInvalid() throws ServletException, IOException {
+            String token = "invalid-token";
 
-        Mockito.when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
-        Mockito.when(authenticationTokenManager.decodeJWTPayload(token)).thenThrow(new RuntimeException("Invalid token"));
+            Mockito.when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
+            Mockito.when(authenticationTokenManager.decodeJWTPayload(token)).thenThrow(new RuntimeException("Invalid token"));
 
-        jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
+            jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
 
-        Assertions.assertNull(SecurityContextHolder.getContext().getAuthentication());
+            Assertions.assertNull(SecurityContextHolder.getContext().getAuthentication());
 
-        Mockito.verify(filterChain).doFilter(request, response);
+            Mockito.verify(filterChain).doFilter(request, response);
+        }
     }
 }

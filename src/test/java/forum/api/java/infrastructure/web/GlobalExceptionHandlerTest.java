@@ -7,6 +7,7 @@ import forum.api.java.commons.exceptions.ClientException;
 import forum.api.java.interfaces.http.api.users.UsersController;
 import forum.api.java.interfaces.http.api.users.dto.UserRegisterRequest;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,25 +40,29 @@ public class GlobalExceptionHandlerTest {
     @MockBean
     private RegisterUserUseCase registerUserUseCase;
 
-    @Test
-    @DisplayName("should return 400 when client error is thrown")
-    public void shouldReturn400WhenClientErrorIsThrown() throws Exception {
-        String username = "username";
-        String fullname = "Fullname";
-        String password = "password";
+    @Nested
+    @DisplayName("handleClientException function")
+    public class HandleClientException {
+        @Test
+        @DisplayName("should return 400 when client error is thrown")
+        public void shouldReturn400WhenClientErrorIsThrown() throws Exception {
+            String username = "username";
+            String fullname = "Fullname";
+            String password = "password";
 
-        UserRegisterRequest request = new UserRegisterRequest(username, fullname, password);
+            UserRegisterRequest request = new UserRegisterRequest(username, fullname, password);
 
-        Mockito.when(registerUserUseCase.execute(Mockito.any())).thenThrow(new ClientException("USER_ALREADY_EXIST"));
+            Mockito.when(registerUserUseCase.execute(Mockito.any())).thenThrow(new ClientException("USER_ALREADY_EXIST"));
 
-        mockMvc.perform(post("/api/users/register-account")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.status").value(400))
-                .andExpect(jsonPath("$.message").value("CLIENT_EXCEPTION.USER_ALREADY_EXIST"));
+            mockMvc.perform(post("/api/users/register-account")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.status").value(400))
+                    .andExpect(jsonPath("$.message").value("CLIENT_EXCEPTION.USER_ALREADY_EXIST"));
 
-        Mockito.verify(registerUserUseCase, Mockito.times(1)).execute(Mockito.any());
+            Mockito.verify(registerUserUseCase, Mockito.times(1)).execute(Mockito.any());
+        }
     }
 }
