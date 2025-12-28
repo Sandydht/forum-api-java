@@ -12,4 +12,8 @@ public interface AuthenticationRepository {
     default void deleteExpiredTokens(Instant now) {
         throw new UnsupportedOperationException("AUTHENTICATION_REPOSITORY.METHOD_NOT_IMPLEMENTED");
     }
+
+    default void checkAvailabilityToken(String token) {
+        throw new UnsupportedOperationException("AUTHENTICATION_REPOSITORY.METHOD_NOT_IMPLEMENTED");
+    }
 }

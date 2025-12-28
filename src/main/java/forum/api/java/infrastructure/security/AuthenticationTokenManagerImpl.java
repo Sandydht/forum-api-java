@@ -1,9 +1,12 @@
 package forum.api.java.infrastructure.security;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import forum.api.java.applications.security.AuthenticationTokenManager;
+import forum.api.java.commons.exceptions.ClientException;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -40,5 +43,15 @@ public class AuthenticationTokenManagerImpl implements AuthenticationTokenManage
     public String decodeJWTPayload(String token) {
         DecodedJWT decodedToken = JWT.decode(token);
         return decodedToken.getSubject();
+    }
+
+    @Override
+    public void verifyToken(String token) {
+        try {
+            JWTVerifier verifier = JWT.require(algorithm).build();
+            verifier.verify(token);
+        } catch (JWTVerificationException exception) {
+            throw new ClientException("VERIFICATION_FAILED");
+        }
     }
 }

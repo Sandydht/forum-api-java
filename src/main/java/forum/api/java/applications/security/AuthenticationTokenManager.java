@@ -12,4 +12,8 @@ public interface AuthenticationTokenManager {
     default String decodeJWTPayload(String token) {
         throw new UnsupportedOperationException("AUTHENTICATION_TOKEN_MANAGER.METHOD_NOT_IMPLEMENTED");
     }
+
+    default void verifyToken(String token) {
+        throw new UnsupportedOperationException("AUTHENTICATION_TOKEN_MANAGER.METHOD_NOT_IMPLEMENTED");
+    }
 }

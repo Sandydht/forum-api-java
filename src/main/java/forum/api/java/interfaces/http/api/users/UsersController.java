@@ -19,7 +19,7 @@ public class UsersController {
         this.registerUserUseCase = registerUserUseCase;
     }
 
-    @PostMapping("/register-account")
+    @PostMapping("register-account")
     public UserRegisterResponse userRegistrationAccount(@RequestBody UserRegisterRequest userRegisterRequest) {
         RegisterUser registerUser = new RegisterUser(userRegisterRequest.getUsername(), userRegisterRequest.getFullname(), userRegisterRequest.getPassword());
         RegisteredUser registeredUser = registerUserUseCase.execute(registerUser);

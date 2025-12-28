@@ -1,9 +1,8 @@
 package forum.api.java.infrastructure.config;
 
-import forum.api.java.applications.usecase.AddThreadUseCase;
-import forum.api.java.applications.usecase.CleanupExpiredTokenUseCase;
-import forum.api.java.applications.usecase.LoginUserUseCase;
-import forum.api.java.applications.usecase.RegisterUserUseCase;
+import forum.api.java.applications.security.AuthenticationTokenManager;
+import forum.api.java.applications.usecase.*;
+import forum.api.java.domain.authentication.AuthenticationRepository;
 import forum.api.java.infrastructure.repository.AuthenticationRepositoryImpl;
 import forum.api.java.infrastructure.repository.ThreadRepositoryImpl;
 import forum.api.java.infrastructure.repository.UserRepositoryImpl;
@@ -51,5 +50,13 @@ public class UseCaseConfig {
             ThreadRepositoryImpl threadRepositoryImpl
     ) {
         return new AddThreadUseCase(userRepositoryImpl, threadRepositoryImpl);
+    }
+
+    @Bean
+    public RefreshAuthenticationUseCase refreshAuthenticationUseCase(
+            AuthenticationRepository authenticationRepository,
+            AuthenticationTokenManager authenticationTokenManager
+    ) {
+        return new RefreshAuthenticationUseCase(authenticationRepository, authenticationTokenManager);
     }
 }

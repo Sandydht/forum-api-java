@@ -4,18 +4,27 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 @DisplayName("a NewAuth entity")
 public class NewAuthTest {
+    private static Stream<Arguments> provideInvalidMissingData() {
+        return Stream.of(
+                Arguments.of(null, "refresh-token"),
+                Arguments.of("access-token", null),
+                Arguments.of("", "refresh-token"),
+                Arguments.of("access-token", ""),
+                Arguments.of("  ", "refresh-token"),
+                Arguments.of("access-token", "  ")
+        );
+    }
+
     @ParameterizedTest
+    @MethodSource("provideInvalidMissingData")
     @DisplayName("should throw error when payload did not contain needed property")
-    @CsvSource({
-            ", refreshToken",
-            "'', refreshToken",
-            "accessToken, ",
-            "accessToken, ''"
-    })
     public void testNotContainNeededProperty(String accessToken, String refreshToken) {
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
             new NewAuth(accessToken, refreshToken);

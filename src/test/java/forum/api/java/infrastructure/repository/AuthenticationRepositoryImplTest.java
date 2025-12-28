@@ -1,5 +1,6 @@
 package forum.api.java.infrastructure.repository;
 
+import forum.api.java.commons.exceptions.NotFoundException;
 import forum.api.java.domain.user.entity.UserDetail;
 import forum.api.java.infrastructure.persistence.authentications.AuthenticationJpaRepository;
 import forum.api.java.infrastructure.persistence.authentications.entity.RefreshTokenEntity;
@@ -96,6 +97,37 @@ public class AuthenticationRepositoryImplTest {
 
             Assertions.assertTrue(authenticationJpaRepository.findByToken("expired-token").isEmpty());
             Assertions.assertTrue(authenticationJpaRepository.findByToken("valid-token").isPresent());
+        }
+    }
+
+    @Nested
+    @DisplayName("checkAvailabilityToken function")
+    public class CheckAvailabilityTokenFunction {
+        @Test
+        @DisplayName("should throw NotFoundException when token is not found in database")
+        public void testShouldThrowNotFoundExceptionWhenTokenNotFound() {
+            String token = "non-existent-token";
+
+            NotFoundException exception = Assertions.assertThrows(
+                    NotFoundException.class,
+                    () -> authenticationRepositoryImpl.checkAvailabilityToken(token)
+            );
+
+            Assertions.assertEquals("NOT_FOUND_EXCEPTION.TOKEN_NOT_FOUND", exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("should not throw NotFoundException when token is found")
+        public void testShouldNotThrowNotFoundExceptionWhenTokenIsFound() {
+            String username = "username";
+            String fullname = "Fullname";
+            String password = "password";
+            String validToken = "valid-token";
+
+            UserEntity user = userJpaRepository.save(new UserEntity(username, fullname, password));
+            authenticationJpaRepository.save(new RefreshTokenEntity(user, validToken, Instant.now().plusSeconds(100)));
+
+            Assertions.assertDoesNotThrow(() -> authenticationRepositoryImpl.checkAvailabilityToken(validToken));
         }
     }
 }

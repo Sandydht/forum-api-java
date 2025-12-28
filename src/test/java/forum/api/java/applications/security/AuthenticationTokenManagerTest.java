@@ -28,5 +28,11 @@ public class AuthenticationTokenManagerTest {
                 () -> authenticationTokenManager.decodeJWTPayload(null)
         );
         Assertions.assertEquals("AUTHENTICATION_TOKEN_MANAGER.METHOD_NOT_IMPLEMENTED", decodeJWTPayloadError.getMessage());
+
+        UnsupportedOperationException verifyTokenError = Assertions.assertThrows(
+                UnsupportedOperationException.class,
+                () -> authenticationTokenManager.verifyToken(null)
+        );
+        Assertions.assertEquals("AUTHENTICATION_TOKEN_MANAGER.METHOD_NOT_IMPLEMENTED", verifyTokenError.getMessage());
     }
 }

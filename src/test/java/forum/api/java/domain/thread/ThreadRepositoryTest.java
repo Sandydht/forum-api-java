@@ -15,7 +15,12 @@ public class ThreadRepositoryTest {
                 UnsupportedOperationException.class,
                 () -> threadRepository.addThread(null,null)
         );
-
         Assertions.assertEquals("THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED", addThreadError.getMessage());
+
+        UnsupportedOperationException getThreadByTitleError = Assertions.assertThrows(
+                UnsupportedOperationException.class,
+                () -> threadRepository.getThreadByTitle(null)
+        );
+        Assertions.assertEquals("THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED", getThreadByTitleError.getMessage());
     }
 }

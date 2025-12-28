@@ -36,4 +36,11 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
     public void deleteExpiredTokens(Instant now) {
         authenticationJpaRepository.deleteExpiredTokens(now);
     }
+
+    @Override
+    public void checkAvailabilityToken(String token) {
+        if (authenticationJpaRepository.findByToken(token).isEmpty()) {
+            throw new NotFoundException("TOKEN_NOT_FOUND");
+        }
+    }
 }

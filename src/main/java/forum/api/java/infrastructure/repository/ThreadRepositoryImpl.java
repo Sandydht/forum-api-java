@@ -32,4 +32,13 @@ public class ThreadRepositoryImpl implements ThreadRepository {
 
         return new AddedThread(savedThread.getId(), savedThread.getTitle(), savedThread.getBody());
     }
+
+    @Override
+    public AddedThread getThreadByTitle(String title) {
+        ThreadEntity thread = threadJpaRepository
+                .findByTitle(title)
+                .orElseThrow(() -> new NotFoundException("THREAD_NOT_FOUND"));
+
+        return new AddedThread(thread.getId(), thread.getTitle(), thread.getBody());
+    }
 }

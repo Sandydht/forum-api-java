@@ -1,9 +1,11 @@
 package forum.api.java.infrastructure.repository;
 
+import forum.api.java.commons.exceptions.NotFoundException;
 import forum.api.java.domain.thread.entity.AddThread;
 import forum.api.java.domain.thread.entity.AddedThread;
 import forum.api.java.domain.user.entity.UserDetail;
 import forum.api.java.infrastructure.persistence.threads.ThreadJpaRepository;
+import forum.api.java.infrastructure.persistence.threads.entity.ThreadEntity;
 import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
 import forum.api.java.infrastructure.persistence.users.entity.UserEntity;
 import org.junit.jupiter.api.Assertions;
@@ -60,6 +62,41 @@ public class ThreadRepositoryImplTest {
             Assertions.assertNotNull(addedThread.getId());
             Assertions.assertEquals(title, addedThread.getTitle());
             Assertions.assertEquals(body, addedThread.getBody());
+        }
+    }
+
+    @Nested
+    @DisplayName("getThreadByTitle function")
+    public class GetThreadByTitleFunction {
+        @Test
+        @DisplayName("should throw NotFoundException when thread not found")
+        public void testThrowNotFoundExceptionWhenThreadNotFound() {
+            String title = "title";
+
+            NotFoundException exception = Assertions.assertThrows(
+                    NotFoundException.class,
+                    () -> threadRepositoryImpl.getThreadByTitle(title)
+            );
+            Assertions.assertEquals("NOT_FOUND_EXCEPTION.THREAD_NOT_FOUND", exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("should not throw NotFoundException when thread is found")
+        public void testShouldNotThrowNotFoundExceptionWhenThreadIsFound() {
+            String username = "user";
+            String fullname = "Fullname";
+            String password = "password";
+
+            UserEntity userEntity = new UserEntity(username, fullname, password);
+            UserEntity savedUser = userJpaRepository.save(userEntity);
+
+            ThreadEntity threadEntity = new ThreadEntity(savedUser, "Title", "Body");
+            ThreadEntity savedThread = threadJpaRepository.save(threadEntity);
+
+            Assertions.assertNotNull(savedThread.getId());
+            Assertions.assertEquals(savedUser.getId(), savedThread.getUser().getId());
+            Assertions.assertEquals("Title", savedThread.getTitle());
+            Assertions.assertEquals("Body", savedThread.getBody());
         }
     }
 }

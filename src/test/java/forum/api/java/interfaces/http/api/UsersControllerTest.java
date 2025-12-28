@@ -37,12 +37,16 @@ public class UsersControllerTest {
     private UserJpaRepository userJpaRepository;
 
     @Nested
-    @DisplayName("register account function")
+    @DisplayName("POST /api/users/register-account")
     public class RegisterAccountFunction {
         @Test
         @DisplayName("should register account successfully")
         public void testShouldRegisterAccountSuccessfully() throws Exception {
-            UserRegisterRequest request = new UserRegisterRequest("user", "Fullname", "password");
+            String username = "user";
+            String fullname = "Fullname";
+            String password = "password";
+
+            UserRegisterRequest request = new UserRegisterRequest(username, fullname, password);
 
             mockMvc.perform(post("/api/users/register-account")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -52,7 +56,12 @@ public class UsersControllerTest {
                     .andExpect(jsonPath("$.username").value(request.getUsername()))
                     .andExpect(jsonPath("$.fullname").value(request.getFullname()));
 
-            Assertions.assertTrue(userJpaRepository.findByUsername(request.getUsername()).isPresent());
+            UserEntity user = userJpaRepository.findByUsername(request.getUsername()).orElseThrow();
+
+            Assertions.assertNotNull(user.getId());
+            Assertions.assertEquals(username, user.getUsername());
+            Assertions.assertEquals(fullname, user.getFullname());
+            Assertions.assertNotNull(user.getPassword());
         }
 
         @Test

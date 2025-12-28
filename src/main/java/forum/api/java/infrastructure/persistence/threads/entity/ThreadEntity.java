@@ -14,10 +14,10 @@ public class ThreadEntity {
     @JoinColumn(name = "user_id", nullable = false) // foreign key ke user
     private UserEntity user;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String body;
 
     protected ThreadEntity() {}
