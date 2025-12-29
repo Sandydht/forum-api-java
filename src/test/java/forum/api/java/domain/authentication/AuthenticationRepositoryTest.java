@@ -42,5 +42,11 @@ public class AuthenticationRepositoryTest {
                 () -> authenticationRepository.checkAvailabilityToken(null)
         );
         Assertions.assertEquals("AUTHENTICATION_REPOSITORY.METHOD_NOT_IMPLEMENTED", checkAvailabilityTokenError.getMessage());
+
+        UnsupportedOperationException deleteTokenError = Assertions.assertThrows(
+                UnsupportedOperationException.class,
+                () -> authenticationRepository.deleteToken(null)
+        );
+        Assertions.assertEquals("AUTHENTICATION_REPOSITORY.METHOD_NOT_IMPLEMENTED", deleteTokenError.getMessage());
     }
 }

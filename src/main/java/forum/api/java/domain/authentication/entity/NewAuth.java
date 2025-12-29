@@ -11,7 +11,7 @@ public class NewAuth {
         this.refreshToken = refreshToken;
     }
 
-    private void verifyPayload(String accessToken, String refreshToken) {
+    private static void verifyPayload(String accessToken, String refreshToken) {
         requireNotBlank(accessToken);
         requireNotBlank(refreshToken);
     }

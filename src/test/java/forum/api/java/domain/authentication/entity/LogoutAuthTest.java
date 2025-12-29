@@ -9,8 +9,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
-@DisplayName("a RefreshAuth entity")
-public class RefreshAuthTest {
+@DisplayName("a LogoutAuth entity")
+public class LogoutAuthTest {
     private static Stream<Arguments> provideInvalidMissingData() {
         return Stream.of(
                 Arguments.of((Object) null),
@@ -22,19 +22,18 @@ public class RefreshAuthTest {
     @MethodSource("provideInvalidMissingData")
     @DisplayName("should throw error when payload did not contain needed property")
     public void testNotContainNeededProperty(String refreshToken) {
-        System.out.println(refreshToken);
         IllegalArgumentException exception = Assertions.assertThrows(
                 IllegalArgumentException.class,
-                () -> new RefreshAuth(refreshToken)
+                () -> new LogoutAuth(refreshToken)
         );
 
-        Assertions.assertEquals("REFRESH_AUTH.NOT_CONTAIN_NEEDED_PROPERTY", exception.getMessage());
+        Assertions.assertEquals("LOGOUT_AUTH.NOT_CONTAIN_NEEDED_PROPERTY", exception.getMessage());
     }
 
     @Test
-    @DisplayName("should create RefreshAuth object corretly")
+    @DisplayName("should create LogoutAuth object correctly")
     public void testObjectCorrectly() {
-        RefreshAuth refreshAuth = new RefreshAuth("refresh-token");
-        Assertions.assertEquals("refresh-token", refreshAuth.getRefreshToken());
+        LogoutAuth logoutAuth = new LogoutAuth("refresh-token");
+        Assertions.assertEquals("refresh-token", logoutAuth.getRefreshToken());
     }
 }

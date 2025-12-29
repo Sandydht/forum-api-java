@@ -1,21 +1,21 @@
 package forum.api.java.domain.authentication.entity;
 
-public class RefreshAuth {
+public class LogoutAuth {
     private final String refreshToken;
 
-    public RefreshAuth(String refreshToken) {
+    public LogoutAuth(String refreshToken) {
         verifyPayload(refreshToken);
 
         this.refreshToken = refreshToken;
     }
 
     private static void verifyPayload(String refreshToken) {
-        requireNotBlank(refreshToken);
+        requiredNotBlank(refreshToken);
     }
 
-    private static void requireNotBlank(String value) {
+    private static void requiredNotBlank(String value) {
         if (value == null || value.isBlank()) {
-            throw new IllegalArgumentException("REFRESH_AUTH.NOT_CONTAIN_NEEDED_PROPERTY");
+            throw new IllegalArgumentException("LOGOUT_AUTH.NOT_CONTAIN_NEEDED_PROPERTY");
         }
     }
 

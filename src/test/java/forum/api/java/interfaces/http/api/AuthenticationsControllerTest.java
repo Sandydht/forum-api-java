@@ -9,6 +9,7 @@ import forum.api.java.infrastructure.persistence.users.entity.UserEntity;
 import forum.api.java.infrastructure.security.PasswordHashImpl;
 import forum.api.java.interfaces.http.api.authentications.dto.RefreshAuthenticationRequest;
 import forum.api.java.interfaces.http.api.authentications.dto.UserLoginRequest;
+import forum.api.java.interfaces.http.api.authentications.dto.UserLogoutRequest;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -133,13 +134,49 @@ public class AuthenticationsControllerTest {
         }
 
         @Test
-        @DisplayName("shoudl return 400 or 404 when refresh token is invalid")
-        public void testShouldThrow400Or404WhenRefreshTokenIsInvalid() throws Exception {
+        @DisplayName("shoudl return ClientException when refresh token is invalid")
+        public void testShouldThrowClientExceptionWhenRefreshTokenIsInvalid() throws Exception {
             RefreshAuthenticationRequest invalidRequest = new RefreshAuthenticationRequest("invalid-token-123");
             mockMvc.perform(post(urlTemplate)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(invalidRequest)))
                     .andExpect(status().isBadRequest());
+        }
+    }
+
+    @Nested
+    @DisplayName("POST /api/authentications/logout-account")
+    public class UserLogoutAccount {
+        private final String urlTemplate = "/api/authentications/logout-account";
+
+        @Test
+        @DisplayName("should success logout account successfully")
+        public void testShouldLogouAccountSuccessfully() throws Exception {
+            UserLoginRequest userLoginRequest = new UserLoginRequest(username, password);
+            String loginResponseString = mockMvc.perform(post("/api/authentications/login-account")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(userLoginRequest)).with(csrf()))
+                    .andExpect(status().isOk())
+                    .andReturn().getResponse().getContentAsString();
+
+            String refreshToken = JsonPath.read(loginResponseString, "$.refreshToken");
+
+            UserLogoutRequest userLogoutRequest = new UserLogoutRequest(refreshToken);
+            mockMvc.perform(post(urlTemplate)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(userLogoutRequest)))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.message").exists());
+        }
+
+        @Test
+        @DisplayName("should return NotFoundException when refresh token is not found")
+        public void testShouldThrowNotFoundExceptionWhenRefreshTokenIsNotFound() throws Exception {
+            UserLogoutRequest invalidRequest = new UserLogoutRequest("invalid-token-123");
+            mockMvc.perform(post(urlTemplate)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(invalidRequest)))
+                    .andExpect(status().isNotFound());
         }
     }
 }

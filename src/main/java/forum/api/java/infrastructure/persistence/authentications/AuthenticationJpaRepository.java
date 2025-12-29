@@ -20,4 +20,6 @@ public interface AuthenticationJpaRepository extends JpaRepository<RefreshTokenE
         WHERE t.expiresAt < :now
     """)
     int deleteExpiredTokens(@Param("now") Instant now);
+
+    Optional<RefreshTokenEntity> deleteByToken(String token);
 }

@@ -43,4 +43,13 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
             throw new NotFoundException("TOKEN_NOT_FOUND");
         }
     }
+
+    @Override
+    public void deleteToken(String token) {
+        if (authenticationJpaRepository.findByToken(token).isEmpty()) {
+            throw new NotFoundException("TOKEN_NOT_FOUND");
+        }
+
+        authenticationJpaRepository.deleteByToken(token);
+    }
 }

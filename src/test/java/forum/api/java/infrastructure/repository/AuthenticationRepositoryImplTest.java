@@ -130,4 +130,39 @@ public class AuthenticationRepositoryImplTest {
             Assertions.assertDoesNotThrow(() -> authenticationRepositoryImpl.checkAvailabilityToken(validToken));
         }
     }
+
+    @Nested
+    @DisplayName("deleteToken function")
+    public class DeleteTokenFunction {
+        @Test
+        @DisplayName("should throw NotFoundException when token is not found in database")
+        public void testShouldThrowNotFoundExceptionWhenTokenNotFound() {
+            String token = "non-existent-token";
+
+            NotFoundException exception = Assertions.assertThrows(
+                    NotFoundException.class,
+                    () -> authenticationRepositoryImpl.deleteToken(token)
+            );
+
+            Assertions.assertEquals("NOT_FOUND_EXCEPTION.TOKEN_NOT_FOUND", exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("should delete token from database")
+        public void testShouldDeleteTokenFromDatabase() {
+            String username = "user";
+            String fullname = "Fullname";
+            String password = "password";
+            String refreshToken = "refresh-token";
+
+            UserEntity userEntity = new UserEntity(username, fullname, password);
+            UserEntity savedUser = userJpaRepository.save(userEntity);
+
+            RefreshTokenEntity refreshTokenEntity = new RefreshTokenEntity(savedUser, refreshToken, Instant.now().plusSeconds(100));
+            authenticationJpaRepository.save(refreshTokenEntity);
+            authenticationRepositoryImpl.deleteToken(refreshToken);
+
+            Assertions.assertTrue(authenticationJpaRepository.findByToken(refreshToken).isEmpty());
+        }
+    }
 }

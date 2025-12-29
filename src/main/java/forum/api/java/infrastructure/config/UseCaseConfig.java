@@ -59,4 +59,9 @@ public class UseCaseConfig {
     ) {
         return new RefreshAuthenticationUseCase(authenticationRepository, authenticationTokenManager);
     }
+
+    @Bean
+    public LogoutUserUseCase logoutUserUseCase(AuthenticationRepository authenticationRepository) {
+        return new LogoutUserUseCase(authenticationRepository);
+    }
 }
