@@ -20,7 +20,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
         ErrorResponse error = new ErrorResponse(
                 HttpServletResponse.SC_UNAUTHORIZED,
-                "AUTHENTICATION_EXCEPTION.MISSING_OR_INVALID_AUTHENTICATION_TOKEN"
+                "JWT_AUTHENTICATION_ENTRY_POINT.MISSING_OR_INVALID_AUTHENTICATION_TOKEN"
         );
 
         ObjectMapper mapper = new ObjectMapper();

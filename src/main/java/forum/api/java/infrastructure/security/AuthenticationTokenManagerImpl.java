@@ -7,6 +7,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import forum.api.java.applications.security.AuthenticationTokenManager;
 import forum.api.java.commons.exceptions.ClientException;
+import forum.api.java.commons.exceptions.InvariantException;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -51,7 +52,7 @@ public class AuthenticationTokenManagerImpl implements AuthenticationTokenManage
             JWTVerifier verifier = JWT.require(algorithm).build();
             verifier.verify(token);
         } catch (JWTVerificationException exception) {
-            throw new ClientException("VERIFICATION_FAILED");
+            throw new InvariantException("VERIFICATION_FAILED");
         }
     }
 }

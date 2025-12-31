@@ -1,6 +1,7 @@
 package forum.api.java.infrastructure.repository;
 
 import forum.api.java.commons.exceptions.ClientException;
+import forum.api.java.commons.exceptions.InvariantException;
 import forum.api.java.commons.exceptions.NotFoundException;
 import forum.api.java.domain.user.UserRepository;
 import forum.api.java.domain.user.entity.RegisterUser;
@@ -35,7 +36,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public void verifyAvailableUsername(String username) {
         if (userJpaRepository.findByUsername(username).isPresent()) {
-            throw new ClientException("USER_ALREADY_EXIST");
+            throw new InvariantException("USER_ALREADY_EXIST");
         }
     }
 

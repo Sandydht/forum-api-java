@@ -1,68 +1,94 @@
 package forum.api.java.infrastructure.web;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import forum.api.java.applications.security.AuthenticationTokenManager;
-import forum.api.java.applications.usecase.RegisterUserUseCase;
 import forum.api.java.commons.exceptions.ClientException;
-import forum.api.java.interfaces.http.api.users.UsersController;
-import forum.api.java.interfaces.http.api.users.dto.UserRegisterRequest;
+import forum.api.java.commons.exceptions.DomainErrorTranslator;
+import forum.api.java.commons.exceptions.InvariantException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
-import org.springframework.http.MediaType;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.mockito.ArgumentMatchers.any;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = UsersController.class)
-@Import(GlobalExceptionHandler.class)
-@AutoConfigureMockMvc(addFilters = false)
 @DisplayName("GlobalExceptionHandler")
+@ExtendWith(MockitoExtension.class)
 public class GlobalExceptionHandlerTest {
-    @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @Mock(lenient = true)
+    private DomainErrorTranslator translator;
 
-    @MockBean
-    private AuthenticationTokenManager authenticationTokenManager;
+    @InjectMocks
+    private GlobalExceptionHandler globalExceptionHandler;
 
-    @MockBean
-    private RegisterUserUseCase registerUserUseCase;
+    @BeforeEach
+    void setUp() {
+        mockMvc = MockMvcBuilders.standaloneSetup(new FakeController())
+                .setControllerAdvice(globalExceptionHandler)
+                .build();
+    }
 
-    @Nested
-    @DisplayName("handleClientException function")
-    public class HandleClientException {
-        @Test
-        @DisplayName("should return 400 when client error is thrown")
-        public void shouldReturn400WhenClientErrorIsThrown() throws Exception {
-            String username = "username";
-            String fullname = "Fullname";
-            String password = "password";
-
-            UserRegisterRequest request = new UserRegisterRequest(username, fullname, password);
-
-            Mockito.when(registerUserUseCase.execute(Mockito.any())).thenThrow(new ClientException("USER_ALREADY_EXIST"));
-
-            mockMvc.perform(post("/api/users/register-account")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(request)))
-                    .andDo(print())
-                    .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.status").value(400))
-                    .andExpect(jsonPath("$.message").value("CLIENT_EXCEPTION.USER_ALREADY_EXIST"));
-
-            Mockito.verify(registerUserUseCase, Mockito.times(1)).execute(Mockito.any());
+    @RestController
+    static class FakeController {
+        @GetMapping("/test-error")
+        public void throwError() {
+            throw new RuntimeException("Original Error");
         }
+    }
+
+    @Test
+    @DisplayName("should return 400 when error is translated to ClientException")
+    void shouldReturn400WhenTranslatedToClientException() throws Exception {
+        String errorMessage = "some error message";
+
+        Mockito.when(translator.translate(any())).thenReturn(new ClientException(errorMessage, 400));
+
+        mockMvc.perform(get("/test-error"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.message").value(errorMessage));
+
+        Mockito.verify(translator, Mockito.times(1)).translate(any());
+    }
+
+    @Test
+    @DisplayName("should return 400 when error is translated to InvariantException")
+    void shouldReturn400WhenTranslatedToInvariantException() throws Exception {
+        String errorMessage = "some error message";
+
+        Mockito.when(translator.translate(any())).thenReturn(new InvariantException(errorMessage));
+
+        mockMvc.perform(get("/test-error"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.message").value(errorMessage));
+
+        Mockito.verify(translator, Mockito.times(1)).translate(any());
+    }
+
+    @Test
+    @DisplayName("should return 500 when error is not a ClientException")
+    void shouldReturn500WhenGeneralErrorOccurs() throws Exception {
+        String errorMessage = "some error message";
+
+        Mockito.when(translator.translate(any())).thenReturn(new RuntimeException(errorMessage));
+
+        mockMvc.perform(get("/test-error"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.status").value(500))
+                .andExpect(jsonPath("$.message").value(errorMessage));
+
+        Mockito.verify(translator, Mockito.times(1)).translate(any());
     }
 }

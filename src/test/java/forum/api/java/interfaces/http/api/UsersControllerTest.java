@@ -73,7 +73,7 @@ public class UsersControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)).with(csrf()))
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.message").value("CLIENT_EXCEPTION.USER_ALREADY_EXIST"));
+                    .andExpect(jsonPath("$.message").value("USER_ALREADY_EXIST"));
         }
     }
 }

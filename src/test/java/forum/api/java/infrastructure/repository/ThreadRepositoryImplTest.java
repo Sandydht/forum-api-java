@@ -80,7 +80,7 @@ public class ThreadRepositoryImplTest {
                     NotFoundException.class,
                     () -> threadRepositoryImpl.getThreadById(id)
             );
-            Assertions.assertEquals("NOT_FOUND_EXCEPTION.THREAD_NOT_FOUND", exception.getMessage());
+            Assertions.assertEquals("THREAD_NOT_FOUND", exception.getMessage());
         }
 
         @Test

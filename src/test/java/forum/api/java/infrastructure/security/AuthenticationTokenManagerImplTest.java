@@ -76,7 +76,7 @@ public class AuthenticationTokenManagerImplTest {
                     () -> authenticationTokenManagerImpl.verifyToken(invalidToken)
             );
 
-            Assertions.assertEquals("CLIENT_EXCEPTION.VERIFICATION_FAILED", exception.getMessage());
+            Assertions.assertEquals("VERIFICATION_FAILED", exception.getMessage());
         }
 
         @Test

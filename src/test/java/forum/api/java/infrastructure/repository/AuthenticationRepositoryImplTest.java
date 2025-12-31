@@ -113,7 +113,7 @@ public class AuthenticationRepositoryImplTest {
                     () -> authenticationRepositoryImpl.checkAvailabilityToken(token)
             );
 
-            Assertions.assertEquals("NOT_FOUND_EXCEPTION.TOKEN_NOT_FOUND", exception.getMessage());
+            Assertions.assertEquals("TOKEN_NOT_FOUND", exception.getMessage());
         }
 
         @Test
@@ -144,7 +144,7 @@ public class AuthenticationRepositoryImplTest {
                     () -> authenticationRepositoryImpl.deleteToken(token)
             );
 
-            Assertions.assertEquals("NOT_FOUND_EXCEPTION.TOKEN_NOT_FOUND", exception.getMessage());
+            Assertions.assertEquals("TOKEN_NOT_FOUND", exception.getMessage());
         }
 
         @Test

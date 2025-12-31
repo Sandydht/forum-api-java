@@ -1,7 +1,9 @@
 package forum.api.java.commons.exceptions;
 
-public class AuthorizationException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public class AuthorizationException extends ClientException {
     public AuthorizationException(String message) {
-        super("AUTHORIZATION_EXCEPTION." + message);
+        super(message, HttpStatus.FORBIDDEN.value());
     }
 }

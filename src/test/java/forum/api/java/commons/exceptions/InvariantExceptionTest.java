@@ -4,17 +4,17 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("AuthenticationException")
-public class AuthenticationExceptionTest {
+@DisplayName("InvariantException")
+public class InvariantExceptionTest {
     @Test
-    @DisplayName("should create AuthenticationException with correct message and default status 403")
-    public void shouldCreateAuthenticationExceptionCorrectly() {
+    @DisplayName("should create InvariantException with correct message and default status 400")
+    public void shouldCreateInvariantExceptionCorrectly() {
         String errorMessage = "some error message";
 
-        AuthenticationException exception = new AuthenticationException(errorMessage);
+        InvariantException exception = new InvariantException(errorMessage);
 
         Assertions.assertEquals(errorMessage, exception.getMessage());
-        Assertions.assertEquals(401, exception.getStatusCode());
+        Assertions.assertEquals(400, exception.getStatusCode());
         Assertions.assertInstanceOf(ClientException.class, exception);
         Assertions.assertInstanceOf(RuntimeException.class, exception);
     }
@@ -25,7 +25,7 @@ public class AuthenticationExceptionTest {
         String errorMessage = "some error message";
 
         Assertions.assertThrows(ClientException.class, () -> {
-            throw new AuthenticationException(errorMessage);
+            throw new InvariantException(errorMessage);
         });
     }
 }

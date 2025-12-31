@@ -83,7 +83,7 @@ public class AuthenticationsControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)).with(csrf()))
                     .andExpect(status().isUnauthorized())
-                    .andExpect(jsonPath("$.message").value("AUTHENTICATION_EXCEPTION.INCORRECT_CREDENTIALS"));
+                    .andExpect(jsonPath("$.message").value("INCORRECT_CREDENTIALS"));
         }
 
         @Test

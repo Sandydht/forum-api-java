@@ -7,10 +7,25 @@ import org.junit.jupiter.api.Test;
 @DisplayName("AuthorizationException")
 public class AuthorizationExceptionTest {
     @Test
-    @DisplayName("should create AuthorizationException correctly")
-    public void testCreateAuthorizationExceptionCorrectly() {
-        String message = "AUTHORIZATION_ERROR";
-        AuthorizationException authorizationException = new AuthorizationException(message);
-        Assertions.assertEquals("AUTHORIZATION_EXCEPTION." + message, authorizationException.getMessage());
+    @DisplayName("should create AuthorizationException with correct message and default status 403")
+    public void shouldCreateAuthorizationExceptionCorrectly() {
+        String errorMessage = "some error message";
+
+        AuthorizationException exception = new AuthorizationException(errorMessage);
+
+        Assertions.assertEquals(errorMessage, exception.getMessage());
+        Assertions.assertEquals(403, exception.getStatusCode());
+        Assertions.assertInstanceOf(ClientException.class, exception);
+        Assertions.assertInstanceOf(RuntimeException.class, exception);
+    }
+
+    @Test
+    @DisplayName("should be throwable as a ClientException")
+    public void shouldBeThrowableAsClientException() {
+        String errorMessage = "some error message";
+
+        Assertions.assertThrows(ClientException.class, () -> {
+            throw new AuthorizationException(errorMessage);
+        });
     }
 }
