@@ -60,7 +60,7 @@ public class AuthenticationsControllerTest {
     @Nested
     @DisplayName("POST /api/authentications/login-account")
     public class UserLoginAccount {
-        private String urlTemplate = "/api/authentications/login-account";
+        private final String urlTemplate = "/api/authentications/login-account";
 
         @Test
         @DisplayName("should login successfully with valid credentials")

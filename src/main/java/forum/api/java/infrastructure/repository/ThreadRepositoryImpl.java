@@ -4,7 +4,9 @@ import forum.api.java.commons.exceptions.NotFoundException;
 import forum.api.java.domain.thread.ThreadRepository;
 import forum.api.java.domain.thread.entity.AddThread;
 import forum.api.java.domain.thread.entity.AddedThread;
+import forum.api.java.domain.thread.entity.ThreadDetail;
 import forum.api.java.domain.user.entity.UserDetail;
+import forum.api.java.domain.user.entity.UserThreadDetail;
 import forum.api.java.infrastructure.persistence.threads.ThreadJpaRepository;
 import forum.api.java.infrastructure.persistence.threads.entity.ThreadEntity;
 import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
@@ -34,11 +36,11 @@ public class ThreadRepositoryImpl implements ThreadRepository {
     }
 
     @Override
-    public AddedThread getThreadByTitle(String title) {
+    public ThreadDetail getThreadById(String id) {
         ThreadEntity thread = threadJpaRepository
-                .findByTitle(title)
+                .findById(id)
                 .orElseThrow(() -> new NotFoundException("THREAD_NOT_FOUND"));
 
-        return new AddedThread(thread.getId(), thread.getTitle(), thread.getBody());
+        return new ThreadDetail(thread.getId(), thread.getTitle(), thread.getBody(), new UserThreadDetail(thread.getUser().getId(), thread.getUser().getFullname()));
     }
 }

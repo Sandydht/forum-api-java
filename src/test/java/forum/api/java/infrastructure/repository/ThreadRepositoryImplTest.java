@@ -3,6 +3,7 @@ package forum.api.java.infrastructure.repository;
 import forum.api.java.commons.exceptions.NotFoundException;
 import forum.api.java.domain.thread.entity.AddThread;
 import forum.api.java.domain.thread.entity.AddedThread;
+import forum.api.java.domain.thread.entity.ThreadDetail;
 import forum.api.java.domain.user.entity.UserDetail;
 import forum.api.java.infrastructure.persistence.threads.ThreadJpaRepository;
 import forum.api.java.infrastructure.persistence.threads.entity.ThreadEntity;
@@ -17,6 +18,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 @DataJpaTest
 @Transactional
@@ -66,16 +69,16 @@ public class ThreadRepositoryImplTest {
     }
 
     @Nested
-    @DisplayName("getThreadByTitle function")
-    public class GetThreadByTitleFunction {
+    @DisplayName("getThreadById function")
+    public class GetThreadByIdFunction{
         @Test
         @DisplayName("should throw NotFoundException when thread not found")
         public void testThrowNotFoundExceptionWhenThreadNotFound() {
-            String title = "title";
+            String id = UUID.randomUUID().toString();
 
             NotFoundException exception = Assertions.assertThrows(
                     NotFoundException.class,
-                    () -> threadRepositoryImpl.getThreadByTitle(title)
+                    () -> threadRepositoryImpl.getThreadById(id)
             );
             Assertions.assertEquals("NOT_FOUND_EXCEPTION.THREAD_NOT_FOUND", exception.getMessage());
         }
@@ -90,13 +93,19 @@ public class ThreadRepositoryImplTest {
             UserEntity userEntity = new UserEntity(username, fullname, password);
             UserEntity savedUser = userJpaRepository.save(userEntity);
 
-            ThreadEntity threadEntity = new ThreadEntity(savedUser, "Title", "Body");
+            String title = "Title";
+            String body = "Body";
+
+            ThreadEntity threadEntity = new ThreadEntity(savedUser, title, body);
             ThreadEntity savedThread = threadJpaRepository.save(threadEntity);
 
-            Assertions.assertNotNull(savedThread.getId());
-            Assertions.assertEquals(savedUser.getId(), savedThread.getUser().getId());
-            Assertions.assertEquals("Title", savedThread.getTitle());
-            Assertions.assertEquals("Body", savedThread.getBody());
+            ThreadDetail threadDetail = threadRepositoryImpl.getThreadById(savedThread.getId());
+
+            Assertions.assertEquals(savedThread.getId(), threadDetail.getId());
+            Assertions.assertEquals(title, threadDetail.getTitle());
+            Assertions.assertEquals(body, threadDetail.getBody());
+            Assertions.assertEquals(savedUser.getId(), threadDetail.getUserThreadDetail().getId());
+            Assertions.assertEquals(savedUser.getFullname(), threadDetail.getUserThreadDetail().getFullname());
         }
     }
 }

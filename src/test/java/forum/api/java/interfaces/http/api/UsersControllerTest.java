@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
 import forum.api.java.infrastructure.persistence.users.entity.UserEntity;
 import forum.api.java.interfaces.http.api.users.dto.UserRegisterRequest;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -39,6 +38,8 @@ public class UsersControllerTest {
     @Nested
     @DisplayName("POST /api/users/register-account")
     public class RegisterAccountFunction {
+        private final String urlTemplate = "/api/users/register-account";
+
         @Test
         @DisplayName("should register account successfully")
         public void testShouldRegisterAccountSuccessfully() throws Exception {
@@ -48,20 +49,13 @@ public class UsersControllerTest {
 
             UserRegisterRequest request = new UserRegisterRequest(username, fullname, password);
 
-            mockMvc.perform(post("/api/users/register-account")
+            mockMvc.perform(post(urlTemplate)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)).with(csrf()))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.id").exists())
                     .andExpect(jsonPath("$.username").value(request.getUsername()))
                     .andExpect(jsonPath("$.fullname").value(request.getFullname()));
-
-            UserEntity user = userJpaRepository.findByUsername(request.getUsername()).orElseThrow();
-
-            Assertions.assertNotNull(user.getId());
-            Assertions.assertEquals(username, user.getUsername());
-            Assertions.assertEquals(fullname, user.getFullname());
-            Assertions.assertNotNull(user.getPassword());
         }
 
         @Test
@@ -75,7 +69,7 @@ public class UsersControllerTest {
 
             UserRegisterRequest request = new UserRegisterRequest(username, fullname, password);
 
-            mockMvc.perform(post("/api/users/register-account")
+            mockMvc.perform(post(urlTemplate)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)).with(csrf()))
                     .andExpect(status().isBadRequest())

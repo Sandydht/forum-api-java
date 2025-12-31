@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -31,6 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayName("ThreadsController")
 public class ThreadsControllerTest {
     private String accessToken;
+    private UserEntity savedUser;
 
     @Autowired
     private MockMvc mockMvc;
@@ -52,8 +54,7 @@ public class ThreadsControllerTest {
         String username = "user";
         String fullname = "Fullname";
         String password = "password";
-
-        userJpaRepository.save(new UserEntity(username, fullname, passwordHashImpl.hashPassword(password)));
+        savedUser = userJpaRepository.save(new UserEntity(username, fullname, passwordHashImpl.hashPassword(password)));
 
         UserLoginRequest loginRequest = new UserLoginRequest(username, password);
         String responseString = mockMvc.perform(post("/api/authentications/login-account")
@@ -77,7 +78,8 @@ public class ThreadsControllerTest {
 
             AddThreadRequest request = new AddThreadRequest(title, body);
 
-            mockMvc.perform(post("/api/threads/add-thread")
+            String urlTemplate = "/api/threads/add-thread";
+            mockMvc.perform(post(urlTemplate)
                             .header("Authorization", "Bearer " + accessToken)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)))
@@ -85,12 +87,43 @@ public class ThreadsControllerTest {
                     .andExpect(jsonPath("$.id").exists())
                     .andExpect(jsonPath("$.title").value(request.getTitle()))
                     .andExpect(jsonPath("$.body").value(request.getBody()));
+        }
+    }
 
-            ThreadEntity thread = threadJpaRepository.findByTitle(title).orElseThrow();
+    @Nested
+    @DisplayName("GET /api/threads/thread-detail/{id}")
+    public class GetThreadDetailAction {
+        private final String urlTemplate = "/api/threads/thread-detail/{id}";
 
-            Assertions.assertNotNull(thread.getId());
-            Assertions.assertEquals(title, thread.getTitle());
-            Assertions.assertEquals(body, thread.getBody());
+        @Test
+        @DisplayName("should return 404 NotFoundException when thread not found")
+        public void testReturn404WhenNotFound() throws Exception {
+            String wrongId = UUID.randomUUID().toString();
+
+            mockMvc.perform(get(urlTemplate, wrongId)
+                            .header("Authorization", "Bearer " + accessToken)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isNotFound());
+        }
+
+        @Test
+        @DisplayName("Should not return 400 when thread found")
+        public void testNotReturn404WhenThreadFound() throws Exception {
+            String title = "Title";
+            String body = "Body";
+
+            ThreadEntity threadEntity = new ThreadEntity(savedUser, title, body);
+            ThreadEntity savedThread = threadJpaRepository.save(threadEntity);
+
+            mockMvc.perform(get(urlTemplate, savedThread.getId())
+                            .header("Authorization", "Bearer " + accessToken)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.id").value(savedThread.getId()))
+                    .andExpect(jsonPath("$.title").value(title))
+                    .andExpect(jsonPath("$.body").value(body))
+                    .andExpect(jsonPath("$.userThreadDetail.id").value(savedUser.getId()))
+                    .andExpect(jsonPath("$.userThreadDetail.fullname").value(savedUser.getFullname()));
         }
     }
 }

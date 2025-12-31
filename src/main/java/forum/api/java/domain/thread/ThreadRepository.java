@@ -2,6 +2,7 @@ package forum.api.java.domain.thread;
 
 import forum.api.java.domain.thread.entity.AddThread;
 import forum.api.java.domain.thread.entity.AddedThread;
+import forum.api.java.domain.thread.entity.ThreadDetail;
 import forum.api.java.domain.user.entity.UserDetail;
 
 public interface ThreadRepository {
@@ -9,7 +10,7 @@ public interface ThreadRepository {
         throw new UnsupportedOperationException("THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED");
     }
 
-    default AddedThread getThreadByTitle(String title) {
+    default ThreadDetail getThreadById(String id) {
         throw new UnsupportedOperationException("THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED");
     }
 }

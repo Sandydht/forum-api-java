@@ -3,6 +3,7 @@ package forum.api.java.infrastructure.config;
 import forum.api.java.applications.security.AuthenticationTokenManager;
 import forum.api.java.applications.usecase.*;
 import forum.api.java.domain.authentication.AuthenticationRepository;
+import forum.api.java.domain.thread.ThreadRepository;
 import forum.api.java.infrastructure.repository.AuthenticationRepositoryImpl;
 import forum.api.java.infrastructure.repository.ThreadRepositoryImpl;
 import forum.api.java.infrastructure.repository.UserRepositoryImpl;
@@ -63,5 +64,10 @@ public class UseCaseConfig {
     @Bean
     public LogoutUserUseCase logoutUserUseCase(AuthenticationRepository authenticationRepository) {
         return new LogoutUserUseCase(authenticationRepository);
+    }
+
+    @Bean
+    public GetThreadDetailUseCase getThreadDetailUseCase(ThreadRepository threadRepository) {
+        return new GetThreadDetailUseCase(threadRepository);
     }
 }
