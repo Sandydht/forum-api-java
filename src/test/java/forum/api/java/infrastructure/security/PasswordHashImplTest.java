@@ -34,7 +34,7 @@ public class PasswordHashImplTest {
                     () -> passwordHashImpl.passwordCompare(plainPassword, fakeHashedPassword)
             );
 
-            Assertions.assertEquals("INCORRECT_CREDENTIALS", isValidPasswordError.getMessage());
+            Assertions.assertEquals("PASSWORD_HASH_IMPL.INCORRECT_CREDENTIALS", isValidPasswordError.getMessage());
         }
 
         @Test
