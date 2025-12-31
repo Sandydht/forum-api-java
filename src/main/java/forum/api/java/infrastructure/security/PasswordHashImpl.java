@@ -15,7 +15,7 @@ public class PasswordHashImpl implements PasswordHash {
     @Override
     public void passwordCompare(String plainPassword, String encryptedPassword) {
         if (!BCrypt.checkpw(plainPassword, encryptedPassword)) {
-            throw new AuthenticationException("INCORRECT_CREDENTIALS");
+            throw new AuthenticationException("PASSWORD_HASH_IMPL.INCORRECT_CREDENTIALS");
         }
     }
 }
