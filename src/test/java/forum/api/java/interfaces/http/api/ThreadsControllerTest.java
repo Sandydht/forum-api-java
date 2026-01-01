@@ -123,9 +123,7 @@ public class ThreadsControllerTest {
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.id").value(savedThread.getId()))
                     .andExpect(jsonPath("$.title").value(title))
-                    .andExpect(jsonPath("$.body").value(body))
-                    .andExpect(jsonPath("$.userThreadDetail.id").value(savedUser.getId()))
-                    .andExpect(jsonPath("$.userThreadDetail.fullname").value(savedUser.getFullname()));
+                    .andExpect(jsonPath("$.body").value(body));
         }
     }
 }

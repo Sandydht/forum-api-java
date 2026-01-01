@@ -2,9 +2,8 @@ package forum.api.java.applications.usecase;
 
 import forum.api.java.domain.thread.ThreadRepository;
 import forum.api.java.domain.threadcomment.ThreadCommentRepository;
-import forum.api.java.domain.threadcomment.entity.AddedThreadComment;
+import forum.api.java.domain.threadcomment.entity.ThreadCommentEntity;
 import forum.api.java.domain.user.UserRepository;
-import forum.api.java.domain.user.entity.UserThreadDetail;
 
 public class AddThreadCommentUseCase {
     private final UserRepository userRepository;
@@ -17,7 +16,7 @@ public class AddThreadCommentUseCase {
         this.threadCommentRepository = threadCommentRepository;
     }
 
-    public AddedThreadComment execute(String userId, String threadId, String content) {
-        return new AddedThreadComment("", "", new UserThreadDetail("", ""));
+    public ThreadCommentEntity execute(String userId, String threadId, String content) {
+        return new ThreadCommentEntity();
     }
 }

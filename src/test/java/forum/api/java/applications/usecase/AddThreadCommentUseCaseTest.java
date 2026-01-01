@@ -2,7 +2,6 @@ package forum.api.java.applications.usecase;
 
 import forum.api.java.domain.thread.ThreadRepository;
 import forum.api.java.domain.threadcomment.ThreadCommentRepository;
-import forum.api.java.domain.threadcomment.entity.AddThreadComment;
 import forum.api.java.domain.user.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,7 +33,5 @@ public class AddThreadCommentUseCaseTest {
         String userId = UUID.randomUUID().toString();
         String threadId = UUID.randomUUID().toString();
         String content = "Content";
-
-        AddThreadComment addThreadComment = new AddThreadComment(userId, threadId, content);
     }
 }
