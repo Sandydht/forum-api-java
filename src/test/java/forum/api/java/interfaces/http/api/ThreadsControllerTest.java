@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -69,10 +70,10 @@ public class ThreadsControllerTest {
 
     @Nested
     @DisplayName("POST /api/threads/add-thread")
-    public class AddThreadEntityFunction {
+    public class AddThreadFunction {
         @Test
         @DisplayName("should add thread successfully")
-        public void testAddThreadSuccessfully() throws Exception {
+        public void shouldAddThreadSuccessfully() throws Exception {
             String title = "Title" + UUID.randomUUID();
             String body = "Body";
 
@@ -92,12 +93,12 @@ public class ThreadsControllerTest {
 
     @Nested
     @DisplayName("GET /api/threads/thread-detail/{id}")
-    public class GetThreadEntityDetailAction {
+    public class GetThreadDetailAction {
         private final String urlTemplate = "/api/threads/thread-detail/{id}";
 
         @Test
         @DisplayName("should return 404 NotFoundException when thread not found")
-        public void testReturn404WhenNotFound() throws Exception {
+        public void shouldReturn404NotFoundExceptionWhenThreadNotFound() throws Exception {
             String wrongId = UUID.randomUUID().toString();
 
             mockMvc.perform(get(urlTemplate, wrongId)
@@ -107,8 +108,8 @@ public class ThreadsControllerTest {
         }
 
         @Test
-        @DisplayName("Should not return 400 when thread found")
-        public void testNotReturn404WhenThreadFound() throws Exception {
+        @DisplayName("Should not return 404 when thread found")
+        public void shouldNotReturn404WhenThreadFound() throws Exception {
             String title = "Title";
             String body = "Body";
 
@@ -117,7 +118,7 @@ public class ThreadsControllerTest {
 
             mockMvc.perform(get(urlTemplate, savedThread.getId())
                             .header("Authorization", "Bearer " + accessToken)
-                            .contentType(MediaType.APPLICATION_JSON))
+                            .contentType(MediaType.APPLICATION_JSON).with(csrf()))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.id").value(savedThread.getId()))
                     .andExpect(jsonPath("$.title").value(title))

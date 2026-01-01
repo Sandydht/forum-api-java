@@ -11,7 +11,7 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 @DisplayName("a UserThreadDetail entity")
-public class UserEntityThreadEntityDetailTest {
+public class UserThreadDetailTest {
     private static Stream<Arguments> provideInvalidMissingData() {
         return Stream.of(
                 Arguments.of(null, "Fullname"),

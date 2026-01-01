@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import forum.api.java.commons.exceptions.ClientException;
+import forum.api.java.commons.exceptions.InvariantException;
 import org.junit.jupiter.api.*;
 
 import java.util.UUID;
@@ -18,7 +19,7 @@ public class AuthenticationTokenManagerImplTest {
     public class CreateAccessTokenFunction {
         @Test
         @DisplayName("should create accessToken correctly")
-        public void testCreateAccessTokenCorrectly() {
+        public void shouldCreateAccessTokenCorrectly() {
             String id = UUID.randomUUID().toString();
 
             String accessToken = authenticationTokenManagerImpl.createAccessToken(id);
@@ -34,7 +35,7 @@ public class AuthenticationTokenManagerImplTest {
     public class CreateRefreshTokenEntityFunction {
         @Test
         @DisplayName("should create refreshToken correctly")
-        public void testCreateRefreshTokenCorrectly() {
+        public void shouldCreateRefreshTokenCorrectly() {
             String id = UUID.randomUUID().toString();
 
             String refreshToken = authenticationTokenManagerImpl.createRefreshToken(id);
@@ -50,7 +51,7 @@ public class AuthenticationTokenManagerImplTest {
     public class DecodeJWTPayloadFunction {
         @Test
         @DisplayName("should decode token correctly")
-        public void testDecodeTokeCorrectly() {
+        public void shouldDecodeTokenCorrectly() {
             String id = UUID.randomUUID().toString();
 
             String accessToken = authenticationTokenManagerImpl.createAccessToken(id);
@@ -67,12 +68,12 @@ public class AuthenticationTokenManagerImplTest {
     @DisplayName("verifyToken function")
     public class verifyTokenFunction {
         @Test
-        @DisplayName("should throw ClientException when verification failed")
-        public void testVerificationFailed() {
+        @DisplayName("should throw InvariantException when verification failed")
+        public void shouldThrowInvariantExceptionWhenVerificationFailed() {
             String invalidToken = "invalid.token";
 
-            ClientException exception = Assertions.assertThrows(
-                    ClientException.class,
+            InvariantException exception = Assertions.assertThrows(
+                    InvariantException.class,
                     () -> authenticationTokenManagerImpl.verifyToken(invalidToken)
             );
 
@@ -80,21 +81,21 @@ public class AuthenticationTokenManagerImplTest {
         }
 
         @Test
-        @DisplayName("should throw ClientException when token is expired")
-        public void testVerificationTokenExpired() {
+        @DisplayName("should throw InvariantException when token is expired")
+        public void shouldThrowInvariantExceptionWhenTokenIsExpired() {
             String expiredToken = JWT.create()
                     .withExpiresAt(new java.util.Date(System.currentTimeMillis() - 1000))
                     .sign(algorithm);
 
             Assertions.assertThrows(
-                    ClientException.class,
+                    InvariantException.class,
                     () -> authenticationTokenManagerImpl.verifyToken(expiredToken)
             );
         }
 
         @Test
-        @DisplayName("should not throw ClientException when token is valid")
-        public void testVerificationTokenSuccess() {
+        @DisplayName("should not throw InvariantException when token is valid")
+        public void shouldNotThrowInvariantExceptionWhenTokenIsValid() {
             String userId = UUID.randomUUID().toString();
             String validToken = JWT.create()
                     .withSubject(userId)

@@ -15,7 +15,7 @@ import java.util.UUID;
 
 @DisplayName("Add thread comment use case")
 @ExtendWith(MockitoExtension.class)
-public class AddThreadEntityCommentUseCaseTest {
+public class AddThreadCommentUseCaseTest {
     @Mock
     private UserRepository userRepository;
 
@@ -30,7 +30,7 @@ public class AddThreadEntityCommentUseCaseTest {
 
     @Test
     @DisplayName("should orchestrating the add thread comment action correctly")
-    public void testAddThreadCommentActionCorrectly() {
+    public void shouldOrchestratingTheAddThreadCommentActionCorrectly() {
         String userId = UUID.randomUUID().toString();
         String threadId = UUID.randomUUID().toString();
         String content = "Content";

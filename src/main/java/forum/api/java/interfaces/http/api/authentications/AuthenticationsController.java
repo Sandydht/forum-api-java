@@ -4,6 +4,7 @@ import forum.api.java.applications.usecase.LoginUserUseCase;
 import forum.api.java.applications.usecase.LogoutUserUseCase;
 import forum.api.java.applications.usecase.RefreshAuthenticationUseCase;
 import forum.api.java.interfaces.http.api.authentications.dto.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,8 +36,9 @@ public class AuthenticationsController {
     }
 
     @PostMapping("logout-account")
-    public UserLogoutResponse userLogoutAccount(@RequestBody UserLogoutRequest request) {
-        logoutUserUseCase.execute(request.getRefreshToken());
+    public UserLogoutResponse userLogoutAccount(@AuthenticationPrincipal String userId) {
+        System.out.println("userId: " + userId);
+        logoutUserUseCase.execute(userId);
         return new UserLogoutResponse("See you!");
     }
 }

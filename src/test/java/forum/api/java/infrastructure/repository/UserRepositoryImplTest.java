@@ -1,6 +1,6 @@
 package forum.api.java.infrastructure.repository;
 
-import forum.api.java.commons.exceptions.ClientException;
+import forum.api.java.commons.exceptions.InvariantException;
 import forum.api.java.commons.exceptions.NotFoundException;
 import forum.api.java.domain.user.entity.UserEntity;
 import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Rollback
 @Import(UserRepositoryImpl.class)
 @DisplayName("UserRepositoryImpl")
-public class UserEntityRepositoryImplTest {
+public class UserRepositoryImplTest {
     @Autowired
     private UserJpaRepository userJpaRepository;
 
@@ -28,8 +28,8 @@ public class UserEntityRepositoryImplTest {
     @DisplayName("verifyAvailableUsername function")
     public class VerifyAvailableUsernameFunction {
         @Test
-        @DisplayName("should throw ClientException when username available")
-        public void testReturnTrueWhenUsernameAvailable() {
+        @DisplayName("should throw InvarianException when username available")
+        public void shouldThrowInvariantExceptionWhenUsernameAvailable() {
             String username = "user";
             String password = "password";
             String fullname = "Fullname";
@@ -37,8 +37,8 @@ public class UserEntityRepositoryImplTest {
             UserJpaEntity userJpaEntity = new UserJpaEntity(username, fullname, password);
             userJpaRepository.save(userJpaEntity);
 
-            ClientException verifyAvailableUsernameError = Assertions.assertThrows(
-                    ClientException.class,
+            InvariantException verifyAvailableUsernameError = Assertions.assertThrows(
+                    InvariantException.class,
                     () -> userRepositoryImpl.verifyAvailableUsername(username)
             );
 
@@ -46,8 +46,8 @@ public class UserEntityRepositoryImplTest {
         }
 
         @Test
-        @DisplayName("should not throw ClientException when username not available")
-        public void testReturnFalseWhenUsernameNotAvailable() {
+        @DisplayName("should not throw InvarianException when username not available")
+        public void shouldNotThrowInvariantExceptionWhenUsernameNotAvailable() {
             String username = "user";
             Assertions.assertDoesNotThrow(() -> userRepositoryImpl.verifyAvailableUsername(username));
         }
@@ -55,10 +55,10 @@ public class UserEntityRepositoryImplTest {
 
     @Nested
     @DisplayName("addUser function")
-    public class AddUserEntityFunction {
+    public class AddUserFunction {
         @Test
         @DisplayName("should persist register user and return registered user correctly")
-        public void testPersistRegisterUserAndReturnRegisteredUserCorrectly() {
+        public void shouldPersistRegisterUserAndReturnRegisteredUserCorrectly() {
             String username = "user";
             String fullname = "Fullname";
             String password = "password";
@@ -74,10 +74,10 @@ public class UserEntityRepositoryImplTest {
 
     @Nested
     @DisplayName("getUserByUsername function")
-    public class GetUserEntityByUsernameFunction {
+    public class GetUserByUsernameFunction {
         @Test
         @DisplayName("should throw NotFoundException when user not found")
-        public void testUserNotFound() {
+        public void shouldThrowNotFoundExceptionWhenUserNotFound() {
             String username = "user";
 
             NotFoundException exception = Assertions.assertThrows(
@@ -89,8 +89,8 @@ public class UserEntityRepositoryImplTest {
         }
 
         @Test
-        @DisplayName("should return user details correctly when user exists")
-        public void testUserExists() {
+        @DisplayName("should return user detail correctly when user exists")
+        public void shouldReturnUserDetailCorrectlyWhenUserExists() {
             String username = "user";
             String fullname = "Fullname";
             String password = "password";
@@ -109,10 +109,10 @@ public class UserEntityRepositoryImplTest {
 
     @Nested
     @DisplayName("getUserById function")
-    public class GetUserEntityByIdFunction {
+    public class GetUserByIdFunction {
         @Test
         @DisplayName("should throw NotFoundException when user not found")
-        public void testUserNotFound() {
+        public void shouldThrowNotFoundExceptionWhenUserNotFound() {
             String userId = "user-id";
 
             NotFoundException exception = Assertions.assertThrows(
@@ -124,8 +124,8 @@ public class UserEntityRepositoryImplTest {
         }
 
         @Test
-        @DisplayName("should return user details correctly when user exists")
-        public void testUserExists() {
+        @DisplayName("should return user detail correctly when user exists")
+        public void shouldReturnUserDetailCorrectlyWhenUserExists() {
             String username = "user";
             String fullname = "Fullname";
             String password = "password";

@@ -5,12 +5,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("UserRepository interface")
-public class UserEntityRepositoryTest {
+public class UserRepositoryTest {
     private final UserRepository userRepository = new UserRepository() {};;
 
     @Test
     @DisplayName("should throw error when invoke abstract behavior")
-    public void testThrowErrorWhenInvokeAbstractBehavior() {
+    public void shouldThrowErrorWhenInvokeAbstractBehavior() {
         UnsupportedOperationException addUserError = Assertions.assertThrows(
                 UnsupportedOperationException.class,
                 () -> userRepository.addUser(null, null, null)

@@ -9,8 +9,7 @@ public class LogoutUserUseCase {
         this.authenticationRepository = authenticationRepository;
     }
 
-    public void execute(String refreshToken) {
-        authenticationRepository.checkAvailabilityToken(refreshToken);
-        authenticationRepository.deleteToken(refreshToken);
+    public void execute(String userId) {
+        authenticationRepository.deleteTokenByUserId(userId);
     }
 }

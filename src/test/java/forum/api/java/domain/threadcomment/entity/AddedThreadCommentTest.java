@@ -12,7 +12,7 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 @DisplayName("a AddedThreadComment entity")
-public class AddedThreadEntityCommentTest {
+public class AddedThreadCommentTest {
     private static Stream<Arguments> provideInvalidMissingData() {
         return Stream.of(
                 Arguments.of(null, "test-comment", new UserThreadDetail(UUID.randomUUID().toString(), "Fullname")),
@@ -25,7 +25,7 @@ public class AddedThreadEntityCommentTest {
     @ParameterizedTest
     @MethodSource("provideInvalidMissingData")
     @DisplayName("should throw error when payload did not contain needed property")
-    public void testNotContainNeededProperty(String id, String content, UserThreadDetail userThreadDetail) {
+    public void shouldThrowErrorWhenPayloadDidNotContainNeededProperty(String id, String content, UserThreadDetail userThreadDetail) {
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
             new AddedThreadComment(id, content, userThreadDetail);
         });
@@ -34,8 +34,8 @@ public class AddedThreadEntityCommentTest {
     }
 
     @Test
-    @DisplayName("should create addedThreadComment object correctly")
-    public void testCreateObjectCorrectly() {
+    @DisplayName("should create object correctly")
+    public void shouldCreateObjectCorrectly() {
         String id = UUID.randomUUID().toString();
         String content = "content";
 

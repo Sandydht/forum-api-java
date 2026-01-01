@@ -11,7 +11,7 @@ public class DomainErrorTranslatorTest {
 
     @Nested
     @DisplayName("REGISTER_USER")
-    public class RegisterUserEntityErrorMessages {
+    public class RegisterUserErrorMessages {
         @Test
         @DisplayName("should translate REGISTER_USER.NOT_CONTAIN_NEEDED_PROPERTY correctly")
         public void shouldTranslateRegisterUserMissingProperty() {
@@ -55,7 +55,7 @@ public class DomainErrorTranslatorTest {
 
     @Nested
     @DisplayName("USER_LOGIN")
-    public class UserEntityLoginErrorMessages {
+    public class UserLoginErrorMessages {
         @Test
         @DisplayName("should translate USER_LOGIN.NOT_CONTAIN_NEEDED_PROPERTY correctly")
         public void shouldTranslateUserLoginNotContainNeededProperty() {

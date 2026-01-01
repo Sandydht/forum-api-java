@@ -10,7 +10,7 @@ public class AuthenticationRepositoryTest {
 
     @Test
     @DisplayName("should throw error when invoke unimplemented method")
-    public void testThrowErrorWhenInvokeAbstractBehavior() {
+    public void shouldThrowErrorWhenInvokeUnimplementedMethod() {
         UnsupportedOperationException addTokenError = Assertions.assertThrows(
                 UnsupportedOperationException.class,
                 () -> authenticationRepository.addToken(null, null)
@@ -34,5 +34,11 @@ public class AuthenticationRepositoryTest {
                 () -> authenticationRepository.deleteToken(null)
         );
         Assertions.assertEquals("AUTHENTICATION_REPOSITORY.METHOD_NOT_IMPLEMENTED", deleteTokenError.getMessage());
+
+        UnsupportedOperationException deleteTokenByUserIdError = Assertions.assertThrows(
+                UnsupportedOperationException.class,
+                () -> authenticationRepository.deleteTokenByUserId(null)
+        );
+        Assertions.assertEquals("AUTHENTICATION_REPOSITORY.METHOD_NOT_IMPLEMENTED", deleteTokenByUserIdError.getMessage());
     }
 }

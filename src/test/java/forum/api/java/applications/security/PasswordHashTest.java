@@ -10,7 +10,7 @@ public class PasswordHashTest {
 
     @Test
     @DisplayName("should throw error when invoke abstract behavior")
-    public void testThrowErrorWhenInvokeAbstractBehavior() {
+    public void shouldThrowErrorWhenInvokeAbstractBehavior() {
         UnsupportedOperationException hashPasswordError = Assertions.assertThrows(
                 UnsupportedOperationException.class,
                 () -> passwordHash.hashPassword("")

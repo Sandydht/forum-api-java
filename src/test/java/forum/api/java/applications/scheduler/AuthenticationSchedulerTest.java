@@ -10,7 +10,7 @@ public class AuthenticationSchedulerTest {
 
     @Test
     @DisplayName("should throw error when invoke unimplemented method")
-    public void testThrowErrorWhenInvokeAbstractBehavior() {
+    public void shouldThrowErrorWhenInvokeUnimplementedMethod() {
         UnsupportedOperationException cleanupExpiredTokenError = Assertions.assertThrows(
                 UnsupportedOperationException.class,
                 authenticationScheduler::cleanupExpiredToken

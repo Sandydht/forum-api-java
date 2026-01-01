@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 public class ErrorResponseTest {
     @Test
     @DisplayName("should serialized to json")
-    public void testShouldSerializeToJson() throws Exception {
+    public void shouldSerializedToJson() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         ErrorResponse errorResponse = new ErrorResponse(401, "Unauthorized");
 

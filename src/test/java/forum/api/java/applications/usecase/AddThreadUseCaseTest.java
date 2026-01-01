@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @DisplayName("Add thread use case")
 @ExtendWith(MockitoExtension.class)
-public class AddThreadEntityUseCaseTest {
+public class AddThreadUseCaseTest {
     @Mock
     private ThreadRepository threadRepository;
 
@@ -25,7 +25,7 @@ public class AddThreadEntityUseCaseTest {
 
     @Test
     @DisplayName("should orchestrating the add thread action correctly")
-    public void testAddThreadActionCorrectly() {
+    public void shouldOrchestratingTheAddThreadActionCorrectly() {
         String userId = UUID.randomUUID().toString();
         String username = "user";
         String fullname = "Fullname";

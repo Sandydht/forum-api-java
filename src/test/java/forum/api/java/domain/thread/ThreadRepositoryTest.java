@@ -5,12 +5,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("ThreadRepository interface")
-public class ThreadEntityRepositoryTest {
+public class ThreadRepositoryTest {
     private final ThreadRepository threadRepository = new ThreadRepository() {};
 
     @Test
     @DisplayName("should throw error when invoke abstract behavior")
-    public void testThrowErrorWhenInvokeAbstractBehavior() {
+    public void shouldThrowErrorWhenInvokeAbstractBehavior() {
         UnsupportedOperationException addThreadError = Assertions.assertThrows(
                 UnsupportedOperationException.class,
                 () -> threadRepository.addThread(null,null, null)

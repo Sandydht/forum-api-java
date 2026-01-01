@@ -22,7 +22,7 @@ import static org.mockito.ArgumentMatchers.eq;
 
 @DisplayName("Login user use case")
 @ExtendWith(MockitoExtension.class)
-public class LoginUserEntityUseCaseTest {
+public class LoginUserUseCaseTest {
     @Mock
     private UserRepository userRepository;
 
@@ -40,7 +40,7 @@ public class LoginUserEntityUseCaseTest {
 
     @Test
     @DisplayName("should orchestrating the get authentication action correctly")
-    public void testLoginUserActionCorrectly() {
+    public void shouldOrchestratingTheGetAuthenticationActionCorrectly() {
         String userId = UUID.randomUUID().toString();
         String username = "user";
         String fullname = "Fullname";

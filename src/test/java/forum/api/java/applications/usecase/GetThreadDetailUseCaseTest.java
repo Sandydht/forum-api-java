@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @DisplayName("Get thread detail use case")
 @ExtendWith(MockitoExtension.class)
-public class GetThreadEntityDetailUseCaseTest {
+public class GetThreadDetailUseCaseTest {
     @Mock
     private ThreadRepository threadRepository;
 
@@ -25,7 +25,7 @@ public class GetThreadEntityDetailUseCaseTest {
 
     @Test
     @DisplayName("should orchestrating the get thread detail action correctly")
-    public void testGetThreadDetailActionCorrectly() {
+    public void shouldOrchestratingTheGetThreadDetailActionCorrectly() {
         String threadId = UUID.randomUUID().toString();
         String title = "Title";
         String body = "Body";

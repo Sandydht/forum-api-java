@@ -41,17 +41,27 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
     @Override
     public void checkAvailabilityToken(String token) {
-        if (authenticationJpaRepository.findByToken(token).isEmpty()) {
+        if (authenticationJpaRepository.findFirstByToken(token).isEmpty()) {
             throw new NotFoundException("TOKEN_NOT_FOUND");
         }
     }
 
     @Override
     public void deleteToken(String token) {
-        if (authenticationJpaRepository.findByToken(token).isEmpty()) {
+        if (authenticationJpaRepository.findFirstByToken(token).isEmpty()) {
             throw new NotFoundException("TOKEN_NOT_FOUND");
         }
 
         authenticationJpaRepository.deleteByToken(token);
+    }
+
+    @Override
+    public void deleteTokenByUserId(String userId) {
+        System.out.println(authenticationJpaRepository.findFirstByUserId(userId));
+        if (authenticationJpaRepository.findFirstByUserId(userId).isEmpty()) {
+            throw new NotFoundException("TOKEN_NOT_FOUND");
+        }
+
+        authenticationJpaRepository.deleteByUserId(userId);
     }
 }

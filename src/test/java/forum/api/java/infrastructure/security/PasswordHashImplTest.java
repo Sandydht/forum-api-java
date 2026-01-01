@@ -12,7 +12,7 @@ public class PasswordHashImplTest {
     public class HashPassword {
         @Test
         @DisplayName("should encrypt password correctly")
-        public void testEncryptPasswordCorrectly() {
+        public void shouldEncryptPasswordCorrectly() {
             String password = "password";
             String hashedPassword = passwordHashImpl.hashPassword(password);
             Assertions.assertNotNull(hashedPassword);
@@ -25,7 +25,7 @@ public class PasswordHashImplTest {
     public class PasswordCompare {
         @Test
         @DisplayName("should return false if password not match")
-        public void testThrowErrorIfPasswordNotMatch() {
+        public void shouldReturnFalseIfPasswordNotMatch() {
             String plainPassword = "plainPassword";
             String fakeHashedPassword = "$2a$10$8K1p/a0dL1LXMIg7OTcl9e7y.S77R9U9.fD8WvJv1i7./6L.T6G1y";
 
@@ -39,7 +39,7 @@ public class PasswordHashImplTest {
 
         @Test
         @DisplayName("should return true if password match")
-        public void testPasswordMatch() {
+        public void shouldReturnTrueIfPasswordMatch() {
             String plainPassword = "plainPassword";
             String hashedPassword = passwordHashImpl.hashPassword(plainPassword);
 

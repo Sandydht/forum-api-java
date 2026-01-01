@@ -43,7 +43,7 @@ public class RefreshTokenEntityTest {
 
     @Test
     @DisplayName("should create object correctly")
-    public void testObjectCorrectly() {
+    public void shouldCreateObjectCorrectly() {
         String id = UUID.randomUUID().toString();
         String username = "user";
         String fullname = "Fullname";

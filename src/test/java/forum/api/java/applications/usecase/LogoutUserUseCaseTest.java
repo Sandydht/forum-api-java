@@ -9,9 +9,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.UUID;
+
 @DisplayName("Logout user use case")
 @ExtendWith(MockitoExtension.class)
-public class LogoutUserEntityUseCaseTest {
+public class LogoutUserUseCaseTest {
     @Mock
     private AuthenticationRepository authenticationRepository;
 
@@ -20,15 +22,13 @@ public class LogoutUserEntityUseCaseTest {
 
     @Test
     @DisplayName("should orchestrating the logout user action correctly")
-    public void testLogoutUserActionCorrectly() {
-        String refreshToken = "refresh-token";
+    public void shouldOrchestratingTheLogoutUserActionCorrectly() {
+        String userId = UUID.randomUUID().toString();
 
-        Mockito.doNothing().when(authenticationRepository).checkAvailabilityToken(refreshToken);
-        Mockito.doNothing().when(authenticationRepository).deleteToken(refreshToken);
+        Mockito.doNothing().when(authenticationRepository).deleteTokenByUserId(userId);
 
-        logoutUserUseCase.execute(refreshToken);
+        logoutUserUseCase.execute(userId);
 
-        Mockito.verify(authenticationRepository, Mockito.times(1)).checkAvailabilityToken(refreshToken);
-        Mockito.verify(authenticationRepository, Mockito.times(1)).deleteToken(refreshToken);
+        Mockito.verify(authenticationRepository, Mockito.times(1)).deleteTokenByUserId(userId);
     }
 }

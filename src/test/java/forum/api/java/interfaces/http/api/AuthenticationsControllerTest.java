@@ -9,6 +9,7 @@ import forum.api.java.infrastructure.persistence.users.entity.UserJpaEntity;
 import forum.api.java.infrastructure.security.PasswordHashImpl;
 import forum.api.java.interfaces.http.api.authentications.dto.RefreshAuthenticationRequest;
 import forum.api.java.interfaces.http.api.authentications.dto.UserLoginRequest;
+import forum.api.java.interfaces.http.api.authentications.dto.UserLoginResponse;
 import forum.api.java.interfaces.http.api.authentications.dto.UserLogoutRequest;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,12 +57,12 @@ public class AuthenticationsControllerTest {
 
     @Nested
     @DisplayName("POST /api/authentications/login-account")
-    public class UserEntityLoginAccount {
+    public class UserLoginAccount {
         private final String urlTemplate = "/api/authentications/login-account";
 
         @Test
         @DisplayName("should login successfully with valid credentials")
-        public void testLoginSuccessfullyWithValidCredentials() throws Exception {
+        public void shouldLoginSuccessfullyWithValidCredentials() throws Exception {
             UserLoginRequest request = new UserLoginRequest(username, password);
             mockMvc.perform(post(urlTemplate)
                             .contentType(MediaType.APPLICATION_JSON)
@@ -72,7 +73,7 @@ public class AuthenticationsControllerTest {
 
         @Test
         @DisplayName("should throw error when login with invalid credentials")
-        public void testThrowErrorWhenLoginWithInvalidCredentials() throws Exception {
+        public void shouldThrowErrorWhenLoginWithInvalidCredentials() throws Exception {
             UserLoginRequest request = new UserLoginRequest(username, "invalid-password");
 
             mockMvc.perform(post(urlTemplate)
@@ -84,7 +85,7 @@ public class AuthenticationsControllerTest {
 
         @Test
         @DisplayName("should persist refresh token in database after successfull login")
-        public void testPersistRefreshTokenInDatabaseAfterSuccessfullLogin() throws Exception {
+        public void shouldPersistRefreshTokenInDatabaseAfterSuccessfullLogin() throws Exception {
             UserLoginRequest request = new UserLoginRequest(username, password);
 
             mockMvc.perform(post(urlTemplate)
@@ -93,7 +94,7 @@ public class AuthenticationsControllerTest {
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.accessToken").exists());
 
-            RefreshTokenJpaEntity refreshToken = authenticationJpaRepository.findByUserUsername(request.getUsername()).orElseThrow();
+            RefreshTokenJpaEntity refreshToken = authenticationJpaRepository.findFirstByUserUsername(request.getUsername()).orElseThrow();
 
             Assertions.assertNotNull(refreshToken.getToken());
             Assertions.assertEquals(request.getUsername(), refreshToken.getUser().getUsername());
@@ -108,7 +109,7 @@ public class AuthenticationsControllerTest {
 
         @Test
         @DisplayName("should return new access token successfully")
-        public void testReturnNewAccessTokenSuccessfully() throws Exception {
+        public void shouldReturnNewAccessTokenSuccessfully() throws Exception {
             UserLoginRequest userLoginRequest = new UserLoginRequest(username, password);
             String loginResponseString = mockMvc.perform(post("/api/authentications/login-account")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -127,8 +128,8 @@ public class AuthenticationsControllerTest {
         }
 
         @Test
-        @DisplayName("shoudl return ClientException when refresh token is invalid")
-        public void testShouldThrowClientExceptionWhenRefreshTokenIsInvalid() throws Exception {
+        @DisplayName("shoudl return InvariantException when refresh token is invalid")
+        public void shouldReturnInvariantExceptionWhenRefreshTokenIsInvalid() throws Exception {
             RefreshAuthenticationRequest invalidRequest = new RefreshAuthenticationRequest("invalid-token-123");
             mockMvc.perform(post(urlTemplate)
                             .contentType(MediaType.APPLICATION_JSON)
@@ -139,32 +140,32 @@ public class AuthenticationsControllerTest {
 
     @Nested
     @DisplayName("POST /api/authentications/logout-account")
-    @Disabled
-    public class UserEntityLogoutAccount {
+    public class UserLogoutAccount {
         private final String urlTemplate = "/api/authentications/logout-account";
 
         @Test
         @DisplayName("should success logout account successfully")
-        public void testShouldLogouAccountSuccessfully() throws Exception {
+        public void shouldSuccessLogoutAccountSuccessfully() throws Exception {
             UserLoginRequest userLoginRequest = new UserLoginRequest(username, password);
-            mockMvc.perform(post("/api/authentications/login-account")
+            String responseString = mockMvc.perform(post("/api/authentications/login-account")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(userLoginRequest)).with(csrf()))
+                            .content(objectMapper.writeValueAsString(userLoginRequest)))
                     .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.accessToken").exists())
                     .andReturn().getResponse().getContentAsString();
 
-            String refreshToken = "";
-            UserLogoutRequest userLogoutRequest = new UserLogoutRequest(refreshToken);
+            UserLoginResponse userLoginResponse = objectMapper.readValue(responseString, UserLoginResponse.class);
+
             mockMvc.perform(post(urlTemplate)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(userLogoutRequest)))
+//                            .header("Authorization", "Bearer " + userLoginResponse.getAccessToken())
+                            .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.message").exists());
         }
 
         @Test
         @DisplayName("should return NotFoundException when refresh token is not found")
-        public void testShouldThrowNotFoundExceptionWhenRefreshTokenIsNotFound() throws Exception {
+        public void shouldReturnNotFoundExceptionWhenRefreshTokenIsNotFound() throws Exception {
             UserLogoutRequest invalidRequest = new UserLogoutRequest("invalid-token-123");
             mockMvc.perform(post(urlTemplate)
                             .contentType(MediaType.APPLICATION_JSON)

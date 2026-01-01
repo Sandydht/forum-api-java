@@ -23,7 +23,7 @@ import java.util.UUID;
 @Rollback
 @Import(ThreadRepositoryImpl.class)
 @DisplayName("ThreadRepositoryImpl")
-public class ThreadEntityRepositoryImplTest {
+public class ThreadRepositoryImplTest {
     @Autowired
     private UserJpaRepository userJpaRepository;
 
@@ -35,10 +35,10 @@ public class ThreadEntityRepositoryImplTest {
 
     @Nested
     @DisplayName("addThread function")
-    public class AddThreadEntityFunction {
+    public class AddThreadFunction {
         @Test
         @DisplayName("should persist add thread and return added thread correctly")
-        public void testPersistAddThreadAndReturnAddedThreadCorrectly() {
+        public void shouldPersistAddThreadAndReturnAddedThreadCorrectly() {
             String username = "user";
             String fullname = "Fullname";
             String password = "password";
@@ -59,10 +59,10 @@ public class ThreadEntityRepositoryImplTest {
 
     @Nested
     @DisplayName("getThreadById function")
-    public class GetThreadEntityByIdFunction {
+    public class GetThreadByIdFunction {
         @Test
         @DisplayName("should throw NotFoundException when thread not found")
-        public void testThrowNotFoundExceptionWhenThreadNotFound() {
+        public void shouldThrowNotFoundExceptionWhenThreadNotFound() {
             String id = UUID.randomUUID().toString();
 
             NotFoundException exception = Assertions.assertThrows(
@@ -74,7 +74,7 @@ public class ThreadEntityRepositoryImplTest {
 
         @Test
         @DisplayName("should not throw NotFoundException when thread is found")
-        public void testShouldNotThrowNotFoundExceptionWhenThreadIsFound() {
+        public void shouldNotThrowNotFoundExceptionWhenThreadIsFound() {
             String username = "user";
             String fullname = "Fullname";
             String password = "password";

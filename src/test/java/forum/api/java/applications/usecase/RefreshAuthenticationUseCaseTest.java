@@ -27,7 +27,7 @@ public class RefreshAuthenticationUseCaseTest {
 
     @Test
     @DisplayName("should orchestrating the refresh authentication action correctly")
-    public void testRefreshAuthenticationActionCorrectly() {
+    public void shouldOrchestratingTheRefreshAuthenticationActionCorrectly() {
         String refreshToken = "refresh-token";
         String accessToken = "access-token";
         String userId = UUID.randomUUID().toString();

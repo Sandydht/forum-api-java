@@ -10,7 +10,7 @@ public class AuthenticationTokenManagerTest {
 
     @Test
     @DisplayName("should throw error when invoke unimplemented method")
-    public void testThrowErrorWhenInvokeAbstractBehavior() {
+    public void shouldThrowErrorWhenInvokeUnimplementedMethod() {
         UnsupportedOperationException createAccessTokenError = Assertions.assertThrows(
                 UnsupportedOperationException.class,
                 () -> authenticationTokenManager.createAccessToken(null)

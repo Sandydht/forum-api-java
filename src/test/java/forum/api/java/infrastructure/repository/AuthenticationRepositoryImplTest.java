@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.UUID;
 
 @DataJpaTest
 @Transactional
@@ -51,7 +52,7 @@ public class AuthenticationRepositoryImplTest {
             UserEntity userEntity = new UserEntity(savedUser.getId(), savedUser.getUsername(), savedUser.getFullname(), savedUser.getPassword());
             authenticationRepositoryImpl.addToken(userEntity, fakeRefreshToken);
 
-            RefreshTokenJpaEntity refreshTokenJpaEntity = authenticationJpaRepository.findByToken(fakeRefreshToken).orElseThrow();
+            RefreshTokenJpaEntity refreshTokenJpaEntity = authenticationJpaRepository.findFirstByToken(fakeRefreshToken).orElseThrow();
 
             Assertions.assertNotNull(refreshTokenJpaEntity.getId());
             Assertions.assertNotNull(refreshTokenJpaEntity.getUser());
@@ -88,8 +89,8 @@ public class AuthenticationRepositoryImplTest {
 
             authenticationRepositoryImpl.deleteExpiredTokens(now);
 
-            Assertions.assertTrue(authenticationJpaRepository.findByToken("expired-token").isEmpty());
-            Assertions.assertTrue(authenticationJpaRepository.findByToken("valid-token").isPresent());
+            Assertions.assertTrue(authenticationJpaRepository.findFirstByToken("expired-token").isEmpty());
+            Assertions.assertTrue(authenticationJpaRepository.findFirstByToken("valid-token").isPresent());
         }
     }
 
@@ -155,7 +156,42 @@ public class AuthenticationRepositoryImplTest {
             authenticationJpaRepository.save(refreshTokenJpaEntity);
             authenticationRepositoryImpl.deleteToken(refreshToken);
 
-            Assertions.assertTrue(authenticationJpaRepository.findByToken(refreshToken).isEmpty());
+            Assertions.assertTrue(authenticationJpaRepository.findFirstByToken(refreshToken).isEmpty());
+        }
+    }
+
+    @Nested
+    @DisplayName("deleteTokenByUserId function")
+    public class DeleteTokenByUserIdFunction {
+        @Test
+        @DisplayName("should throw NotFoundException when token is not found in database")
+        public void shouldThrowNotFoundExceptionWhenTokenIsNotFoundInDatabase() {
+            String userId = UUID.randomUUID().toString();
+
+            NotFoundException exception = Assertions.assertThrows(
+                    NotFoundException.class,
+                    () -> authenticationRepositoryImpl.deleteTokenByUserId(userId)
+            );
+
+            Assertions.assertEquals("TOKEN_NOT_FOUND", exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("should delete token from database")
+        public void shouldDeleteTokenFromDatabase() {
+            String username = "user";
+            String fullname = "Fullname";
+            String password = "password";
+            String refreshToken = "refresh-token";
+
+            UserJpaEntity userJpaEntity = new UserJpaEntity(username, fullname, password);
+            UserJpaEntity savedUser = userJpaRepository.save(userJpaEntity);
+
+            RefreshTokenJpaEntity refreshTokenJpaEntity = new RefreshTokenJpaEntity(savedUser, refreshToken, Instant.now().plusSeconds(100));
+            authenticationJpaRepository.save(refreshTokenJpaEntity);
+            authenticationRepositoryImpl.deleteTokenByUserId(savedUser.getId());
+
+            Assertions.assertTrue(authenticationJpaRepository.findFirstByUserId(savedUser.getId()).isEmpty());
         }
     }
 }

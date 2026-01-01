@@ -42,7 +42,7 @@ public class UsersControllerTest {
 
         @Test
         @DisplayName("should register account successfully")
-        public void testShouldRegisterAccountSuccessfully() throws Exception {
+        public void shouldRegisterAccountSuccessfully() throws Exception {
             String username = "user";
             String fullname = "Fullname";
             String password = "password";
@@ -60,7 +60,7 @@ public class UsersControllerTest {
 
         @Test
         @DisplayName("should return 400 when username is already exist")
-        public void testReturn400WhenUsernamIsAlreadyExist() throws Exception{
+        public void shouldReturn400WhenUsernameIsAlreadyExist() throws Exception{
             String username = "user";
             String fullname = "Fullname";
             String password = "password";

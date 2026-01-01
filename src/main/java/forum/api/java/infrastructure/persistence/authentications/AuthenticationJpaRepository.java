@@ -12,9 +12,11 @@ import java.util.Optional;
 
 @Transactional
 public interface AuthenticationJpaRepository extends JpaRepository<RefreshTokenJpaEntity, String> {
-    Optional<RefreshTokenJpaEntity> findByToken(String token);
+    Optional<RefreshTokenJpaEntity> findFirstByToken(String token);
     Optional<RefreshTokenJpaEntity> deleteByToken(String token);
-    Optional<RefreshTokenJpaEntity> findByUserUsername(String username);
+    Optional<RefreshTokenJpaEntity> findFirstByUserUsername(String username);
+    Optional<RefreshTokenJpaEntity> findFirstByUserId(String userId);
+    Optional<RefreshTokenJpaEntity> deleteByUserId(String userId);
 
     @Modifying
     @Query("""

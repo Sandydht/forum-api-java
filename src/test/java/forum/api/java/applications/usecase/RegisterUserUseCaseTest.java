@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @DisplayName("Register user use case")
 @ExtendWith(MockitoExtension.class)
-public class RegisterUserEntityUseCaseTest {
+public class RegisterUserUseCaseTest {
     @Mock
     private UserRepository userRepository;
 
@@ -28,7 +28,7 @@ public class RegisterUserEntityUseCaseTest {
 
     @Test
     @DisplayName("should orchestrating the register user action correctly")
-    public void testRegisterUserActionCorrectly() {
+    public void shouldOrchestratingThreRegisterUserActionCorrectly() {
         String id = UUID.randomUUID().toString();
         String username = "user";
         String fullname = "Fullname";

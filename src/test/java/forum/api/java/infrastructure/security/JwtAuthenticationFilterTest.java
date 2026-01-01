@@ -48,7 +48,7 @@ public class JwtAuthenticationFilterTest {
     public class DoFilterInternal {
         @Test
         @DisplayName("should set authentication when token is valid")
-        public void testSetAuthenticationWhenTokenIsValid() throws ServletException, IOException {
+        public void shouldSetAuthenticationWhenTokenIsValid() throws ServletException, IOException {
             String token = "valid-token";
             String userId = "user-123";
 
