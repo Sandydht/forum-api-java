@@ -118,7 +118,8 @@ public class ThreadsControllerTest {
 
             mockMvc.perform(get(urlTemplate, savedThread.getId())
                             .header("Authorization", "Bearer " + accessToken)
-                            .contentType(MediaType.APPLICATION_JSON).with(csrf()))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .with(csrf()))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.id").value(savedThread.getId()))
                     .andExpect(jsonPath("$.title").value(title))

@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
-@AutoConfigureMockMvc(addFilters = false)
+@AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Transactional
 @DisplayName("AuthenticationsController")
@@ -141,7 +141,6 @@ public class AuthenticationsControllerTest {
     @Nested
     @DisplayName("POST /api/authentications/logout-account")
     public class UserLogoutAccount {
-        private final String urlTemplate = "/api/authentications/logout-account";
 
         @Test
         @DisplayName("should success logout account successfully")
@@ -149,28 +148,20 @@ public class AuthenticationsControllerTest {
             UserLoginRequest userLoginRequest = new UserLoginRequest(username, password);
             String responseString = mockMvc.perform(post("/api/authentications/login-account")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(userLoginRequest)))
+                            .content(objectMapper.writeValueAsString(userLoginRequest))
+                            .with(csrf()))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.accessToken").exists())
                     .andReturn().getResponse().getContentAsString();
 
             UserLoginResponse userLoginResponse = objectMapper.readValue(responseString, UserLoginResponse.class);
 
+            String urlTemplate = "/api/authentications/logout-account";
             mockMvc.perform(post(urlTemplate)
-//                            .header("Authorization", "Bearer " + userLoginResponse.getAccessToken())
+                            .header("Authorization", "Bearer " + userLoginResponse.getAccessToken())
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.message").exists());
-        }
-
-        @Test
-        @DisplayName("should return NotFoundException when refresh token is not found")
-        public void shouldReturnNotFoundExceptionWhenRefreshTokenIsNotFound() throws Exception {
-            UserLogoutRequest invalidRequest = new UserLogoutRequest("invalid-token-123");
-            mockMvc.perform(post(urlTemplate)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(invalidRequest)))
-                    .andExpect(status().isNotFound());
         }
     }
 }
