@@ -24,4 +24,8 @@ public interface AuthenticationRepository {
     default void deleteTokenByUserId(String userId) {
         throw new UnsupportedOperationException("AUTHENTICATION_REPOSITORY.METHOD_NOT_IMPLEMENTED");
     }
+
+    default String getTokenByUsername(String username) {
+        throw new UnsupportedOperationException("AUTHENTICATION_REPOSITORY.METHOD_NOT_IMPLEMENTED");
+    }
 }

@@ -10,7 +10,6 @@ import forum.api.java.infrastructure.security.PasswordHashImpl;
 import forum.api.java.interfaces.http.api.authentications.dto.RefreshAuthenticationRequest;
 import forum.api.java.interfaces.http.api.authentications.dto.UserLoginRequest;
 import forum.api.java.interfaces.http.api.authentications.dto.UserLoginResponse;
-import forum.api.java.interfaces.http.api.authentications.dto.UserLogoutRequest;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -68,7 +67,8 @@ public class AuthenticationsControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)).with(csrf()))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.accessToken").exists());
+                    .andExpect(jsonPath("$.accessToken").exists())
+                    .andExpect(jsonPath("$.refreshToken").exists());
         }
 
         @Test
@@ -92,7 +92,8 @@ public class AuthenticationsControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)).with(csrf()))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.accessToken").exists());
+                    .andExpect(jsonPath("$.accessToken").exists())
+                    .andExpect(jsonPath("$.refreshToken").exists());
 
             RefreshTokenJpaEntity refreshToken = authenticationJpaRepository.findFirstByUserUsername(request.getUsername()).orElseThrow();
 
@@ -103,7 +104,6 @@ public class AuthenticationsControllerTest {
 
     @Nested
     @DisplayName("POST /api/authentications/refresh-authentication")
-    @Disabled
     public class GetRefreshAuthentication {
         private final String urlTemplate = "/api/authentications/refresh-authentication";
 
@@ -141,7 +141,6 @@ public class AuthenticationsControllerTest {
     @Nested
     @DisplayName("POST /api/authentications/logout-account")
     public class UserLogoutAccount {
-
         @Test
         @DisplayName("should success logout account successfully")
         public void shouldSuccessLogoutAccountSuccessfully() throws Exception {

@@ -6,6 +6,8 @@ import forum.api.java.infrastructure.persistence.authentications.AuthenticationJ
 import forum.api.java.infrastructure.persistence.authentications.entity.RefreshTokenJpaEntity;
 import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
 import forum.api.java.infrastructure.persistence.users.entity.UserJpaEntity;
+import forum.api.java.infrastructure.security.AuthenticationTokenManagerImpl;
+import forum.api.java.infrastructure.security.PasswordHashImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -67,26 +69,18 @@ public class AuthenticationRepositoryImplTest {
         @Test
         @DisplayName("should delete expired tokens from database")
         public void testDeleteExpiredTokensFromDatabase() {
+            String username = "user";
+            String fullname = "Fullname";
+            String password = "password";
+
+            String expiredToken = "expired-token";
+            String validToken = "valid-token";
             Instant now = Instant.now();
 
-            UserJpaEntity user = userJpaRepository.save(new UserJpaEntity(
-                    "user",
-                    "Fullname",
-                    "password"
-            ));
+            UserJpaEntity user = userJpaRepository.save(new UserJpaEntity(username, fullname, password));
 
-            authenticationJpaRepository.save(new RefreshTokenJpaEntity(
-                    user,
-                    "expired-token",
-                    now.minus(Duration.ofDays(1))
-            ));
-
-            authenticationJpaRepository.save(new RefreshTokenJpaEntity(
-                    user,
-                    "valid-token",
-                    now.plus(Duration.ofDays(1))
-            ));
-
+            authenticationJpaRepository.save(new RefreshTokenJpaEntity(user, expiredToken, now.minus(Duration.ofDays(1))));
+            authenticationJpaRepository.save(new RefreshTokenJpaEntity(user, validToken, now.plus(Duration.ofDays(1))));
             authenticationRepositoryImpl.deleteExpiredTokens(now);
 
             Assertions.assertTrue(authenticationJpaRepository.findFirstByToken("expired-token").isEmpty());
@@ -107,7 +101,7 @@ public class AuthenticationRepositoryImplTest {
                     () -> authenticationRepositoryImpl.checkAvailabilityToken(token)
             );
 
-            Assertions.assertEquals("TOKEN_NOT_FOUND", exception.getMessage());
+            Assertions.assertEquals("AUTHENTICATION_REPOSITORY_IMPL.TOKEN_NOT_FOUND", exception.getMessage());
         }
 
         @Test
@@ -138,7 +132,7 @@ public class AuthenticationRepositoryImplTest {
                     () -> authenticationRepositoryImpl.deleteToken(token)
             );
 
-            Assertions.assertEquals("TOKEN_NOT_FOUND", exception.getMessage());
+            Assertions.assertEquals("AUTHENTICATION_REPOSITORY_IMPL.TOKEN_NOT_FOUND", exception.getMessage());
         }
 
         @Test
@@ -173,7 +167,7 @@ public class AuthenticationRepositoryImplTest {
                     () -> authenticationRepositoryImpl.deleteTokenByUserId(userId)
             );
 
-            Assertions.assertEquals("TOKEN_NOT_FOUND", exception.getMessage());
+            Assertions.assertEquals("AUTHENTICATION_REPOSITORY_IMPL.TOKEN_NOT_FOUND", exception.getMessage());
         }
 
         @Test
@@ -192,6 +186,44 @@ public class AuthenticationRepositoryImplTest {
             authenticationRepositoryImpl.deleteTokenByUserId(savedUser.getId());
 
             Assertions.assertTrue(authenticationJpaRepository.findFirstByUserId(savedUser.getId()).isEmpty());
+        }
+    }
+
+    @Nested
+    @DisplayName("getTokenByUsername function")
+    public class GetTokenByUsernameFunction {
+        @Test
+        @DisplayName("should throw NotFoundException when token not found")
+        public void shouldThrowNotFoundExceptionWhenTokenNotFound() {
+            String username = "user";
+
+            NotFoundException exception = Assertions.assertThrows(
+                    NotFoundException.class,
+                    () -> authenticationRepositoryImpl.getTokenByUsername(username)
+            );
+
+            Assertions.assertEquals("AUTHENTICATION_REPOSITORY_IMPL.TOKEN_NOT_FOUND", exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("should not throw NotFoundException when token is found")
+        public void shouldNotThrowNotFoundExceptionWhenTokenIsFound() {
+            String username = "user";
+            String fullname = "Fullname";
+            String password = "password";
+
+            UserJpaEntity userJpaEntity = new UserJpaEntity(username, fullname, password);
+            UserJpaEntity savedUser = userJpaRepository.save(userJpaEntity);
+
+            Instant expiresAt = Instant.now().plus(Duration.ofDays(7));
+            String refreshToken = "refresh-token";
+
+            RefreshTokenJpaEntity refreshTokenJpaEntity = new RefreshTokenJpaEntity(savedUser, refreshToken, expiresAt);
+            authenticationJpaRepository.save(refreshTokenJpaEntity);
+
+            String savedRefreshToken = authenticationRepositoryImpl.getTokenByUsername(username);
+
+            Assertions.assertEquals(refreshToken, savedRefreshToken);
         }
     }
 }

@@ -1,5 +1,6 @@
 package forum.api.java.interfaces.http.api.authentications;
 
+import forum.api.java.applications.usecase.GetRefreshTokenUseCase;
 import forum.api.java.applications.usecase.LoginUserUseCase;
 import forum.api.java.applications.usecase.LogoutUserUseCase;
 import forum.api.java.applications.usecase.RefreshAuthenticationUseCase;
@@ -16,17 +17,20 @@ public class AuthenticationsController {
     private final LoginUserUseCase loginUserUseCase;
     private final RefreshAuthenticationUseCase refreshAuthenticationUseCase;
     private final LogoutUserUseCase logoutUserUseCase;
+    private final GetRefreshTokenUseCase getRefreshTokenUseCase;
 
-    public AuthenticationsController(LoginUserUseCase loginUserUseCase, RefreshAuthenticationUseCase refreshAuthenticationUseCase, LogoutUserUseCase logoutUserUseCase) {
+    public AuthenticationsController(LoginUserUseCase loginUserUseCase, RefreshAuthenticationUseCase refreshAuthenticationUseCase, LogoutUserUseCase logoutUserUseCase, GetRefreshTokenUseCase getRefreshTokenUseCase) {
         this.loginUserUseCase = loginUserUseCase;
         this.refreshAuthenticationUseCase = refreshAuthenticationUseCase;
         this.logoutUserUseCase = logoutUserUseCase;
+        this.getRefreshTokenUseCase = getRefreshTokenUseCase;
     }
 
     @PostMapping("login-account")
     public UserLoginResponse userLoginAccount(@RequestBody UserLoginRequest request) {
         String accessToken = loginUserUseCase.execute(request.getUsername(), request.getPassword());
-        return new UserLoginResponse(accessToken);
+        String refreshToken = getRefreshTokenUseCase.execute(request.getUsername());
+        return new UserLoginResponse(accessToken, refreshToken);
     }
 
     @PostMapping("refresh-authentication")

@@ -67,4 +67,9 @@ public class UseCaseConfig {
     public GetThreadDetailUseCase getThreadDetailUseCase(ThreadRepository threadRepository) {
         return new GetThreadDetailUseCase(threadRepository);
     }
+
+    @Bean
+    public GetRefreshTokenUseCase getRefreshTokenUseCase(AuthenticationRepository authenticationRepository) {
+        return new GetRefreshTokenUseCase(authenticationRepository);
+    }
 }

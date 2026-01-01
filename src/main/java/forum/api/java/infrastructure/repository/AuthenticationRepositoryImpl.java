@@ -26,7 +26,7 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
     public void addToken(UserEntity userEntity, String token) {
         UserJpaEntity userJpaEntity = userJpaRepository
                 .findByUsername(userEntity.getUsername())
-                .orElseThrow(() -> new NotFoundException("USER_NOT_FOUND"));
+                .orElseThrow(() -> new NotFoundException("AUTHENTICATION_REPOSITORY_IMPL.USER_NOT_FOUND"));
 
         Instant expiresAt = Instant.now().plus(Duration.ofDays(7));
         RefreshTokenJpaEntity refreshTokenJpaEntity = new RefreshTokenJpaEntity(userJpaEntity, token, expiresAt);
@@ -42,14 +42,14 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
     @Override
     public void checkAvailabilityToken(String token) {
         if (authenticationJpaRepository.findFirstByToken(token).isEmpty()) {
-            throw new NotFoundException("TOKEN_NOT_FOUND");
+            throw new NotFoundException("AUTHENTICATION_REPOSITORY_IMPL.TOKEN_NOT_FOUND");
         }
     }
 
     @Override
     public void deleteToken(String token) {
         if (authenticationJpaRepository.findFirstByToken(token).isEmpty()) {
-            throw new NotFoundException("TOKEN_NOT_FOUND");
+            throw new NotFoundException("AUTHENTICATION_REPOSITORY_IMPL.TOKEN_NOT_FOUND");
         }
 
         authenticationJpaRepository.deleteByToken(token);
@@ -57,11 +57,18 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
     @Override
     public void deleteTokenByUserId(String userId) {
-        System.out.println(authenticationJpaRepository.findFirstByUserId(userId));
         if (authenticationJpaRepository.findFirstByUserId(userId).isEmpty()) {
-            throw new NotFoundException("TOKEN_NOT_FOUND");
+            throw new NotFoundException("AUTHENTICATION_REPOSITORY_IMPL.TOKEN_NOT_FOUND");
         }
 
         authenticationJpaRepository.deleteByUserId(userId);
+    }
+
+    @Override
+    public String getTokenByUsername(String username) {
+        RefreshTokenJpaEntity refreshTokenJpaEntity = authenticationJpaRepository.findFirstByUserUsername(username)
+                .orElseThrow(() -> new NotFoundException("AUTHENTICATION_REPOSITORY_IMPL.TOKEN_NOT_FOUND"));
+
+        return refreshTokenJpaEntity.getToken();
     }
 }

@@ -3,7 +3,6 @@ package forum.api.java.infrastructure.security;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import forum.api.java.commons.exceptions.ClientException;
 import forum.api.java.commons.exceptions.InvariantException;
 import org.junit.jupiter.api.*;
 
