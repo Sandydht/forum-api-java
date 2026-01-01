@@ -2,9 +2,7 @@ package forum.api.java.interfaces.http.api.threads;
 
 import forum.api.java.applications.usecase.AddThreadUseCase;
 import forum.api.java.applications.usecase.GetThreadDetailUseCase;
-import forum.api.java.domain.thread.entity.AddThread;
-import forum.api.java.domain.thread.entity.AddedThread;
-import forum.api.java.domain.thread.entity.ThreadDetail;
+import forum.api.java.domain.thread.entity.ThreadEntity;
 import forum.api.java.domain.user.entity.UserThreadDetail;
 import forum.api.java.interfaces.http.api.threads.dto.AddThreadRequest;
 import forum.api.java.interfaces.http.api.threads.dto.AddThreadResponse;
@@ -25,21 +23,21 @@ public class ThreadsController {
 
     @PostMapping("add-thread")
     public AddThreadResponse addThreadAction(@AuthenticationPrincipal String userId, @RequestBody AddThreadRequest addThreadRequest) {
-        AddThread addThread = new AddThread(addThreadRequest.getTitle(), addThreadRequest.getBody());
-        AddedThread addedThread = addThreadUseCase.execute(userId, addThread);
-        return new AddThreadResponse(addedThread.getId(), addedThread.getTitle(), addedThread.getBody());
+        System.out.println("userId: " + userId);
+        ThreadEntity threadEntity = addThreadUseCase.execute(userId, addThreadRequest.getTitle(), addThreadRequest.getBody());
+        return new AddThreadResponse(threadEntity.getId(), threadEntity.getTitle(), threadEntity.getBody());
     }
 
     @GetMapping("thread-detail/{id}")
     public GetThreadDetailResponse getThreadDetailAction(@PathVariable("id") String threadId) {
-        ThreadDetail threadDetail = getThreadDetailUseCase.execute(threadId);
+        ThreadEntity threadEntity = getThreadDetailUseCase.execute(threadId);
         return new GetThreadDetailResponse(
-                threadDetail.getId(),
-                threadDetail.getTitle(),
-                threadDetail.getBody(),
+                threadEntity.getId(),
+                threadEntity.getTitle(),
+                threadEntity.getBody(),
                 new UserThreadDetail(
-                        threadDetail.getUserThreadDetail().getId(),
-                        threadDetail.getUserThreadDetail().getFullname()
+                        threadEntity.getUser().getId(),
+                        threadEntity.getUser().getFullname()
                 )
         );
     }

@@ -46,11 +46,8 @@ public class UseCaseConfig {
     }
 
     @Bean
-    public AddThreadUseCase addThreadUseCase(
-            UserRepositoryImpl userRepositoryImpl,
-            ThreadRepositoryImpl threadRepositoryImpl
-    ) {
-        return new AddThreadUseCase(userRepositoryImpl, threadRepositoryImpl);
+    public AddThreadUseCase addThreadUseCase(ThreadRepositoryImpl threadRepositoryImpl) {
+        return new AddThreadUseCase(threadRepositoryImpl);
     }
 
     @Bean

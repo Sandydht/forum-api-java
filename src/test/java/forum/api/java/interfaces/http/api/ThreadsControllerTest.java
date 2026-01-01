@@ -2,9 +2,9 @@ package forum.api.java.interfaces.http.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import forum.api.java.infrastructure.persistence.threads.ThreadJpaRepository;
-import forum.api.java.infrastructure.persistence.threads.entity.ThreadEntity;
+import forum.api.java.infrastructure.persistence.threads.entity.ThreadJpaEntity;
 import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
-import forum.api.java.infrastructure.persistence.users.entity.UserEntity;
+import forum.api.java.infrastructure.persistence.users.entity.UserJpaEntity;
 import forum.api.java.infrastructure.security.PasswordHashImpl;
 import forum.api.java.interfaces.http.api.authentications.dto.UserLoginRequest;
 import forum.api.java.interfaces.http.api.authentications.dto.UserLoginResponse;
@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayName("ThreadsController")
 public class ThreadsControllerTest {
     private String accessToken;
-    private UserEntity savedUser;
+    private UserJpaEntity savedUser;
 
     @Autowired
     private MockMvc mockMvc;
@@ -54,7 +54,7 @@ public class ThreadsControllerTest {
         String username = "user";
         String fullname = "Fullname";
         String password = "password";
-        savedUser = userJpaRepository.save(new UserEntity(username, fullname, passwordHashImpl.hashPassword(password)));
+        savedUser = userJpaRepository.save(new UserJpaEntity(username, fullname, passwordHashImpl.hashPassword(password)));
 
         UserLoginRequest loginRequest = new UserLoginRequest(username, password);
         String responseString = mockMvc.perform(post("/api/authentications/login-account")
@@ -69,7 +69,7 @@ public class ThreadsControllerTest {
 
     @Nested
     @DisplayName("POST /api/threads/add-thread")
-    public class AddThreadFunction {
+    public class AddThreadEntityFunction {
         @Test
         @DisplayName("should add thread successfully")
         public void testAddThreadSuccessfully() throws Exception {
@@ -92,7 +92,7 @@ public class ThreadsControllerTest {
 
     @Nested
     @DisplayName("GET /api/threads/thread-detail/{id}")
-    public class GetThreadDetailAction {
+    public class GetThreadEntityDetailAction {
         private final String urlTemplate = "/api/threads/thread-detail/{id}";
 
         @Test
@@ -112,8 +112,8 @@ public class ThreadsControllerTest {
             String title = "Title";
             String body = "Body";
 
-            ThreadEntity threadEntity = new ThreadEntity(savedUser, title, body);
-            ThreadEntity savedThread = threadJpaRepository.save(threadEntity);
+            ThreadJpaEntity threadJpaEntity = new ThreadJpaEntity(savedUser, title, body);
+            ThreadJpaEntity savedThread = threadJpaRepository.save(threadJpaEntity);
 
             mockMvc.perform(get(urlTemplate, savedThread.getId())
                             .header("Authorization", "Bearer " + accessToken)

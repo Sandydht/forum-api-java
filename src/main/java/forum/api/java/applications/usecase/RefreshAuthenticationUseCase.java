@@ -2,7 +2,6 @@ package forum.api.java.applications.usecase;
 
 import forum.api.java.applications.security.AuthenticationTokenManager;
 import forum.api.java.domain.authentication.AuthenticationRepository;
-import forum.api.java.domain.authentication.entity.RefreshAuth;
 
 public class RefreshAuthenticationUseCase {
     private final AuthenticationRepository authenticationRepository;
@@ -13,10 +12,10 @@ public class RefreshAuthenticationUseCase {
         this.authenticationTokenManager = authenticationTokenManager;
     }
 
-    public String execute(RefreshAuth refreshAuth) {
-        authenticationTokenManager.verifyToken(refreshAuth.getRefreshToken());
-        authenticationRepository.checkAvailabilityToken(refreshAuth.getRefreshToken());
-        String userId = authenticationTokenManager.decodeJWTPayload(refreshAuth.getRefreshToken());
+    public String execute(String refreshToken) {
+        authenticationTokenManager.verifyToken(refreshToken);
+        authenticationRepository.checkAvailabilityToken(refreshToken);
+        String userId = authenticationTokenManager.decodeJWTPayload(refreshToken);
         return authenticationTokenManager.createAccessToken(userId);
     }
 }

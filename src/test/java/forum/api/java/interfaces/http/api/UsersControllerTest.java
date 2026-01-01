@@ -2,7 +2,7 @@ package forum.api.java.interfaces.http.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
-import forum.api.java.infrastructure.persistence.users.entity.UserEntity;
+import forum.api.java.infrastructure.persistence.users.entity.UserJpaEntity;
 import forum.api.java.interfaces.http.api.users.dto.UserRegisterRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -65,7 +65,7 @@ public class UsersControllerTest {
             String fullname = "Fullname";
             String password = "password";
 
-            userJpaRepository.save(new UserEntity(username, fullname, password));
+            userJpaRepository.save(new UserJpaEntity(username, fullname, password));
 
             UserRegisterRequest request = new UserRegisterRequest(username, fullname, password);
 

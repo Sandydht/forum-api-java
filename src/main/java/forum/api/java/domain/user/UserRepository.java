@@ -1,13 +1,11 @@
 package forum.api.java.domain.user;
 
-import forum.api.java.domain.user.entity.UserDetail;
-import forum.api.java.domain.user.entity.RegisterUser;
-import forum.api.java.domain.user.entity.RegisteredUser;
+import forum.api.java.domain.user.entity.UserEntity;
 
 import java.util.Optional;
 
 public interface UserRepository {
-    default RegisteredUser addUser(RegisterUser registerUser) {
+    default UserEntity addUser(String username, String fullname, String password) {
         throw new UnsupportedOperationException("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED");
     }
 
@@ -15,11 +13,11 @@ public interface UserRepository {
         throw new UnsupportedOperationException("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED");
     }
 
-    default Optional<UserDetail> getUserByUsername(String username) {
+    default Optional<UserEntity> getUserByUsername(String username) {
         throw new UnsupportedOperationException("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED");
     }
 
-    default Optional<UserDetail> getUserById(String id) {
+    default Optional<UserEntity> getUserById(String id) {
         throw new UnsupportedOperationException("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED");
     }
 }

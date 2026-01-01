@@ -1,13 +1,8 @@
 package forum.api.java.domain.authentication;
 
-import forum.api.java.domain.user.entity.UserDetail;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.time.Duration;
-import java.time.Instant;
-import java.util.UUID;
 
 @DisplayName("AuthenticationRepository interface")
 public class AuthenticationRepositoryTest {
@@ -16,24 +11,15 @@ public class AuthenticationRepositoryTest {
     @Test
     @DisplayName("should throw error when invoke unimplemented method")
     public void testThrowErrorWhenInvokeAbstractBehavior() {
-        String id = UUID.randomUUID().toString();
-        String username = "user";
-        String fullname = "Fullname";
-        String password = "password";
-        String refreshToken = "refresh-token";
-        Instant expiredDate = Instant.now().plus(Duration.ofDays(7));
-
-        UserDetail loginUser = new UserDetail(id, username, fullname, password);
-
         UnsupportedOperationException addTokenError = Assertions.assertThrows(
                 UnsupportedOperationException.class,
-                () -> authenticationRepository.addToken(loginUser, refreshToken, expiredDate)
+                () -> authenticationRepository.addToken(null, null)
         );
         Assertions.assertEquals("AUTHENTICATION_REPOSITORY.METHOD_NOT_IMPLEMENTED", addTokenError.getMessage());
 
         UnsupportedOperationException deleteExpiredTokensError = Assertions.assertThrows(
                 UnsupportedOperationException.class,
-                () -> authenticationRepository.deleteExpiredTokens(Instant.now())
+                () -> authenticationRepository.deleteExpiredTokens(null)
         );
         Assertions.assertEquals("AUTHENTICATION_REPOSITORY.METHOD_NOT_IMPLEMENTED", deleteExpiredTokensError.getMessage());
 

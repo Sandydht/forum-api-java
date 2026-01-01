@@ -1,0 +1,26 @@
+package forum.api.java.domain.thread;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+@DisplayName("ThreadRepository interface")
+public class ThreadEntityRepositoryTest {
+    private final ThreadRepository threadRepository = new ThreadRepository() {};
+
+    @Test
+    @DisplayName("should throw error when invoke abstract behavior")
+    public void testThrowErrorWhenInvokeAbstractBehavior() {
+        UnsupportedOperationException addThreadError = Assertions.assertThrows(
+                UnsupportedOperationException.class,
+                () -> threadRepository.addThread(null,null, null)
+        );
+        Assertions.assertEquals("THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED", addThreadError.getMessage());
+
+        UnsupportedOperationException getThreadByIdError = Assertions.assertThrows(
+                UnsupportedOperationException.class,
+                () -> threadRepository.getThreadById(null)
+        );
+        Assertions.assertEquals("THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED", getThreadByIdError.getMessage());
+    }
+}

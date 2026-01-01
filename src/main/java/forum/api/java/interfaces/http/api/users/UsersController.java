@@ -1,8 +1,7 @@
 package forum.api.java.interfaces.http.api.users;
 
 import forum.api.java.applications.usecase.RegisterUserUseCase;
-import forum.api.java.domain.user.entity.RegisterUser;
-import forum.api.java.domain.user.entity.RegisteredUser;
+import forum.api.java.domain.user.entity.UserEntity;
 import forum.api.java.interfaces.http.api.users.dto.UserRegisterRequest;
 import forum.api.java.interfaces.http.api.users.dto.UserRegisterResponse;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,8 +20,7 @@ public class UsersController {
 
     @PostMapping("register-account")
     public UserRegisterResponse userRegistrationAccount(@RequestBody UserRegisterRequest userRegisterRequest) {
-        RegisterUser registerUser = new RegisterUser(userRegisterRequest.getUsername(), userRegisterRequest.getFullname(), userRegisterRequest.getPassword());
-        RegisteredUser registeredUser = registerUserUseCase.execute(registerUser);
-        return new UserRegisterResponse(registeredUser.getId(), registeredUser.getUsername(), registeredUser.getFullname());
+        UserEntity userEntity = registerUserUseCase.execute(userRegisterRequest.getUsername(), userRegisterRequest.getFullname(), userRegisterRequest.getPassword());
+        return new UserRegisterResponse(userEntity.getId(), userEntity.getUsername(), userEntity.getFullname());
     }
 }

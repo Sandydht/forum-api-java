@@ -2,13 +2,14 @@ package forum.api.java.infrastructure.repository;
 
 import forum.api.java.commons.exceptions.NotFoundException;
 import forum.api.java.domain.authentication.AuthenticationRepository;
-import forum.api.java.domain.user.entity.UserDetail;
+import forum.api.java.domain.user.entity.UserEntity;
 import forum.api.java.infrastructure.persistence.authentications.AuthenticationJpaRepository;
-import forum.api.java.infrastructure.persistence.authentications.entity.RefreshTokenEntity;
+import forum.api.java.infrastructure.persistence.authentications.entity.RefreshTokenJpaEntity;
 import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
-import forum.api.java.infrastructure.persistence.users.entity.UserEntity;
+import forum.api.java.infrastructure.persistence.users.entity.UserJpaEntity;
 import org.springframework.stereotype.Repository;
 
+import java.time.Duration;
 import java.time.Instant;
 
 @Repository
@@ -22,14 +23,15 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
     }
 
     @Override
-    public void addToken(UserDetail userDetail, String token, Instant expiresAt) {
-        UserEntity userEntity = userJpaRepository
-                .findByUsername(userDetail.getUsername())
+    public void addToken(UserEntity userEntity, String token) {
+        UserJpaEntity userJpaEntity = userJpaRepository
+                .findByUsername(userEntity.getUsername())
                 .orElseThrow(() -> new NotFoundException("USER_NOT_FOUND"));
 
-        RefreshTokenEntity refreshTokenEntity = new RefreshTokenEntity(userEntity, token, expiresAt);
+        Instant expiresAt = Instant.now().plus(Duration.ofDays(7));
+        RefreshTokenJpaEntity refreshTokenJpaEntity = new RefreshTokenJpaEntity(userJpaEntity, token, expiresAt);
 
-        authenticationJpaRepository.save(refreshTokenEntity);
+        authenticationJpaRepository.save(refreshTokenJpaEntity);
     }
 
     @Override

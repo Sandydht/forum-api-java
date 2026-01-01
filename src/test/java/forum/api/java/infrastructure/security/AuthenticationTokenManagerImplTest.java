@@ -31,7 +31,7 @@ public class AuthenticationTokenManagerImplTest {
 
     @Nested
     @DisplayName("createRefreshToken function")
-    public class CreateRefreshTokenFunction {
+    public class CreateRefreshTokenEntityFunction {
         @Test
         @DisplayName("should create refreshToken correctly")
         public void testCreateRefreshTokenCorrectly() {

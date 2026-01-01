@@ -2,7 +2,6 @@ package forum.api.java.applications.usecase;
 
 import forum.api.java.applications.security.AuthenticationTokenManager;
 import forum.api.java.domain.authentication.AuthenticationRepository;
-import forum.api.java.domain.authentication.entity.RefreshAuth;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,20 +32,18 @@ public class RefreshAuthenticationUseCaseTest {
         String accessToken = "access-token";
         String userId = UUID.randomUUID().toString();
 
-        RefreshAuth refreshAuth = new RefreshAuth(refreshToken);
-
-        Mockito.doNothing().when(authenticationTokenManager).verifyToken(refreshAuth.getRefreshToken());
-        Mockito.doNothing().when(authenticationRepository).checkAvailabilityToken(refreshAuth.getRefreshToken());
-        Mockito.when(authenticationTokenManager.decodeJWTPayload(refreshAuth.getRefreshToken())).thenReturn(userId);
+        Mockito.doNothing().when(authenticationTokenManager).verifyToken(refreshToken);
+        Mockito.doNothing().when(authenticationRepository).checkAvailabilityToken(refreshToken);
+        Mockito.when(authenticationTokenManager.decodeJWTPayload(refreshToken)).thenReturn(userId);
         Mockito.when(authenticationTokenManager.createAccessToken(userId)).thenReturn(accessToken);
 
-        String newAccessToken = refreshAuthenticationUseCase.execute(refreshAuth);
+        String newAccessToken = refreshAuthenticationUseCase.execute(refreshToken);
 
         Assertions.assertEquals(accessToken, newAccessToken);
 
-        Mockito.verify(authenticationTokenManager, Mockito.times(1)).verifyToken(refreshAuth.getRefreshToken());
-        Mockito.verify(authenticationRepository, Mockito.times(1)).checkAvailabilityToken(refreshAuth.getRefreshToken());
-        Mockito.verify(authenticationTokenManager, Mockito.times(1)).decodeJWTPayload(refreshAuth.getRefreshToken());
+        Mockito.verify(authenticationTokenManager, Mockito.times(1)).verifyToken(refreshToken);
+        Mockito.verify(authenticationRepository, Mockito.times(1)).checkAvailabilityToken(refreshToken);
+        Mockito.verify(authenticationTokenManager, Mockito.times(1)).decodeJWTPayload(refreshToken);
         Mockito.verify(authenticationTokenManager, Mockito.times(1)).createAccessToken(userId);
     }
 }

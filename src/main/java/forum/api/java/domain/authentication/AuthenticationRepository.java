@@ -1,11 +1,11 @@
 package forum.api.java.domain.authentication;
 
-import forum.api.java.domain.user.entity.UserDetail;
+import forum.api.java.domain.user.entity.UserEntity;
 
 import java.time.Instant;
 
 public interface AuthenticationRepository {
-    default void addToken(UserDetail userDetail, String token, Instant expiresAt) {
+    default void addToken(UserEntity userEntity, String token) {
         throw new UnsupportedOperationException("AUTHENTICATION_REPOSITORY.METHOD_NOT_IMPLEMENTED");
     }
 
