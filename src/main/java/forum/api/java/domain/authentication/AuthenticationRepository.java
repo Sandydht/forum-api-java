@@ -5,7 +5,7 @@ import forum.api.java.domain.user.entity.UserEntity;
 import java.time.Instant;
 
 public interface AuthenticationRepository {
-    default void addToken(UserEntity userEntity, String token) {
+    default void addToken(String username, String token) {
         throw new UnsupportedOperationException("AUTHENTICATION_REPOSITORY.METHOD_NOT_IMPLEMENTED");
     }
 

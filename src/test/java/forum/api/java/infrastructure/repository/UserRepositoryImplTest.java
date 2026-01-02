@@ -42,7 +42,7 @@ public class UserRepositoryImplTest {
                     () -> userRepositoryImpl.verifyAvailableUsername(username)
             );
 
-            Assertions.assertEquals("USER_ALREADY_EXIST", verifyAvailableUsernameError.getMessage());
+            Assertions.assertEquals("USER_REPOSITORY_IMPL.USER_ALREADY_EXIST", verifyAvailableUsernameError.getMessage());
         }
 
         @Test
@@ -85,7 +85,7 @@ public class UserRepositoryImplTest {
                     () -> userRepositoryImpl.getUserByUsername(username)
             );
 
-            Assertions.assertEquals("USER_NOT_FOUND", exception.getMessage());
+            Assertions.assertEquals("USER_REPOSITORY_IMPL.USER_NOT_FOUND", exception.getMessage());
         }
 
         @Test
@@ -120,7 +120,7 @@ public class UserRepositoryImplTest {
                     () -> userRepositoryImpl.getUserById(userId)
             );
 
-            Assertions.assertEquals("USER_NOT_FOUND", exception.getMessage());
+            Assertions.assertEquals("USER_REPOSITORY_IMPL.USER_NOT_FOUND", exception.getMessage());
         }
 
         @Test

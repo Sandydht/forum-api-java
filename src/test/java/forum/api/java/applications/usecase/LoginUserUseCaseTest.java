@@ -17,7 +17,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
 @DisplayName("Login user use case")
@@ -55,7 +54,7 @@ public class LoginUserUseCaseTest {
         Mockito.doNothing().when(passwordHash).passwordCompare(password, userEntity.getPassword());
         Mockito.when(authenticationTokenManager.createAccessToken(userId)).thenReturn(accessToken);
         Mockito.when(authenticationTokenManager.createRefreshToken(userId)).thenReturn(refreshToken);
-        Mockito.doNothing().when(authenticationRepository).addToken(any(UserEntity.class), eq(refreshToken));
+        Mockito.doNothing().when(authenticationRepository).addToken(eq(username), eq(refreshToken));
 
         String generatedAccessToken = loginUserUseCase.execute(username, password);
 
@@ -65,6 +64,6 @@ public class LoginUserUseCaseTest {
         Mockito.verify(passwordHash, Mockito.times(1)).passwordCompare(password, userEntity.getPassword());
         Mockito.verify(authenticationTokenManager, Mockito.times(1)).createAccessToken(userId);
         Mockito.verify(authenticationTokenManager, Mockito.times(1)).createRefreshToken(userId);
-        Mockito.verify(authenticationRepository, Mockito.times(1)).addToken(any(UserEntity.class), eq(refreshToken));
+        Mockito.verify(authenticationRepository, Mockito.times(1)).addToken(eq(username), eq(refreshToken));
     }
 }

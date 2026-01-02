@@ -7,9 +7,9 @@ import forum.api.java.infrastructure.persistence.authentications.entity.RefreshT
 import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
 import forum.api.java.infrastructure.persistence.users.entity.UserJpaEntity;
 import forum.api.java.infrastructure.security.PasswordHashImpl;
-import forum.api.java.interfaces.http.api.authentications.dto.RefreshAuthenticationRequest;
-import forum.api.java.interfaces.http.api.authentications.dto.UserLoginRequest;
-import forum.api.java.interfaces.http.api.authentications.dto.UserLoginResponse;
+import forum.api.java.interfaces.http.api.authentications.dto.request.RefreshAuthenticationRequest;
+import forum.api.java.interfaces.http.api.authentications.dto.request.UserLoginRequest;
+import forum.api.java.interfaces.http.api.authentications.dto.response.UserLoginResponse;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

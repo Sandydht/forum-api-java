@@ -3,7 +3,7 @@ package forum.api.java.interfaces.http.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
 import forum.api.java.infrastructure.persistence.users.entity.UserJpaEntity;
-import forum.api.java.interfaces.http.api.users.dto.UserRegisterRequest;
+import forum.api.java.interfaces.http.api.users.dto.request.UserRegisterRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -73,7 +73,7 @@ public class UsersControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)).with(csrf()))
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.message").value("USER_ALREADY_EXIST"));
+                    .andExpect(jsonPath("$.message").value("USER_REPOSITORY_IMPL.USER_ALREADY_EXIST"));
         }
     }
 }

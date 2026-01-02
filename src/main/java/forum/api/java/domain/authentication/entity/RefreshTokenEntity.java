@@ -1,27 +1,25 @@
 package forum.api.java.domain.authentication.entity;
 
-import forum.api.java.domain.user.entity.UserEntity;
-
 import java.time.Instant;
 
 public class RefreshTokenEntity {
     private final String id;
-    private final UserEntity userEntity;
+    private final String userId;
     private final String token;
     private final Instant expiresAt;
 
-    public RefreshTokenEntity(String id, UserEntity userEntity, String token, Instant expiresAt) {
-        verifyPayload(id, userEntity, token, expiresAt);
+    public RefreshTokenEntity(String id, String userId, String token, Instant expiresAt) {
+        verifyPayload(id, userId, token, expiresAt);
 
         this.id = id;
-        this.userEntity = userEntity;
+        this.userId = userId;
         this.token = token;
         this.expiresAt = expiresAt;
     }
 
-    private static void verifyPayload(String id, UserEntity userEntity, String token, Instant expiresAt) {
+    private static void verifyPayload(String id, String userId, String token, Instant expiresAt) {
         requireNotBlank(id);
-        requireNotNull(userEntity);
+        requireNotBlank(userId);
         requireNotBlank(token);
         requireNotNull(expiresAt);
     }
@@ -42,8 +40,8 @@ public class RefreshTokenEntity {
         return id;
     }
 
-    public UserEntity getUser() {
-        return userEntity;
+    public String getUserId() {
+        return userId;
     }
 
     public String getToken() {

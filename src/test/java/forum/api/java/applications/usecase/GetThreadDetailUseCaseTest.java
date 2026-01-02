@@ -26,34 +26,20 @@ public class GetThreadDetailUseCaseTest {
     @Test
     @DisplayName("should orchestrating the get thread detail action correctly")
     public void shouldOrchestratingTheGetThreadDetailActionCorrectly() {
-        String threadId = UUID.randomUUID().toString();
+        String id = UUID.randomUUID().toString();
+        String userId = UUID.randomUUID().toString();
         String title = "Title";
         String body = "Body";
 
-        String userId = UUID.randomUUID().toString();
-        String username = "user";
-        String fullname = "Fullname";
-        String password = "password";
+        Mockito.when(threadRepository.getThreadById(id)).thenReturn(new ThreadEntity(id, userId, title, body));
 
-        UserEntity userEntity = new UserEntity(userId, username, fullname, password);
+        ThreadEntity threadEntity = getThreadDetailUseCase.execute(id);
 
-        Mockito.when(threadRepository.getThreadById(threadId)).thenReturn(new ThreadEntity(
-                threadId,
-                userEntity,
-                title,
-                body
-        ));
-
-        ThreadEntity threadEntity = getThreadDetailUseCase.execute(threadId);
-
-        Assertions.assertEquals(threadId, threadEntity.getId());
-        Assertions.assertEquals(userId, threadEntity.getUser().getId());
-        Assertions.assertEquals(username, threadEntity.getUser().getUsername());
-        Assertions.assertEquals(fullname, threadEntity.getUser().getFullname());
-        Assertions.assertEquals(password, threadEntity.getUser().getPassword());
+        Assertions.assertEquals(id, threadEntity.getId());
+        Assertions.assertEquals(userId, threadEntity.getUserId());
         Assertions.assertEquals(title, threadEntity.getTitle());
         Assertions.assertEquals(body, threadEntity.getBody());
 
-        Mockito.verify(threadRepository, Mockito.times(1)).getThreadById(threadId);
+        Mockito.verify(threadRepository, Mockito.times(1)).getThreadById(id);
     }
 }

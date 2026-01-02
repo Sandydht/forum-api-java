@@ -1,4 +1,4 @@
-package forum.api.java.interfaces.http.api.threads.dto;
+package forum.api.java.interfaces.http.api.authentications.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AddThreadResponse {
-    private String id;
-    private String title;
-    private String body;
+public class UserLogoutResponse {
+    private String message;
 }

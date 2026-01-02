@@ -1,6 +1,5 @@
 package forum.api.java.domain.thread.entity;
 
-import forum.api.java.domain.user.entity.UserEntity;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,26 +13,26 @@ import java.util.stream.Stream;
 public class ThreadEntityTest {
     private static Stream<Arguments> provideInvalidMissingData() {
         String id = UUID.randomUUID().toString();
-        UserEntity userEntity = new UserEntity(UUID.randomUUID().toString(), "user", "Fullname", "password");
+        String userId = UUID.randomUUID().toString();
         String title = "Title";
         String body = "Body";
 
         return Stream.of(
-                Arguments.of(null, userEntity, title, body),
+                Arguments.of(null, userId, title, body),
                 Arguments.of(id, null, title, body),
-                Arguments.of(id, userEntity, null, body),
-                Arguments.of(id, userEntity, title, null),
-                Arguments.of("  ", userEntity, title, body),
-                Arguments.of(id, userEntity, "  ", body)
+                Arguments.of(id, userId, null, body),
+                Arguments.of(id, userId, title, null),
+                Arguments.of("  ", userId, title, body),
+                Arguments.of(id, userId, "  ", body)
         );
     }
 
     @ParameterizedTest
     @DisplayName("should throw error when payload did not contain needed property")
     @MethodSource("provideInvalidMissingData")
-    public void shouldThrowErrorWhenPayloadDidNotContainNeededProperty(String id, UserEntity userEntity, String title, String body) {
+    public void shouldThrowErrorWhenPayloadDidNotContainNeededProperty(String id, String userId, String title, String body) {
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            new ThreadEntity(id, userEntity, title, body);
+            new ThreadEntity(id, userId, title, body);
         });
 
         Assertions.assertEquals("THREAD.NOT_CONTAIN_NEEDED_PROPERTY", exception.getMessage());
@@ -43,23 +42,14 @@ public class ThreadEntityTest {
     @DisplayName("should create object correctly")
     public void shouldCreateObjectCorrectly() {
         String id = UUID.randomUUID().toString();
-        String username = "user";
-        String fullname = "Fullname";
-        String password = "password";
-
-        UserEntity userEntity = new UserEntity(id, username, fullname, password);
-
-        String threadId = UUID.randomUUID().toString();
+        String userId = UUID.randomUUID().toString();
         String title = "Title";
         String body = "Body";
 
-        ThreadEntity threadEntity = new ThreadEntity(threadId, userEntity, title, body);
+        ThreadEntity threadEntity = new ThreadEntity(id, userId, title, body);
 
-        Assertions.assertEquals(threadId, threadEntity.getId());
-        Assertions.assertEquals(userEntity.getId(), threadEntity.getUser().getId());
-        Assertions.assertEquals(userEntity.getUsername(), threadEntity.getUser().getUsername());
-        Assertions.assertEquals(userEntity.getFullname(), threadEntity.getUser().getFullname());
-        Assertions.assertEquals(userEntity.getPassword(), threadEntity.getUser().getPassword());
+        Assertions.assertEquals(id, threadEntity.getId());
+        Assertions.assertEquals(userId, threadEntity.getUserId());
         Assertions.assertEquals(title, threadEntity.getTitle());
         Assertions.assertEquals(body, threadEntity.getBody());
     }

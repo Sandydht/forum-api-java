@@ -2,8 +2,8 @@ package forum.api.java.interfaces.http.api.users;
 
 import forum.api.java.applications.usecase.RegisterUserUseCase;
 import forum.api.java.domain.user.entity.UserEntity;
-import forum.api.java.interfaces.http.api.users.dto.UserRegisterRequest;
-import forum.api.java.interfaces.http.api.users.dto.UserRegisterResponse;
+import forum.api.java.interfaces.http.api.users.dto.request.UserRegisterRequest;
+import forum.api.java.interfaces.http.api.users.dto.response.UserRegisterResponse;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

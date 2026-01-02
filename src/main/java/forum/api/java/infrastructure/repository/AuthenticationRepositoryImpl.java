@@ -2,7 +2,6 @@ package forum.api.java.infrastructure.repository;
 
 import forum.api.java.commons.exceptions.NotFoundException;
 import forum.api.java.domain.authentication.AuthenticationRepository;
-import forum.api.java.domain.user.entity.UserEntity;
 import forum.api.java.infrastructure.persistence.authentications.AuthenticationJpaRepository;
 import forum.api.java.infrastructure.persistence.authentications.entity.RefreshTokenJpaEntity;
 import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
@@ -23,9 +22,9 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
     }
 
     @Override
-    public void addToken(UserEntity userEntity, String token) {
+    public void addToken(String username, String token) {
         UserJpaEntity userJpaEntity = userJpaRepository
-                .findByUsername(userEntity.getUsername())
+                .findByUsername(username)
                 .orElseThrow(() -> new NotFoundException("AUTHENTICATION_REPOSITORY_IMPL.USER_NOT_FOUND"));
 
         Instant expiresAt = Instant.now().plus(Duration.ofDays(7));

@@ -1,25 +1,23 @@
 package forum.api.java.domain.thread.entity;
 
-import forum.api.java.domain.user.entity.UserEntity;
-
 public class ThreadEntity {
     private final String id;
-    private final UserEntity userEntity;
+    private final String userId;
     private final String title;
     private final String body;
 
-    public ThreadEntity(String id, UserEntity userEntity, String title, String body) {
-        verifyPayload(id, userEntity, title, body);
+    public ThreadEntity(String id, String userId, String title, String body) {
+        verifyPayload(id, userId, title, body);
 
         this.id = id;
-        this.userEntity = userEntity;
+        this.userId = userId;
         this.title = title;
         this.body = body;
     }
 
-    private static void verifyPayload(String id, UserEntity userEntity, String title, String body) {
+    private static void verifyPayload(String id, String userId, String title, String body) {
         requireNotBlank(id);
-        requireNotNull(userEntity);
+        requireNotBlank(userId);
         requireNotBlank(title);
         requireNotBlank(body);
     }
@@ -40,8 +38,8 @@ public class ThreadEntity {
         return id;
     }
 
-    public UserEntity getUser() {
-        return userEntity;
+    public String getUserId() {
+        return userId;
     }
 
     public String getTitle() {

@@ -31,8 +31,7 @@ public class LoginUserUseCase {
         String accessToken = authenticationTokenManager.createAccessToken(findUserEntity.getId());
         String refreshToken = authenticationTokenManager.createRefreshToken(findUserEntity.getId());
 
-        UserEntity userEntity = new UserEntity(findUserEntity.getId(), findUserEntity.getUsername(), findUserEntity.getFullname(), findUserEntity.getPassword());
-        authenticationRepository.addToken(userEntity, refreshToken);
+        authenticationRepository.addToken(username, refreshToken);
 
         return accessToken;
     }

@@ -1,4 +1,4 @@
-package forum.api.java.interfaces.http.api.users.dto;
+package forum.api.java.interfaces.http.api.authentications.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -9,12 +9,9 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserRegisterRequest {
+public class UserLoginRequest {
     @NotBlank(message = "Username is required")
     private String username;
-
-    @NotBlank(message = "Fullname is required")
-    private String fullname;
 
     @NotBlank(message = "Password is required")
     private String password;

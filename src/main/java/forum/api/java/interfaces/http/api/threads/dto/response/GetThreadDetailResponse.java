@@ -1,4 +1,4 @@
-package forum.api.java.interfaces.http.api.threads.dto;
+package forum.api.java.interfaces.http.api.threads.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

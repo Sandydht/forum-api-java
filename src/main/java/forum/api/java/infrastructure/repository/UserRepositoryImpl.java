@@ -6,6 +6,7 @@ import forum.api.java.domain.user.UserRepository;
 import forum.api.java.domain.user.entity.UserEntity;
 import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
 import forum.api.java.infrastructure.persistence.users.entity.UserJpaEntity;
+import forum.api.java.infrastructure.persistence.users.mapper.UserJpaMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -22,47 +23,31 @@ public class UserRepositoryImpl implements UserRepository {
     public UserEntity addUser(String username, String fullname, String password) {
         UserJpaEntity userJpaEntity = new UserJpaEntity(username, fullname, password);
         UserJpaEntity savedUser = userJpaRepository.save(userJpaEntity);
-
-        return new UserEntity(
-                savedUser.getId(),
-                savedUser.getUsername(),
-                savedUser.getFullname(),
-                savedUser.getPassword()
-        );
+        return UserJpaMapper.toDomain(savedUser);
     }
 
     @Override
     public void verifyAvailableUsername(String username) {
         if (userJpaRepository.findByUsername(username).isPresent()) {
-            throw new InvariantException("USER_ALREADY_EXIST");
+            throw new InvariantException("USER_REPOSITORY_IMPL.USER_ALREADY_EXIST");
         }
     }
 
     @Override
     public Optional<UserEntity> getUserByUsername(String username) {
         if (userJpaRepository.findByUsername(username).isEmpty()) {
-            throw new NotFoundException("USER_NOT_FOUND");
+            throw new NotFoundException("USER_REPOSITORY_IMPL.USER_NOT_FOUND");
         }
 
-        return userJpaRepository.findByUsername(username).map(userEntity -> new UserEntity(
-            userEntity.getId(),
-            userEntity.getUsername(),
-            userEntity.getFullname(),
-            userEntity.getPassword()
-        ));
+        return userJpaRepository.findByUsername(username).map(UserJpaMapper::toDomain);
     }
 
     @Override
     public Optional<UserEntity> getUserById(String id) {
         if (userJpaRepository.findById(id).isEmpty()) {
-            throw new NotFoundException("USER_NOT_FOUND");
+            throw new NotFoundException("USER_REPOSITORY_IMPL.USER_NOT_FOUND");
         }
 
-        return userJpaRepository.findById(id).map(userEntity -> new UserEntity(
-                userEntity.getId(),
-                userEntity.getUsername(),
-                userEntity.getFullname(),
-                userEntity.getPassword()
-        ));
+        return userJpaRepository.findById(id).map(UserJpaMapper::toDomain);
     }
 }

@@ -69,7 +69,7 @@ public class ThreadRepositoryImplTest {
                     NotFoundException.class,
                     () -> threadRepositoryImpl.getThreadById(id)
             );
-            Assertions.assertEquals("THREAD_NOT_FOUND", exception.getMessage());
+            Assertions.assertEquals("THREAD_REPOSITORY_IMPL.THREAD_NOT_FOUND", exception.getMessage());
         }
 
         @Test
@@ -91,10 +91,7 @@ public class ThreadRepositoryImplTest {
             ThreadEntity threadEntity = threadRepositoryImpl.getThreadById(savedThread.getId());
 
             Assertions.assertEquals(savedThread.getId(), threadEntity.getId());
-            Assertions.assertEquals(savedThread.getUser().getId(), threadEntity.getUser().getId());
-            Assertions.assertEquals(savedThread.getUser().getUsername(), threadEntity.getUser().getUsername());
-            Assertions.assertEquals(savedThread.getUser().getFullname(), threadEntity.getUser().getFullname());
-            Assertions.assertEquals(savedThread.getUser().getPassword(), threadEntity.getUser().getPassword());
+            Assertions.assertEquals(savedThread.getUser().getId(), threadEntity.getUserId());
             Assertions.assertEquals(title, threadEntity.getTitle());
             Assertions.assertEquals(body, threadEntity.getBody());
         }

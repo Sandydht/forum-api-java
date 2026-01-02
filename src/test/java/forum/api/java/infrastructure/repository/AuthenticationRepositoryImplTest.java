@@ -49,10 +49,9 @@ public class AuthenticationRepositoryImplTest {
             String fakeRefreshToken = "fake-refresh-token";
 
             UserJpaEntity userJpaEntity = new UserJpaEntity(username, fullname, password);
-            UserJpaEntity savedUser = userJpaRepository.save(userJpaEntity);
+            userJpaRepository.save(userJpaEntity);
 
-            UserEntity userEntity = new UserEntity(savedUser.getId(), savedUser.getUsername(), savedUser.getFullname(), savedUser.getPassword());
-            authenticationRepositoryImpl.addToken(userEntity, fakeRefreshToken);
+            authenticationRepositoryImpl.addToken(username, fakeRefreshToken);
 
             RefreshTokenJpaEntity refreshTokenJpaEntity = authenticationJpaRepository.findFirstByToken(fakeRefreshToken).orElseThrow();
 

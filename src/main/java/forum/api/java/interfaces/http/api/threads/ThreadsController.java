@@ -3,9 +3,9 @@ package forum.api.java.interfaces.http.api.threads;
 import forum.api.java.applications.usecase.AddThreadUseCase;
 import forum.api.java.applications.usecase.GetThreadDetailUseCase;
 import forum.api.java.domain.thread.entity.ThreadEntity;
-import forum.api.java.interfaces.http.api.threads.dto.AddThreadRequest;
-import forum.api.java.interfaces.http.api.threads.dto.AddThreadResponse;
-import forum.api.java.interfaces.http.api.threads.dto.GetThreadDetailResponse;
+import forum.api.java.interfaces.http.api.threads.dto.request.AddThreadRequest;
+import forum.api.java.interfaces.http.api.threads.dto.response.AddThreadResponse;
+import forum.api.java.interfaces.http.api.threads.dto.response.GetThreadDetailResponse;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +22,6 @@ public class ThreadsController {
 
     @PostMapping("add-thread")
     public AddThreadResponse addThreadAction(@AuthenticationPrincipal String userId, @RequestBody AddThreadRequest addThreadRequest) {
-        System.out.println("userId: " + userId);
         ThreadEntity threadEntity = addThreadUseCase.execute(userId, addThreadRequest.getTitle(), addThreadRequest.getBody());
         return new AddThreadResponse(threadEntity.getId(), threadEntity.getTitle(), threadEntity.getBody());
     }
