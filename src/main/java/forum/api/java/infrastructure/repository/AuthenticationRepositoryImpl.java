@@ -62,12 +62,4 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
         authenticationJpaRepository.deleteByUserId(userId);
     }
-
-    @Override
-    public String getTokenByUsername(String username) {
-        RefreshTokenJpaEntity refreshTokenJpaEntity = authenticationJpaRepository.findFirstByUserUsername(username)
-                .orElseThrow(() -> new NotFoundException("AUTHENTICATION_REPOSITORY_IMPL.TOKEN_NOT_FOUND"));
-
-        return refreshTokenJpaEntity.getToken();
-    }
 }

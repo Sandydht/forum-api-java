@@ -40,11 +40,5 @@ public class AuthenticationRepositoryTest {
                 () -> authenticationRepository.deleteTokenByUserId(null)
         );
         Assertions.assertEquals("AUTHENTICATION_REPOSITORY.METHOD_NOT_IMPLEMENTED", deleteTokenByUserIdError.getMessage());
-
-        UnsupportedOperationException getTokenByUsernameError = Assertions.assertThrows(
-                UnsupportedOperationException.class,
-                () -> authenticationRepository.getTokenByUsername(null)
-        );
-        Assertions.assertEquals("AUTHENTICATION_REPOSITORY.METHOD_NOT_IMPLEMENTED", getTokenByUsernameError.getMessage());
     }
 }

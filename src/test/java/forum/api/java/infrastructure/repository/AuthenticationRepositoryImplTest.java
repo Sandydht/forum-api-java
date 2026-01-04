@@ -1,13 +1,10 @@
 package forum.api.java.infrastructure.repository;
 
 import forum.api.java.commons.exceptions.NotFoundException;
-import forum.api.java.domain.user.entity.UserEntity;
 import forum.api.java.infrastructure.persistence.authentications.AuthenticationJpaRepository;
 import forum.api.java.infrastructure.persistence.authentications.entity.RefreshTokenJpaEntity;
 import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
 import forum.api.java.infrastructure.persistence.users.entity.UserJpaEntity;
-import forum.api.java.infrastructure.security.AuthenticationTokenManagerImpl;
-import forum.api.java.infrastructure.security.PasswordHashImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -185,44 +182,6 @@ public class AuthenticationRepositoryImplTest {
             authenticationRepositoryImpl.deleteTokenByUserId(savedUser.getId());
 
             Assertions.assertTrue(authenticationJpaRepository.findFirstByUserId(savedUser.getId()).isEmpty());
-        }
-    }
-
-    @Nested
-    @DisplayName("getTokenByUsername function")
-    public class GetTokenByUsernameFunction {
-        @Test
-        @DisplayName("should throw NotFoundException when token not found")
-        public void shouldThrowNotFoundExceptionWhenTokenNotFound() {
-            String username = "user";
-
-            NotFoundException exception = Assertions.assertThrows(
-                    NotFoundException.class,
-                    () -> authenticationRepositoryImpl.getTokenByUsername(username)
-            );
-
-            Assertions.assertEquals("AUTHENTICATION_REPOSITORY_IMPL.TOKEN_NOT_FOUND", exception.getMessage());
-        }
-
-        @Test
-        @DisplayName("should not throw NotFoundException when token is found")
-        public void shouldNotThrowNotFoundExceptionWhenTokenIsFound() {
-            String username = "user";
-            String fullname = "Fullname";
-            String password = "password";
-
-            UserJpaEntity userJpaEntity = new UserJpaEntity(username, fullname, password);
-            UserJpaEntity savedUser = userJpaRepository.save(userJpaEntity);
-
-            Instant expiresAt = Instant.now().plus(Duration.ofDays(7));
-            String refreshToken = "refresh-token";
-
-            RefreshTokenJpaEntity refreshTokenJpaEntity = new RefreshTokenJpaEntity(savedUser, refreshToken, expiresAt);
-            authenticationJpaRepository.save(refreshTokenJpaEntity);
-
-            String savedRefreshToken = authenticationRepositoryImpl.getTokenByUsername(username);
-
-            Assertions.assertEquals(refreshToken, savedRefreshToken);
         }
     }
 }

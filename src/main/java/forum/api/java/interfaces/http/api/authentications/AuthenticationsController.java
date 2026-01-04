@@ -47,7 +47,6 @@ public class AuthenticationsController {
 
     @PostMapping("logout-account")
     public UserLogoutResponse userLogoutAccount(@AuthenticationPrincipal String userId) {
-        System.out.println("userId: " + userId);
         logoutUserUseCase.execute(userId);
         return new UserLogoutResponse("See you!");
     }
