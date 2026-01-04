@@ -6,6 +6,9 @@ import forum.api.java.domain.authentication.AuthenticationRepository;
 import forum.api.java.domain.user.UserRepository;
 import forum.api.java.domain.user.entity.UserEntity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class LoginUserUseCase {
     private final UserRepository userRepository;
     private final AuthenticationRepository authenticationRepository;
@@ -24,7 +27,7 @@ public class LoginUserUseCase {
         this.authenticationTokenManager = authenticationTokenManager;
     }
 
-    public String execute(String username, String password) {
+    public Map<String, String> execute(String username, String password) {
         UserEntity findUserEntity = userRepository.getUserByUsername(username).orElseThrow();
         passwordHash.passwordCompare(password, findUserEntity.getPassword());
 
@@ -33,6 +36,9 @@ public class LoginUserUseCase {
 
         authenticationRepository.addToken(username, refreshToken);
 
-        return accessToken;
+        Map<String, String> result = new HashMap<>();
+        result.put("accessToken", accessToken);
+        result.put("refreshToken", refreshToken);
+        return result;
     }
 }
