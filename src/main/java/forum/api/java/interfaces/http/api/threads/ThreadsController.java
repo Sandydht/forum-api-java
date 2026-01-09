@@ -3,7 +3,7 @@ package forum.api.java.interfaces.http.api.threads;
 import forum.api.java.applications.usecase.AddThreadUseCase;
 import forum.api.java.applications.usecase.GetThreadDetailUseCase;
 import forum.api.java.domain.thread.entity.AddedThread;
-import forum.api.java.domain.thread.entity.ThreadEntity;
+import forum.api.java.domain.thread.entity.ThreadDetail;
 import forum.api.java.interfaces.http.api.threads.dto.request.AddThreadRequest;
 import forum.api.java.interfaces.http.api.threads.dto.response.AddThreadResponse;
 import forum.api.java.interfaces.http.api.threads.dto.response.GetThreadDetailResponse;
@@ -29,11 +29,11 @@ public class ThreadsController {
 
     @GetMapping("thread-detail/{id}")
     public GetThreadDetailResponse getThreadDetailAction(@PathVariable("id") String threadId) {
-        ThreadEntity threadEntity = getThreadDetailUseCase.execute(threadId);
+        ThreadDetail threadDetail = getThreadDetailUseCase.execute(threadId);
         return new GetThreadDetailResponse(
-                threadEntity.getId(),
-                threadEntity.getTitle(),
-                threadEntity.getBody()
+                threadDetail.getId(),
+                threadDetail.getTitle(),
+                threadDetail.getBody()
         );
     }
 }

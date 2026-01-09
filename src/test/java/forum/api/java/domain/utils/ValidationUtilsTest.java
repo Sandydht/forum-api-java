@@ -99,4 +99,31 @@ public class ValidationUtilsTest {
             Assertions.assertDoesNotThrow(() -> ValidationUtils.usernameNotContainRestrictedCharacter(username, errorMessage));
         }
     }
+
+    @Nested
+    @DisplayName("requireNonNull function")
+    public class RequireNonNullFunction {
+        @Test
+        @DisplayName("should throw IllegalArgumentException when object is null")
+        public void shouldThrowIllegalArgumentExceptionWhenObjectIsNull() {
+            Object input = null;
+            String errorMessage = "OBJECT_SHOULD_NOT_BE_NULL";
+
+            IllegalArgumentException exception = Assertions.assertThrows(
+                    IllegalArgumentException.class,
+                    () -> ValidationUtils.requireNonNull(input, errorMessage)
+            );
+
+            Assertions.assertEquals(errorMessage, exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("should not throw exception when object is valid")
+        public void shouldNotThrowExceptionWhenObjectIsValid() {
+            Object input = new Object();
+            String errorMessage = "OBJECT_SHOULD_NOT_BE_NULL";
+
+            Assertions.assertDoesNotThrow(() -> ValidationUtils.requireNonNull(input, errorMessage));
+        }
+    }
 }

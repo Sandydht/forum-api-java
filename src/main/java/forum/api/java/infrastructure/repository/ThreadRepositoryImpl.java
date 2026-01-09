@@ -3,7 +3,7 @@ package forum.api.java.infrastructure.repository;
 import forum.api.java.commons.exceptions.NotFoundException;
 import forum.api.java.domain.thread.ThreadRepository;
 import forum.api.java.domain.thread.entity.AddedThread;
-import forum.api.java.domain.thread.entity.ThreadEntity;
+import forum.api.java.domain.thread.entity.ThreadDetail;
 import forum.api.java.infrastructure.persistence.threads.ThreadJpaRepository;
 import forum.api.java.infrastructure.persistence.threads.entity.ThreadJpaEntity;
 import forum.api.java.infrastructure.persistence.threads.mapper.ThreadJpaMapper;
@@ -33,10 +33,10 @@ public class ThreadRepositoryImpl implements ThreadRepository {
     }
 
     @Override
-    public ThreadEntity getThreadById(String id) {
+    public ThreadDetail getThreadById(String id) {
         return threadJpaRepository
                 .findById(id)
-                .map(ThreadJpaMapper::toThreadEntityDomain)
+                .map(ThreadJpaMapper::toThreadDetailDomain)
                 .orElseThrow(() -> new NotFoundException("THREAD_REPOSITORY_IMPL.THREAD_NOT_FOUND"));
     }
 }

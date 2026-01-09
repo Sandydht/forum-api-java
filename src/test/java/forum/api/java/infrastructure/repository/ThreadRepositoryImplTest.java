@@ -2,7 +2,7 @@ package forum.api.java.infrastructure.repository;
 
 import forum.api.java.commons.exceptions.NotFoundException;
 import forum.api.java.domain.thread.entity.AddedThread;
-import forum.api.java.domain.thread.entity.ThreadEntity;
+import forum.api.java.domain.thread.entity.ThreadDetail;
 import forum.api.java.infrastructure.persistence.threads.ThreadJpaRepository;
 import forum.api.java.infrastructure.persistence.threads.entity.ThreadJpaEntity;
 import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
@@ -89,12 +89,14 @@ public class ThreadRepositoryImplTest {
             ThreadJpaEntity threadJpaEntity = new ThreadJpaEntity(savedUser, title, body);
             ThreadJpaEntity savedThread = threadJpaRepository.save(threadJpaEntity);
 
-            ThreadEntity threadEntity = threadRepositoryImpl.getThreadById(savedThread.getId());
+            ThreadDetail threadDetail = threadRepositoryImpl.getThreadById(savedThread.getId());
 
-            Assertions.assertEquals(savedThread.getId(), threadEntity.getId());
-            Assertions.assertEquals(savedThread.getUser().getId(), threadEntity.getUserId());
-            Assertions.assertEquals(title, threadEntity.getTitle());
-            Assertions.assertEquals(body, threadEntity.getBody());
+            Assertions.assertEquals(savedThread.getId(), threadDetail.getId());
+            Assertions.assertEquals(title, threadDetail.getTitle());
+            Assertions.assertEquals(body, threadDetail.getBody());
+            Assertions.assertEquals(savedUser.getId(), threadDetail.getOwner().getId());
+            Assertions.assertEquals(savedUser.getUsername(), threadDetail.getOwner().getUsername());
+            Assertions.assertEquals(savedUser.getFullname(), threadDetail.getOwner().getFullname());
         }
     }
 }

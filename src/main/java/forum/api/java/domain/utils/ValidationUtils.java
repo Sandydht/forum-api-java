@@ -22,4 +22,10 @@ public class ValidationUtils {
             throw new IllegalArgumentException(message);
         }
     }
+
+    public static void requireNonNull(Object object, String message) {
+        if (object == null) {
+            throw new IllegalArgumentException(message);
+        }
+    }
 }
