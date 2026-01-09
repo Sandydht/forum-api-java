@@ -2,7 +2,8 @@ package forum.api.java.infrastructure.repository;
 
 import forum.api.java.commons.exceptions.InvariantException;
 import forum.api.java.commons.exceptions.NotFoundException;
-import forum.api.java.domain.user.entity.UserEntity;
+import forum.api.java.domain.user.entity.RegisteredUser;
+import forum.api.java.domain.user.entity.UserDetail;
 import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
 import forum.api.java.infrastructure.persistence.users.entity.UserJpaEntity;
 import org.junit.jupiter.api.*;
@@ -63,12 +64,11 @@ public class UserRepositoryImplTest {
             String fullname = "Fullname";
             String password = "password";
 
-            UserEntity userEntity = userRepositoryImpl.addUser(username, fullname, password);
+            RegisteredUser registeredUser = userRepositoryImpl.addUser(username, fullname, password);
 
-            Assertions.assertNotNull(userEntity.getId());
-            Assertions.assertEquals(username, userEntity.getUsername());
-            Assertions.assertEquals(fullname, userEntity.getFullname());
-            Assertions.assertEquals(password, userEntity.getPassword());
+            Assertions.assertNotNull(registeredUser.getId());
+            Assertions.assertEquals(username, registeredUser.getUsername());
+            Assertions.assertEquals(fullname, registeredUser.getFullname());
         }
     }
 
@@ -98,7 +98,7 @@ public class UserRepositoryImplTest {
             UserJpaEntity userJpaEntity = new UserJpaEntity(username, fullname, password);
             UserJpaEntity savedUser = userJpaRepository.save(userJpaEntity);
 
-            UserEntity result = userRepositoryImpl.getUserByUsername(username).orElseThrow();
+            UserDetail result = userRepositoryImpl.getUserByUsername(username);
 
             Assertions.assertEquals(savedUser.getId(), result.getId());
             Assertions.assertEquals(savedUser.getUsername(), result.getUsername());
@@ -133,7 +133,7 @@ public class UserRepositoryImplTest {
             UserJpaEntity userJpaEntity = new UserJpaEntity(username, fullname, password);
             UserJpaEntity savedUser = userJpaRepository.save(userJpaEntity);
 
-            UserEntity result = userRepositoryImpl.getUserByUsername(username).orElseThrow();
+            UserDetail result = userRepositoryImpl.getUserById(savedUser.getId());
 
             Assertions.assertEquals(savedUser.getId(), result.getId());
             Assertions.assertEquals(savedUser.getUsername(), result.getUsername());

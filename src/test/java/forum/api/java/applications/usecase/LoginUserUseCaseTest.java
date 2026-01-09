@@ -3,8 +3,9 @@ package forum.api.java.applications.usecase;
 import forum.api.java.applications.security.AuthenticationTokenManager;
 import forum.api.java.applications.security.PasswordHash;
 import forum.api.java.domain.authentication.AuthenticationRepository;
+import forum.api.java.domain.authentication.entity.NewAuthentication;
 import forum.api.java.domain.user.UserRepository;
-import forum.api.java.domain.user.entity.UserEntity;
+import forum.api.java.domain.user.entity.UserDetail;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,8 +15,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.eq;
@@ -49,21 +48,21 @@ public class LoginUserUseCaseTest {
         String accessToken = "access-token";
         String refreshToken = "refresh-token";
 
-        UserEntity userEntity = new UserEntity(userId, username, fullname, password);
+        UserDetail userDetail = new UserDetail(userId, username, fullname, password);
 
-        Mockito.when(userRepository.getUserByUsername(username)).thenReturn(Optional.of(userEntity));
-        Mockito.doNothing().when(passwordHash).passwordCompare(password, userEntity.getPassword());
+        Mockito.when(userRepository.getUserByUsername(username)).thenReturn(userDetail);
+        Mockito.doNothing().when(passwordHash).passwordCompare(password, userDetail.getPassword());
         Mockito.when(authenticationTokenManager.createAccessToken(userId)).thenReturn(accessToken);
         Mockito.when(authenticationTokenManager.createRefreshToken(userId)).thenReturn(refreshToken);
         Mockito.doNothing().when(authenticationRepository).addToken(eq(username), eq(refreshToken));
 
-        Map<String, String> loggedInUser = loginUserUseCase.execute(username, password);
+        NewAuthentication loggedInUser = loginUserUseCase.execute(username, password);
 
-        Assertions.assertEquals(accessToken, loggedInUser.get("accessToken"));
-        Assertions.assertEquals(refreshToken, loggedInUser.get("refreshToken"));
+        Assertions.assertEquals(accessToken, loggedInUser.getAccessToken());
+        Assertions.assertEquals(refreshToken, loggedInUser.getRefreshToken());
 
         Mockito.verify(userRepository, Mockito.times(1)).getUserByUsername(username);
-        Mockito.verify(passwordHash, Mockito.times(1)).passwordCompare(password, userEntity.getPassword());
+        Mockito.verify(passwordHash, Mockito.times(1)).passwordCompare(password, userDetail.getPassword());
         Mockito.verify(authenticationTokenManager, Mockito.times(1)).createAccessToken(userId);
         Mockito.verify(authenticationTokenManager, Mockito.times(1)).createRefreshToken(userId);
         Mockito.verify(authenticationRepository, Mockito.times(1)).addToken(eq(username), eq(refreshToken));

@@ -3,6 +3,7 @@ package forum.api.java.interfaces.http.api.authentications;
 import forum.api.java.applications.usecase.LoginUserUseCase;
 import forum.api.java.applications.usecase.LogoutUserUseCase;
 import forum.api.java.applications.usecase.RefreshAuthenticationUseCase;
+import forum.api.java.domain.authentication.entity.NewAuthentication;
 import forum.api.java.interfaces.http.api.authentications.dto.request.RefreshAuthenticationRequest;
 import forum.api.java.interfaces.http.api.authentications.dto.request.UserLoginRequest;
 import forum.api.java.interfaces.http.api.authentications.dto.response.RefreshAuthenticationResponse;
@@ -13,8 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/authentications")
@@ -35,8 +34,8 @@ public class AuthenticationsController {
 
     @PostMapping("login-account")
     public UserLoginResponse userLoginAccount(@RequestBody UserLoginRequest request) {
-        Map<String, String> loggedInUser = loginUserUseCase.execute(request.getUsername(), request.getPassword());
-        return new UserLoginResponse(loggedInUser.get("accessToken"), loggedInUser.get("refreshToken"));
+        NewAuthentication loggedInUser = loginUserUseCase.execute(request.getUsername(), request.getPassword());
+        return new UserLoginResponse(loggedInUser.getAccessToken(), loggedInUser.getRefreshToken());
     }
 
     @PostMapping("refresh-authentication")

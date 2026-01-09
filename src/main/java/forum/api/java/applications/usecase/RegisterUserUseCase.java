@@ -2,7 +2,7 @@ package forum.api.java.applications.usecase;
 
 import forum.api.java.applications.security.PasswordHash;
 import forum.api.java.domain.user.UserRepository;
-import forum.api.java.domain.user.entity.UserEntity;
+import forum.api.java.domain.user.entity.RegisteredUser;
 
 public class RegisterUserUseCase {
     private final UserRepository userRepository;
@@ -13,7 +13,7 @@ public class RegisterUserUseCase {
         this.passwordHash = passwordHash;
     }
 
-    public UserEntity execute(String username, String fullname, String password) {
+    public RegisteredUser execute(String username, String fullname, String password) {
         userRepository.verifyAvailableUsername(username);
         String hashedPassword = passwordHash.hashPassword(password);
         return userRepository.addUser(username, fullname, hashedPassword);

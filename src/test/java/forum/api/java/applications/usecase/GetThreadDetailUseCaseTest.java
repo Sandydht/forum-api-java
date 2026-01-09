@@ -2,7 +2,6 @@ package forum.api.java.applications.usecase;
 
 import forum.api.java.domain.thread.ThreadRepository;
 import forum.api.java.domain.thread.entity.ThreadEntity;
-import forum.api.java.domain.user.entity.UserEntity;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

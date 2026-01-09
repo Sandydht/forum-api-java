@@ -10,18 +10,23 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-@DisplayName("a User entity")
-public class UserEntityTest {
+@DisplayName("User detail entity")
+public class UserDetailTest {
     private static Stream<Arguments> provideInvalidMissingData() {
+        String id = UUID.randomUUID().toString();
+        String username = "user";
+        String fullname = "Fullname";
+        String password = "password";
+
         return Stream.of(
-                Arguments.of(null, "user", "Fullname", "password"),
-                Arguments.of(UUID.randomUUID().toString(), null, "Fullname", "password"),
-                Arguments.of(UUID.randomUUID().toString(), "user", null, "Password"),
-                Arguments.of(UUID.randomUUID().toString(), "user", "Fullname", null),
-                Arguments.of("  ", "user", "Fullname", "password"),
-                Arguments.of(UUID.randomUUID().toString(), "  ", "Fullname", "password"),
-                Arguments.of(UUID.randomUUID().toString(), "user", "  ", "password"),
-                Arguments.of(UUID.randomUUID().toString(), "user", "Fullname", "  ")
+                Arguments.of(null, username, fullname, password),
+                Arguments.of(id, null, fullname, password),
+                Arguments.of(id, username, null, password),
+                Arguments.of(id, username, fullname, null),
+                Arguments.of("  ", username, fullname, password),
+                Arguments.of(id, "  ", fullname, password),
+                Arguments.of(id, username, "  ", password),
+                Arguments.of(id, username, fullname, "  ")
         );
     }
 
@@ -30,10 +35,10 @@ public class UserEntityTest {
     @MethodSource("provideInvalidMissingData")
     public void shouldThrowErrorWhenPayloadDidNotContainNeededProperty(String id, String username, String fullname, String password) {
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            new UserEntity(id, username, fullname, password);
+            new UserDetail(id, username, fullname, password);
         });
 
-        Assertions.assertEquals("USER.NOT_CONTAIN_NEEDED_PROPERTY", exception.getMessage());
+        Assertions.assertEquals("USER_DETAIL.NOT_CONTAIN_NEEDED_PROPERTY", exception.getMessage());
     }
 
     @Test
@@ -45,10 +50,10 @@ public class UserEntityTest {
         String password = "password";
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            new UserEntity(id, invalidUsername, fullname, password);
+            new UserDetail(id, invalidUsername, fullname, password);
         });
 
-        Assertions.assertEquals("USER.USERNAME_LIMIT_CHAR", exception.getMessage());
+        Assertions.assertEquals("USER_DETAIL.USERNAME_LIMIT_CHAR", exception.getMessage());
     }
 
     @Test
@@ -60,10 +65,10 @@ public class UserEntityTest {
         String password = "password";
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            new UserEntity(id, invalidUsername, fullname, password);
+            new UserDetail(id, invalidUsername, fullname, password);
         });
 
-        Assertions.assertEquals("USER.USERNAME_CONTAIN_RESTRICTED_CHARACTER", exception.getMessage());
+        Assertions.assertEquals("USER_DETAIL.USERNAME_CONTAIN_RESTRICTED_CHARACTER", exception.getMessage());
     }
 
     @Test
@@ -74,11 +79,11 @@ public class UserEntityTest {
         String fullname = "Fullname";
         String password = "password";
 
-        UserEntity userEntity = new UserEntity(id, username, fullname, password);
+        UserDetail userDetail = new UserDetail(id, username, fullname, password);
 
-        Assertions.assertEquals(id, userEntity.getId());
-        Assertions.assertEquals(username, userEntity.getUsername());
-        Assertions.assertEquals(fullname, userEntity.getFullname());
-        Assertions.assertEquals(password, userEntity.getPassword());
+        Assertions.assertEquals(id, userDetail.getId());
+        Assertions.assertEquals(username, userDetail.getUsername());
+        Assertions.assertEquals(fullname, userDetail.getFullname());
+        Assertions.assertEquals(password, userDetail.getPassword());
     }
 }

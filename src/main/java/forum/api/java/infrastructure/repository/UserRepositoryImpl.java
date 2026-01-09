@@ -3,13 +3,12 @@ package forum.api.java.infrastructure.repository;
 import forum.api.java.commons.exceptions.InvariantException;
 import forum.api.java.commons.exceptions.NotFoundException;
 import forum.api.java.domain.user.UserRepository;
-import forum.api.java.domain.user.entity.UserEntity;
+import forum.api.java.domain.user.entity.RegisteredUser;
+import forum.api.java.domain.user.entity.UserDetail;
 import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
 import forum.api.java.infrastructure.persistence.users.entity.UserJpaEntity;
 import forum.api.java.infrastructure.persistence.users.mapper.UserJpaMapper;
 import org.springframework.stereotype.Repository;
-
-import java.util.Optional;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository {
@@ -20,10 +19,10 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public UserEntity addUser(String username, String fullname, String password) {
+    public RegisteredUser addUser(String username, String fullname, String password) {
         UserJpaEntity userJpaEntity = new UserJpaEntity(username, fullname, password);
         UserJpaEntity savedUser = userJpaRepository.save(userJpaEntity);
-        return UserJpaMapper.toDomain(savedUser);
+        return UserJpaMapper.toRegisteredUserDomain(savedUser);
     }
 
     @Override
@@ -34,20 +33,12 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<UserEntity> getUserByUsername(String username) {
-        if (userJpaRepository.findByUsername(username).isEmpty()) {
-            throw new NotFoundException("USER_REPOSITORY_IMPL.USER_NOT_FOUND");
-        }
-
-        return userJpaRepository.findByUsername(username).map(UserJpaMapper::toDomain);
+    public UserDetail getUserByUsername(String username) {
+        return userJpaRepository.findByUsername(username).map(UserJpaMapper::toUserDetailDomain).orElseThrow(() -> new NotFoundException("USER_REPOSITORY_IMPL.USER_NOT_FOUND"));
     }
 
     @Override
-    public Optional<UserEntity> getUserById(String id) {
-        if (userJpaRepository.findById(id).isEmpty()) {
-            throw new NotFoundException("USER_REPOSITORY_IMPL.USER_NOT_FOUND");
-        }
-
-        return userJpaRepository.findById(id).map(UserJpaMapper::toDomain);
+    public UserDetail getUserById(String id) {
+        return userJpaRepository.findById(id).map(UserJpaMapper::toUserDetailDomain).orElseThrow(() -> new NotFoundException("USER_REPOSITORY_IMPL.USER_NOT_FOUND"));
     }
 }

@@ -1,0 +1,102 @@
+package forum.api.java.domain.utils;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+
+@DisplayName("Domain validation utils")
+public class ValidationUtilsTest {
+    @Nested
+    @DisplayName("requireNotBlank function")
+    public class RequireNotBlankFunction {
+        @Test
+        @DisplayName("should throw IllegalArgumentException when value is null")
+        public void shouldThrowIllegalArgumentExceptionWhenValueIsNull() {
+            String errorMessage = "VALUE_IS_NULL";
+
+            IllegalArgumentException exception = Assertions.assertThrows(
+                    IllegalArgumentException.class,
+                    () -> ValidationUtils.requireNotBlank(null, errorMessage)
+            );
+
+            Assertions.assertEquals(errorMessage, exception.getMessage());
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"", "  ", "      \n"})
+        @DisplayName("should throw IllegalArgumentException when value is empty or only whitespace")
+        public void shouldThrowIllegalArgumentExceptionWhenValueIsEmptyOrOnlyWhitespace(String value) {
+            String errorMessage = "VALUE_IS_BLANK";
+
+            IllegalArgumentException exception = Assertions.assertThrows(
+                    IllegalArgumentException.class,
+                    () -> ValidationUtils.requireNotBlank(value, errorMessage)
+            );
+
+            Assertions.assertEquals(errorMessage, exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("should not throw exception when value is valid")
+        public void shouldNotThrowExceptionWhenValueIsValid() {
+            Assertions.assertDoesNotThrow(() -> ValidationUtils.requireNotBlank("valid_value", "error"));
+        }
+    }
+
+    @Nested
+    @DisplayName("usernameLimitCharacter function")
+    public class UsernameLimitCharacterFunction {
+        @Test
+        @DisplayName("should throw IllegalArgumentException when username contains more than 50 character")
+        public void shouldThrowIllegalArgumentExceptionWhenUsernameContainsMoreThan50Character() {
+            String username = "a".repeat(51);
+            String errorMessage = "USERNAME_TOO_LONG";
+
+            IllegalArgumentException exception = Assertions.assertThrows(
+                    IllegalArgumentException.class,
+                    () -> ValidationUtils.usernameLimitCharacter(username, errorMessage)
+            );
+
+            Assertions.assertEquals(errorMessage, exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("should not throw exception when username is exactly 50 character")
+        public void shouldNotThrowExceptionWhenUsernameIsExactly50Character() {
+            String username = "a".repeat(50);
+            String errorMessage = "USERNAME_TOO_LONG";
+
+            Assertions.assertDoesNotThrow(() -> ValidationUtils.usernameLimitCharacter(username, errorMessage));
+        }
+    }
+
+    @Nested
+    @DisplayName("usernameNotContainRestrictedCharacter function")
+    public class UsernameNotContainRestrictedCharacterFunction {
+        @ParameterizedTest
+        @ValueSource(strings = {"user name", "user-name", "user!", "@user", "user#", "user.name"})
+        @DisplayName("should throw IllegalArgumentException when username contains restricted character")
+        public void shouldThrowIllegalArgumentExceptionWhenUsernameContainsRestrictedCharacter(String username) {
+            String errorMessage = "RESTRICTRED_CHARACTER";
+
+            IllegalArgumentException exception = Assertions.assertThrows(
+                    IllegalArgumentException.class,
+                    () -> ValidationUtils.usernameNotContainRestrictedCharacter(username, errorMessage)
+            );
+
+            Assertions.assertEquals(errorMessage, exception.getMessage());
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"username", "user_123", "USER_NAME", "12345"})
+        @DisplayName("should not throw exception when username is valid")
+        public void shouldNotThrowExceptionWhenUsernameIsValid(String username) {
+            String errorMessage = "RESTRICTRED_CHARACTER";
+
+            Assertions.assertDoesNotThrow(() -> ValidationUtils.usernameNotContainRestrictedCharacter(username, errorMessage));
+        }
+    }
+}

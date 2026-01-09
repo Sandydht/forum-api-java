@@ -2,7 +2,7 @@ package forum.api.java.applications.usecase;
 
 import forum.api.java.applications.security.PasswordHash;
 import forum.api.java.domain.user.UserRepository;
-import forum.api.java.domain.user.entity.UserEntity;
+import forum.api.java.domain.user.entity.RegisteredUser;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,14 +37,13 @@ public class RegisterUserUseCaseTest {
 
         Mockito.doNothing().when(userRepository).verifyAvailableUsername(username);
         Mockito.when(passwordHash.hashPassword(password)).thenReturn(hashedPassword);
-        Mockito.when(userRepository.addUser(username, fullname, hashedPassword)).thenReturn(new UserEntity(id, username, fullname, hashedPassword));
+        Mockito.when(userRepository.addUser(username, fullname, hashedPassword)).thenReturn(new RegisteredUser(id, username, fullname));
 
-        UserEntity userEntity = registerUserUseCase.execute(username, fullname, password);
+        RegisteredUser registeredUser = registerUserUseCase.execute(username, fullname, password);
 
-        Assertions.assertEquals(id, userEntity.getId());
-        Assertions.assertEquals(username, userEntity.getUsername());
-        Assertions.assertEquals(fullname, userEntity.getFullname());
-        Assertions.assertEquals(hashedPassword, userEntity.getPassword());
+        Assertions.assertEquals(id, registeredUser.getId());
+        Assertions.assertEquals(username, registeredUser.getUsername());
+        Assertions.assertEquals(fullname, registeredUser.getFullname());
 
         Mockito.verify(userRepository, Mockito.times(1)).verifyAvailableUsername(username);
         Mockito.verify(passwordHash, Mockito.times(1)).hashPassword(password);
