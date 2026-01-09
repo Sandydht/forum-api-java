@@ -1,6 +1,7 @@
 package forum.api.java.infrastructure.repository;
 
 import forum.api.java.commons.exceptions.NotFoundException;
+import forum.api.java.commons.models.PagedSearchResult;
 import forum.api.java.domain.thread.ThreadRepository;
 import forum.api.java.domain.thread.entity.AddedThread;
 import forum.api.java.domain.thread.entity.ThreadDetail;
@@ -9,6 +10,10 @@ import forum.api.java.infrastructure.persistence.threads.entity.ThreadJpaEntity;
 import forum.api.java.infrastructure.persistence.threads.mapper.ThreadJpaMapper;
 import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
 import forum.api.java.infrastructure.persistence.users.entity.UserJpaEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -38,5 +43,12 @@ public class ThreadRepositoryImpl implements ThreadRepository {
                 .findById(id)
                 .map(ThreadJpaMapper::toThreadDetailDomain)
                 .orElseThrow(() -> new NotFoundException("THREAD_REPOSITORY_IMPL.THREAD_NOT_FOUND"));
+    }
+
+    @Override
+    public PagedSearchResult<ThreadDetail> getThreadPaginationList(String title, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<ThreadJpaEntity> result = threadJpaRepository.findByTitleContaining(title, pageable);
+        return ThreadJpaMapper.toPagedThreadDetailDomain(result);
     }
 }

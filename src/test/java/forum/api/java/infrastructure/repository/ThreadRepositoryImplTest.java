@@ -1,6 +1,7 @@
 package forum.api.java.infrastructure.repository;
 
 import forum.api.java.commons.exceptions.NotFoundException;
+import forum.api.java.commons.models.PagedSearchResult;
 import forum.api.java.domain.thread.entity.AddedThread;
 import forum.api.java.domain.thread.entity.ThreadDetail;
 import forum.api.java.infrastructure.persistence.threads.ThreadJpaRepository;
@@ -18,6 +19,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
+
 
 @DataJpaTest
 @Transactional
@@ -97,6 +99,66 @@ public class ThreadRepositoryImplTest {
             Assertions.assertEquals(savedUser.getId(), threadDetail.getOwner().getId());
             Assertions.assertEquals(savedUser.getUsername(), threadDetail.getOwner().getUsername());
             Assertions.assertEquals(savedUser.getFullname(), threadDetail.getOwner().getFullname());
+        }
+    }
+
+    @Nested
+    @DisplayName("getThreadPaginationList function")
+    public class GetThreadPaginationListFunction {
+        @Test
+        @DisplayName("should return paged threads correctly based on title search and pagination")
+        public void shouldReturnPagedThreadsCorrectlyBasedOnTitleSearchAndPagination() {
+            UserJpaEntity user = userJpaRepository.save(new UserJpaEntity("dicoding", "Dicoding Indonesia", "password"));
+
+            threadJpaRepository.save(new ThreadJpaEntity(user, "Belajar Spring Boot", "Konten Spring"));
+            threadJpaRepository.save(new ThreadJpaEntity(user, "Belajar Java Dasar", "Konten Java"));
+            threadJpaRepository.save(new ThreadJpaEntity(user, "Tutorial Microservices", "Konten Microservices"));
+            threadJpaRepository.save(new ThreadJpaEntity(user, "Spring Security Guide", "Konten Security"));
+
+            String searchTitle = "Spring";
+            int page = 0;
+            int size = 2;
+
+            PagedSearchResult<ThreadDetail> result = threadRepositoryImpl.getThreadPaginationList(searchTitle, page, size);
+
+            Assertions.assertNotNull(result);
+            Assertions.assertEquals(2, result.getData().size());
+            Assertions.assertEquals(2, result.getTotalElements());
+            Assertions.assertEquals(1, result.getTotalPages());
+            Assertions.assertEquals(page, result.getPage());
+
+            Assertions.assertTrue(result.getData().get(0).getTitle().contains("Spring"));
+            Assertions.assertEquals("dicoding", result.getData().get(0).getOwner().getUsername());
+        }
+
+        @Test
+        @DisplayName("should return empty data when title does not match any thread")
+        public void shouldReturnEmptyDataWhenTitleNoMatch() {
+            UserJpaEntity user = userJpaRepository.save(new UserJpaEntity("user2", "Name", "pass"));
+            threadJpaRepository.save(new ThreadJpaEntity(user, "Thread A", "Body A"));
+
+            PagedSearchResult<ThreadDetail> result = threadRepositoryImpl.getThreadPaginationList("NonExistent", 0, 10);
+
+            Assertions.assertEquals(0, result.getData().size());
+            Assertions.assertEquals(0, result.getTotalElements());
+            Assertions.assertEquals(0, result.getTotalPages());
+        }
+
+        @Test
+        @DisplayName("should handle pagination correctly when data exceeds page size")
+        public void shouldHandlePaginationCorrectly() {
+            UserJpaEntity user = userJpaRepository.save(new UserJpaEntity("user3", "Name", "pass"));
+            for (int i = 0; i < 3; i++) {
+                threadJpaRepository.save(new ThreadJpaEntity(user, "Java Thread " + i, "Body"));
+            }
+
+            PagedSearchResult<ThreadDetail> firstPage = threadRepositoryImpl.getThreadPaginationList("Java", 0, 2);
+            PagedSearchResult<ThreadDetail> secondPage = threadRepositoryImpl.getThreadPaginationList("Java", 1, 2);
+
+            Assertions.assertEquals(2, firstPage.getData().size());
+            Assertions.assertEquals(1, secondPage.getData().size()); // Sisa 1 data di halaman kedua
+            Assertions.assertEquals(3, firstPage.getTotalElements());
+            Assertions.assertEquals(2, firstPage.getTotalPages());
         }
     }
 }
