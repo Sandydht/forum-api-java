@@ -1,6 +1,10 @@
 package forum.api.java.domain.authentication.entity;
 
+import forum.api.java.domain.utils.ValidationUtils;
+
 public class NewAuthentication {
+    private static final String notContainNeededPropertyErrorMessage = "NEW_AUTHENTICATION.NOT_CONTAIN_NEEDED_PROPERTY";
+
     private final String accessToken;
     private final String refreshToken;
 
@@ -12,14 +16,8 @@ public class NewAuthentication {
     }
 
     private static void verifyPayload(String accessToken, String refreshToken) {
-        requireNotBlank(accessToken);
-        requireNotBlank(refreshToken);
-    }
-
-    private static void requireNotBlank(String value) {
-        if (value == null || value.isBlank()) {
-            throw new IllegalArgumentException("NEW_AUTHENTICATION.NOT_CONTAIN_NEEDED_PROPERTY");
-        }
+        ValidationUtils.requireNotBlank(accessToken, notContainNeededPropertyErrorMessage);
+        ValidationUtils.requireNotBlank(refreshToken, notContainNeededPropertyErrorMessage);
     }
 
     public String getAccessToken() {
