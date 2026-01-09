@@ -25,6 +25,8 @@ public class ThreadJpaMapper {
                 threadJpaEntity.getId(),
                 threadJpaEntity.getTitle(),
                 threadJpaEntity.getBody(),
+                threadJpaEntity.getCreatedAt(),
+                threadJpaEntity.getUpdatedAt(),
                 userThreadDetail
         );
     }

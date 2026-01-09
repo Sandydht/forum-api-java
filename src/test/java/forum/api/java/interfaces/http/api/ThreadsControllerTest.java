@@ -122,8 +122,13 @@ public class ThreadsControllerTest {
                             .with(csrf()))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.id").value(savedThread.getId()))
-                    .andExpect(jsonPath("$.title").value(title))
-                    .andExpect(jsonPath("$.body").value(body));
+                    .andExpect(jsonPath("$.title").value(savedThread.getTitle()))
+                    .andExpect(jsonPath("$.body").value(savedThread.getBody()))
+                    .andExpect(jsonPath("$.createdAt").exists())
+                    .andExpect(jsonPath("$.updatedAt").exists())
+                    .andExpect(jsonPath("$.owner.id").value(savedThread.getUser().getId()))
+                    .andExpect(jsonPath("$.owner.username").value(savedThread.getUser().getUsername()))
+                    .andExpect(jsonPath("$.owner.fullname").value(savedThread.getUser().getFullname()));
         }
     }
 }

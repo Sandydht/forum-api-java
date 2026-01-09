@@ -2,9 +2,13 @@ package forum.api.java.infrastructure.persistence.authentications.entity;
 
 import forum.api.java.infrastructure.persistence.users.entity.UserJpaEntity;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.Instant;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "refresh_tokens")
 public class RefreshTokenJpaEntity {
@@ -29,16 +33,4 @@ public class RefreshTokenJpaEntity {
         this.token = token;
         this.expiresAt = expiresAt;
     }
-
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
-
-    public UserJpaEntity getUser() { return user; }
-    public void setUser(UserJpaEntity user) { this.user = user; }
-
-    public String getToken() { return token; }
-    public void setToken(String token) { this.token = token; }
-
-    public Instant getExpiresAt() { return expiresAt; }
-    public void setExpiresAt(Instant expiresAt) { this.expiresAt = expiresAt; }
 }

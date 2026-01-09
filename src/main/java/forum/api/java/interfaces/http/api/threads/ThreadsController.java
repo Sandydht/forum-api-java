@@ -4,6 +4,7 @@ import forum.api.java.applications.usecase.AddThreadUseCase;
 import forum.api.java.applications.usecase.GetThreadDetailUseCase;
 import forum.api.java.domain.thread.entity.AddedThread;
 import forum.api.java.domain.thread.entity.ThreadDetail;
+import forum.api.java.interfaces.http.api.common.response.UserThreadDetailResponse;
 import forum.api.java.interfaces.http.api.threads.dto.request.AddThreadRequest;
 import forum.api.java.interfaces.http.api.threads.dto.response.AddThreadResponse;
 import forum.api.java.interfaces.http.api.threads.dto.response.GetThreadDetailResponse;
@@ -30,10 +31,20 @@ public class ThreadsController {
     @GetMapping("thread-detail/{id}")
     public GetThreadDetailResponse getThreadDetailAction(@PathVariable("id") String threadId) {
         ThreadDetail threadDetail = getThreadDetailUseCase.execute(threadId);
+
+        UserThreadDetailResponse owner = new UserThreadDetailResponse(
+                threadDetail.getOwner().getId(),
+                threadDetail.getOwner().getUsername(),
+                threadDetail.getOwner().getFullname()
+        );
+
         return new GetThreadDetailResponse(
                 threadDetail.getId(),
                 threadDetail.getTitle(),
-                threadDetail.getBody()
+                threadDetail.getBody(),
+                threadDetail.getCreatedAt(),
+                threadDetail.getUpdatedAt(),
+                owner
         );
     }
 }

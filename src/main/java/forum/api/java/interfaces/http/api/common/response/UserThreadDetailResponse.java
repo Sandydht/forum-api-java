@@ -1,4 +1,4 @@
-package forum.api.java.interfaces.http.api.common;
+package forum.api.java.interfaces.http.api.common.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UserThreadDetailResponse {
     private String id;
+    private String username;
     private String fullname;
 }
