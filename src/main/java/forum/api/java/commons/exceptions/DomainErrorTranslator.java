@@ -13,10 +13,10 @@ public class DomainErrorTranslator {
         directories.put("REGISTER_USER.NOT_MEET_DATA_TYPE_SPECIFICATION", new InvariantException("Cannot create new user because data type does not match"));
         directories.put("REGISTER_USER.USERNAME_CONTAIN_RESTRICTED_CHARACTER", new InvariantException("Cannot create a new user because the username contains prohibited characters"));
 
-        // USER_LOGIN
-        directories.put("USER_LOGIN.NOT_CONTAIN_NEEDED_PROPERTY", new InvariantException("Must send username and password"));
-        directories.put("USER_LOGIN.USERNAME_LIMIT_CHAR", new InvariantException("Username character exceeds the limit"));
-        directories.put("USER_LOGIN.USERNAME_CONTAIN_RESTRICTED_CHARACTER", new InvariantException("Username contains prohibited characters"));
+        // LOGIN_USER
+        directories.put("LOGIN_USER.NOT_CONTAIN_NEEDED_PROPERTY", new InvariantException("Must send username and password"));
+        directories.put("LOGIN_USER.USERNAME_LIMIT_CHAR", new InvariantException("Username character exceeds the limit"));
+        directories.put("LOGIN_USER.USERNAME_CONTAIN_RESTRICTED_CHARACTER", new InvariantException("Username contains prohibited characters"));
 
         // PASSWORD_HASH_IMPL
         directories.put("PASSWORD_HASH_IMPL.INCORRECT_CREDENTIALS", new AuthenticationException("Incorrect credentials"));

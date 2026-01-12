@@ -3,6 +3,7 @@ package forum.api.java.interfaces.http.api.authentications;
 import forum.api.java.applications.usecase.LoginUserUseCase;
 import forum.api.java.applications.usecase.LogoutUserUseCase;
 import forum.api.java.applications.usecase.RefreshAuthenticationUseCase;
+import forum.api.java.domain.authentication.entity.LoginUser;
 import forum.api.java.domain.authentication.entity.NewAuthentication;
 import forum.api.java.interfaces.http.api.authentications.dto.request.RefreshAuthenticationRequest;
 import forum.api.java.interfaces.http.api.authentications.dto.request.UserLoginRequest;
@@ -34,7 +35,8 @@ public class AuthenticationsController {
 
     @PostMapping("login-account")
     public UserLoginResponse userLoginAccount(@RequestBody UserLoginRequest request) {
-        NewAuthentication loggedInUser = loginUserUseCase.execute(request.getUsername(), request.getPassword());
+        LoginUser loginUser = new LoginUser(request.getUsername(), request.getPassword());
+        NewAuthentication loggedInUser = loginUserUseCase.execute(loginUser);
         return new UserLoginResponse(loggedInUser.getAccessToken(), loggedInUser.getRefreshToken());
     }
 

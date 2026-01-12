@@ -54,12 +54,12 @@ public class DomainErrorTranslatorTest {
     }
 
     @Nested
-    @DisplayName("USER_LOGIN")
+    @DisplayName("LOGIN_USER")
     public class UserLoginErrorMessages {
         @Test
-        @DisplayName("should translate USER_LOGIN.NOT_CONTAIN_NEEDED_PROPERTY correctly")
-        public void shouldTranslateUserLoginNotContainNeededProperty() {
-            Exception error = new Exception("USER_LOGIN.NOT_CONTAIN_NEEDED_PROPERTY");
+        @DisplayName("should translate LOGIN_USER.NOT_CONTAIN_NEEDED_PROPERTY correctly")
+        public void shouldTranslateLoginUserNotContainNeededProperty() {
+            Exception error = new Exception("LOGIN_USER.NOT_CONTAIN_NEEDED_PROPERTY");
             RuntimeException result = domainErrorTranslator.translate(error);
 
             Assertions.assertInstanceOf(InvariantException.class, result);
@@ -67,9 +67,9 @@ public class DomainErrorTranslatorTest {
         }
 
         @Test
-        @DisplayName("should translate USER_LOGIN.USERNAME_LIMIT_CHAR correctly")
-        public void shouldTranslateUserLoginUsernameLimit() {
-            Exception error = new Exception("USER_LOGIN.USERNAME_LIMIT_CHAR");
+        @DisplayName("should translate LOGIN_USER.USERNAME_LIMIT_CHAR correctly")
+        public void shouldTranslateLoginUserUsernameLimit() {
+            Exception error = new Exception("LOGIN_USER.USERNAME_LIMIT_CHAR");
             RuntimeException result = domainErrorTranslator.translate(error);
 
             Assertions.assertInstanceOf(InvariantException.class, result);
@@ -77,9 +77,9 @@ public class DomainErrorTranslatorTest {
         }
 
         @Test
-        @DisplayName("should translate USER_LOGIN.USERNAME_CONTAIN_RESTRICTED_CHARACTER correctly")
-        public void shouldTranslateUserLoginUsernameContainRestrictedCharacter() {
-            Exception error = new Exception("USER_LOGIN.USERNAME_CONTAIN_RESTRICTED_CHARACTER");
+        @DisplayName("should translate LOGIN_USER.USERNAME_CONTAIN_RESTRICTED_CHARACTER correctly")
+        public void shouldTranslateLoginUserUsernameContainRestrictedCharacter() {
+            Exception error = new Exception("LOGIN_USER.USERNAME_CONTAIN_RESTRICTED_CHARACTER");
             RuntimeException result = domainErrorTranslator.translate(error);
 
             Assertions.assertInstanceOf(InvariantException.class, result);
