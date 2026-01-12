@@ -73,7 +73,39 @@ public class UsersControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)).with(csrf()))
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.message").value("USER_REPOSITORY_IMPL.USER_ALREADY_EXIST"));
+                    .andExpect(jsonPath("$.message").value("User already exist"));
+        }
+
+        @Test
+        @DisplayName("should return 400 when username contains restricted character")
+        public void shouldReturn400WhenUsernameContainsRestrictedCharacter() throws Exception {
+            String username = "user 75";
+            String fullname = "Fullname";
+            String password = "password";
+
+            UserRegisterRequest request = new UserRegisterRequest(username, fullname, password);
+
+            mockMvc.perform(post(urlTemplate)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)).with(csrf()))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.message").value("Cannot create a new user because the username contains prohibited characters"));
+        }
+
+        @Test
+        @DisplayName("should return 400 when username contains more than 50 character")
+        public void shouldReturn400WhenUsernameContainsMoreThan50Character() throws Exception {
+            String username = "user".repeat(51);
+            String fullname = "Fullname";
+            String password = "password";
+
+            UserRegisterRequest request = new UserRegisterRequest(username, fullname, password);
+
+            mockMvc.perform(post(urlTemplate)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)).with(csrf()))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.message").value("Cannot create a new user because the username character exceeds the limit"));
         }
     }
 }

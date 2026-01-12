@@ -89,7 +89,7 @@ public class DomainErrorTranslatorTest {
 
     @Nested
     @DisplayName("PASSWORD_HASH_IMPL")
-    public class PasswordHashImpl {
+    public class PasswordHashImplErrorMessages {
         @Test
         @DisplayName("should translate PASSWORD_HASH_IMPL.INCORRECT_CREDENTIALS correctly")
         public void shouldTranslatePasswordHashImplIncorrectCredentials() {
@@ -98,6 +98,78 @@ public class DomainErrorTranslatorTest {
 
             Assertions.assertInstanceOf(AuthenticationException.class, result);
             Assertions.assertEquals("Incorrect credentials", result.getMessage());
+        }
+    }
+
+    @Nested
+    @DisplayName("USER_REPOSITORY_IMPL")
+    public class UserRepositoryImplErrorMessages {
+        @Test
+        @DisplayName("should translate USER_REPOSITORY_IMPL.USER_ALREADY_EXIST correctly")
+        public void shouldTranslateUserRepositoryImplUserAlreadyExistCorrectly() {
+            Exception error = new Exception("USER_REPOSITORY_IMPL.USER_ALREADY_EXIST");
+            RuntimeException result = domainErrorTranslator.translate(error);
+
+            Assertions.assertInstanceOf(InvariantException.class, result);
+            Assertions.assertEquals("User already exist", result.getMessage());
+        }
+
+        @Test
+        @DisplayName("should translate USER_REPOSITORY_IMPL.USER_NOT_FOUND correctly")
+        public void shouldTranslateUserRepositoryImplUserNotFoundCorrectly() {
+            Exception error = new Exception("USER_REPOSITORY_IMPL.USER_NOT_FOUND");
+            RuntimeException result = domainErrorTranslator.translate(error);
+
+            Assertions.assertInstanceOf(NotFoundException.class, result);
+            Assertions.assertEquals("User not found", result.getMessage());
+        }
+    }
+
+    @Nested
+    @DisplayName("AUTHENTICATION_REPOSITORY_IMPL")
+    public class AuthenticationRepositoryImplErrorMessages {
+        @Test
+        @DisplayName("should translate AUTHENTICATION_REPOSITORY_IMPL.USER_NOT_FOUND correctly")
+        public void shouldTranslateAuthenticationRepositoryImplUserNotFoundCorrectly() {
+            Exception error = new Exception("AUTHENTICATION_REPOSITORY_IMPL.USER_NOT_FOUND");
+            RuntimeException result = domainErrorTranslator.translate(error);
+
+            Assertions.assertInstanceOf(NotFoundException.class, result);
+            Assertions.assertEquals("User not found", result.getMessage());
+        }
+
+        @Test
+        @DisplayName("should translate AUTHENTICATION_REPOSITORY_IMPL.TOKEN_NOT_FOUND correctly")
+        public void shouldTranslateAuthenticationRepositoryImplTokenNotFoundCorrectly() {
+            Exception error = new Exception("AUTHENTICATION_REPOSITORY_IMPL.TOKEN_NOT_FOUND");
+            RuntimeException result = domainErrorTranslator.translate(error);
+
+            Assertions.assertInstanceOf(NotFoundException.class, result);
+            Assertions.assertEquals("Token not found", result.getMessage());
+        }
+    }
+
+    @Nested
+    @DisplayName("THREAD_REPOSITORY_IMPL")
+    public class ThreadRepositoryImplErrorMessages {
+        @Test
+        @DisplayName("should translate THREAD_REPOSITORY_IMPL.USER_NOT_FOUND correctly")
+        public void shouldTranslateThreadRepositoryImplUserNotFoundCorrectly() {
+            Exception error = new Exception("THREAD_REPOSITORY_IMPL.USER_NOT_FOUND");
+            RuntimeException result = domainErrorTranslator.translate(error);
+
+            Assertions.assertInstanceOf(NotFoundException.class, result);
+            Assertions.assertEquals("User not found", result.getMessage());
+        }
+
+        @Test
+        @DisplayName("should translate THREAD_REPOSITORY_IMPL.THREAD_NOT_FOUND correctly")
+        public void shouldTranslateThreadRepositoryImplThreadNotFoundCorrectly() {
+            Exception error = new Exception("THREAD_REPOSITORY_IMPL.THREAD_NOT_FOUND");
+            RuntimeException result = domainErrorTranslator.translate(error);
+
+            Assertions.assertInstanceOf(NotFoundException.class, result);
+            Assertions.assertEquals("Thread not found", result.getMessage());
         }
     }
 

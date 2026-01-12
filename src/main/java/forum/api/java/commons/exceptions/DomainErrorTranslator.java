@@ -20,6 +20,18 @@ public class DomainErrorTranslator {
 
         // PASSWORD_HASH_IMPL
         directories.put("PASSWORD_HASH_IMPL.INCORRECT_CREDENTIALS", new AuthenticationException("Incorrect credentials"));
+
+        // USER_REPOSITORY_IMPL
+        directories.put("USER_REPOSITORY_IMPL.USER_ALREADY_EXIST", new InvariantException("User already exist"));
+        directories.put("USER_REPOSITORY_IMPL.USER_NOT_FOUND", new NotFoundException("User not found"));
+
+        // AUTHENTICATION_REPOSITORY_IMPL
+        directories.put("AUTHENTICATION_REPOSITORY_IMPL.USER_NOT_FOUND", new NotFoundException("User not found"));
+        directories.put("AUTHENTICATION_REPOSITORY_IMPL.TOKEN_NOT_FOUND", new NotFoundException("Token not found"));
+
+        // THREAD_REPOSITORY_IMPL
+        directories.put("THREAD_REPOSITORY_IMPL.USER_NOT_FOUND", new NotFoundException("User not found"));
+        directories.put("THREAD_REPOSITORY_IMPL.THREAD_NOT_FOUND", new NotFoundException("Thread not found"));
     }
 
     public RuntimeException translate(Exception error) {

@@ -1,10 +1,11 @@
 package forum.api.java.domain.user;
 
+import forum.api.java.domain.user.entity.RegisterUser;
 import forum.api.java.domain.user.entity.RegisteredUser;
 import forum.api.java.domain.user.entity.UserDetail;
 
 public interface UserRepository {
-    default RegisteredUser addUser(String username, String fullname, String password) {
+    default RegisteredUser addUser(RegisterUser registerUser) {
         throw new UnsupportedOperationException("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED");
     }
 

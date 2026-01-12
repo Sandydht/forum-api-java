@@ -2,6 +2,7 @@ package forum.api.java.infrastructure.repository;
 
 import forum.api.java.commons.exceptions.InvariantException;
 import forum.api.java.commons.exceptions.NotFoundException;
+import forum.api.java.domain.user.entity.RegisterUser;
 import forum.api.java.domain.user.entity.RegisteredUser;
 import forum.api.java.domain.user.entity.UserDetail;
 import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
@@ -11,11 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 @DataJpaTest
 @Transactional
 @Rollback
+@ActiveProfiles("test")
 @Import(UserRepositoryImpl.class)
 @DisplayName("UserRepositoryImpl")
 public class UserRepositoryImplTest {
@@ -64,7 +67,8 @@ public class UserRepositoryImplTest {
             String fullname = "Fullname";
             String password = "password";
 
-            RegisteredUser registeredUser = userRepositoryImpl.addUser(username, fullname, password);
+            RegisterUser registerUser = new RegisterUser(username, fullname, password);
+            RegisteredUser registeredUser = userRepositoryImpl.addUser(registerUser);
 
             Assertions.assertNotNull(registeredUser.getId());
             Assertions.assertEquals(username, registeredUser.getUsername());

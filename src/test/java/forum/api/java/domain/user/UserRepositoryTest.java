@@ -13,7 +13,7 @@ public class UserRepositoryTest {
     public void shouldThrowErrorWhenInvokeAbstractBehavior() {
         UnsupportedOperationException addUserError = Assertions.assertThrows(
                 UnsupportedOperationException.class,
-                () -> userRepository.addUser(null, null, null)
+                () -> userRepository.addUser(null)
         );
         Assertions.assertEquals("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED", addUserError.getMessage());
 

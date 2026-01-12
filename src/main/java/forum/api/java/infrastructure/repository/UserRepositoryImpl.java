@@ -3,6 +3,7 @@ package forum.api.java.infrastructure.repository;
 import forum.api.java.commons.exceptions.InvariantException;
 import forum.api.java.commons.exceptions.NotFoundException;
 import forum.api.java.domain.user.UserRepository;
+import forum.api.java.domain.user.entity.RegisterUser;
 import forum.api.java.domain.user.entity.RegisteredUser;
 import forum.api.java.domain.user.entity.UserDetail;
 import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
@@ -19,8 +20,8 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public RegisteredUser addUser(String username, String fullname, String password) {
-        UserJpaEntity userJpaEntity = new UserJpaEntity(username, fullname, password);
+    public RegisteredUser addUser(RegisterUser registerUser) {
+        UserJpaEntity userJpaEntity = new UserJpaEntity(registerUser.getUsername(), registerUser.getFullname(), registerUser.getPassword());
         UserJpaEntity savedUser = userJpaRepository.save(userJpaEntity);
         return UserJpaMapper.toRegisteredUserDomain(savedUser);
     }

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
@@ -22,6 +23,7 @@ import java.util.UUID;
 @DataJpaTest
 @Transactional
 @Rollback
+@ActiveProfiles("test")
 @Import(AuthenticationRepositoryImpl.class)
 @DisplayName("AuthenticationRepositoryImpl")
 public class AuthenticationRepositoryImplTest {
