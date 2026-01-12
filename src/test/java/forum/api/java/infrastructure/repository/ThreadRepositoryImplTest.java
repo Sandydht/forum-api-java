@@ -108,36 +108,46 @@ public class ThreadRepositoryImplTest {
         @Test
         @DisplayName("should return paged threads correctly based on title search and pagination")
         public void shouldReturnPagedThreadsCorrectlyBasedOnTitleSearchAndPagination() {
-            UserJpaEntity user = userJpaRepository.save(new UserJpaEntity("dicoding", "Dicoding Indonesia", "password"));
+            String username = "user";
+            String fullname = "Fullname";
+            String password = "password";
+            UserJpaEntity user = userJpaRepository.save(new UserJpaEntity(username, fullname, password));
 
             threadJpaRepository.save(new ThreadJpaEntity(user, "Belajar Spring Boot", "Konten Spring"));
             threadJpaRepository.save(new ThreadJpaEntity(user, "Belajar Java Dasar", "Konten Java"));
             threadJpaRepository.save(new ThreadJpaEntity(user, "Tutorial Microservices", "Konten Microservices"));
             threadJpaRepository.save(new ThreadJpaEntity(user, "Spring Security Guide", "Konten Security"));
 
-            String searchTitle = "Spring";
+            String searchTitle = "Tutorial";
             int page = 0;
-            int size = 2;
+            int size = 10;
 
             PagedSearchResult<ThreadDetail> result = threadRepositoryImpl.getThreadPaginationList(searchTitle, page, size);
 
-            Assertions.assertNotNull(result);
-            Assertions.assertEquals(2, result.getData().size());
-            Assertions.assertEquals(2, result.getTotalElements());
-            Assertions.assertEquals(1, result.getTotalPages());
+            Assertions.assertEquals(1, result.getData().size());
             Assertions.assertEquals(page, result.getPage());
+            Assertions.assertEquals(size, result.getSize());
+            Assertions.assertEquals(1, result.getTotalPages());
+            Assertions.assertEquals(1, result.getTotalElements());
 
-            Assertions.assertTrue(result.getData().get(0).getTitle().contains("Spring"));
-            Assertions.assertEquals("dicoding", result.getData().get(0).getOwner().getUsername());
+            Assertions.assertTrue(result.getData().get(0).getTitle().contains(searchTitle));
+            Assertions.assertEquals(username, result.getData().get(0).getOwner().getUsername());
         }
 
         @Test
         @DisplayName("should return empty data when title does not match any thread")
         public void shouldReturnEmptyDataWhenTitleNoMatch() {
-            UserJpaEntity user = userJpaRepository.save(new UserJpaEntity("user2", "Name", "pass"));
+            String username = "user";
+            String fullname = "Fullname";
+            String password = "password";
+            UserJpaEntity user = userJpaRepository.save(new UserJpaEntity(username, fullname, password));
+
             threadJpaRepository.save(new ThreadJpaEntity(user, "Thread A", "Body A"));
 
-            PagedSearchResult<ThreadDetail> result = threadRepositoryImpl.getThreadPaginationList("NonExistent", 0, 10);
+            String searchTitle = "NonExistent";
+            int page = 0;
+            int size = 10;
+            PagedSearchResult<ThreadDetail> result = threadRepositoryImpl.getThreadPaginationList(searchTitle, page, size);
 
             Assertions.assertEquals(0, result.getData().size());
             Assertions.assertEquals(0, result.getTotalElements());
@@ -147,7 +157,11 @@ public class ThreadRepositoryImplTest {
         @Test
         @DisplayName("should handle pagination correctly when data exceeds page size")
         public void shouldHandlePaginationCorrectly() {
-            UserJpaEntity user = userJpaRepository.save(new UserJpaEntity("user3", "Name", "pass"));
+            String username = "user";
+            String fullname = "Fullname";
+            String password = "password";
+            UserJpaEntity user = userJpaRepository.save(new UserJpaEntity(username, fullname, password));
+
             for (int i = 0; i < 3; i++) {
                 threadJpaRepository.save(new ThreadJpaEntity(user, "Java Thread " + i, "Body"));
             }

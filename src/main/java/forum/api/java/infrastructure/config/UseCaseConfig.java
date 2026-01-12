@@ -67,4 +67,9 @@ public class UseCaseConfig {
     public GetThreadDetailUseCase getThreadDetailUseCase(ThreadRepository threadRepository) {
         return new GetThreadDetailUseCase(threadRepository);
     }
+
+    @Bean
+    public GetThreadPaginationListUseCase getThreadPaginationListUseCase(ThreadRepository threadRepository) {
+        return new GetThreadPaginationListUseCase(threadRepository);
+    }
 }

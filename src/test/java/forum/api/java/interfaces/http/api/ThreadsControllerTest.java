@@ -131,4 +131,35 @@ public class ThreadsControllerTest {
                     .andExpect(jsonPath("$.owner.fullname").value(savedThread.getUser().getFullname()));
         }
     }
+
+    @Nested
+    @DisplayName("GET /api/threads/thread-pagination-list")
+    public class GetThreadPaginationListAction {
+        private final String urlTemplate = "/api/threads/thread-pagination-list";
+
+        @Test
+        @DisplayName("should return paginated thread list")
+        public void shouldReturnPaginatedThreadList() throws Exception {
+            ThreadJpaEntity savedThread = threadJpaRepository.save(new ThreadJpaEntity(savedUser, "Title", "Body"));
+
+            mockMvc.perform(get(urlTemplate)
+                            .header("Authorization", "Bearer " + accessToken)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .with(csrf())
+                            .param("title", "")
+                            .param("page", "0")
+                            .param("size", "10"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.data[0].id").value(savedThread.getId()))
+                    .andExpect(jsonPath("$.data[0].title").value(savedThread.getTitle()))
+                    .andExpect(jsonPath("$.data[0].body").value(savedThread.getBody()))
+                    .andExpect(jsonPath("$.data[0].owner.id").value(savedUser.getId()))
+                    .andExpect(jsonPath("$.data[0].owner.username").value(savedUser.getUsername()))
+                    .andExpect(jsonPath("$.data[0].owner.fullname").value(savedUser.getFullname()))
+                    .andExpect(jsonPath("$.page").value(0))
+                    .andExpect(jsonPath("$.size").value(10))
+                    .andExpect(jsonPath("$.totalElements").value(1))
+                    .andExpect(jsonPath("$.totalPages").value(1));
+        }
+    }
 }
