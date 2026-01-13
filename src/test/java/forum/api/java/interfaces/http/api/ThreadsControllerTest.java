@@ -9,6 +9,7 @@ import forum.api.java.infrastructure.security.PasswordHashImpl;
 import forum.api.java.interfaces.http.api.authentications.dto.request.UserLoginRequest;
 import forum.api.java.interfaces.http.api.authentications.dto.response.UserLoginResponse;
 import forum.api.java.interfaces.http.api.threads.dto.request.AddThreadRequest;
+import forum.api.java.interfaces.http.api.threads.dto.request.UpdateThreadRequest;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -21,8 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -160,6 +160,69 @@ public class ThreadsControllerTest {
                     .andExpect(jsonPath("$.size").value(10))
                     .andExpect(jsonPath("$.totalElements").value(1))
                     .andExpect(jsonPath("$.totalPages").value(1));
+        }
+
+        @Test
+        @DisplayName("should return empty data array when data not found")
+        public void shouldReturnEmptyDataArrayWhenDataNotFound() throws Exception {
+            mockMvc.perform(get(urlTemplate)
+                            .header("Authorization", "Bearer " + accessToken)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .with(csrf())
+                            .param("title", "Not found title")
+                            .param("page", "0")
+                            .param("size", "10"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.page").value(0))
+                    .andExpect(jsonPath("$.size").value(10))
+                    .andExpect(jsonPath("$.totalElements").value(0))
+                    .andExpect(jsonPath("$.totalPages").value(0));
+        }
+    }
+
+    @Nested
+    @DisplayName("PATCH /api/threads/update-thread/{id}")
+    public class UpdateThreadAction {
+        private final String urlTemplate = "/api/threads/update-thread/{id}";
+
+        @Test
+        @DisplayName("should throw NotFoundException when thread not found")
+        public void shouldThrowNotFoundExceptionWhenThreadNotFound() throws Exception {
+            String wrongId = UUID.randomUUID().toString();
+            String title = "New title";
+            String body = "New body";
+
+            UpdateThreadRequest request = new UpdateThreadRequest(title, body);
+
+            mockMvc.perform(patch(urlTemplate, wrongId)
+                            .header("Authorization", "Bearer " + accessToken)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isNotFound());
+        }
+
+        @Test
+        @DisplayName("should update thread and return thread data correctly")
+        public void shouldUpdateThreadAndReturnThreadDataCorrectly() throws Exception {
+            String title = "Title";
+            String body = "Body";
+
+            ThreadJpaEntity threadJpaEntity = new ThreadJpaEntity(savedUser, title, body);
+            ThreadJpaEntity savedThread = threadJpaRepository.save(threadJpaEntity);
+
+            String newTitle = "New title";
+            String newBody = "New body";
+
+            UpdateThreadRequest request = new UpdateThreadRequest(newTitle, newBody);
+
+            mockMvc.perform(patch(urlTemplate, savedThread.getId())
+                            .header("Authorization", "Bearer " + accessToken)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.id").value(savedThread.getId()))
+                    .andExpect(jsonPath("$.title").value(newTitle))
+                    .andExpect(jsonPath("$.body").value(newBody));
         }
     }
 }

@@ -5,6 +5,7 @@ import forum.api.java.commons.models.PagedSearchResult;
 import forum.api.java.domain.thread.entity.AddThread;
 import forum.api.java.domain.thread.entity.AddedThread;
 import forum.api.java.domain.thread.entity.ThreadDetail;
+import forum.api.java.domain.thread.entity.UpdateThread;
 import forum.api.java.infrastructure.persistence.threads.ThreadJpaRepository;
 import forum.api.java.infrastructure.persistence.threads.entity.ThreadJpaEntity;
 import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
@@ -20,6 +21,8 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.UUID;
 
 @DataJpaTest
@@ -176,6 +179,58 @@ public class ThreadRepositoryImplTest {
             Assertions.assertEquals(1, secondPage.getData().size()); // Sisa 1 data di halaman kedua
             Assertions.assertEquals(3, firstPage.getTotalElements());
             Assertions.assertEquals(2, firstPage.getTotalPages());
+        }
+    }
+
+    @Nested
+    @DisplayName("updateThreadById function")
+    public class UpdateThreadByIdFunction {
+        @Test
+        @DisplayName("should throw NotFoundException when thread not found")
+        public void shouldThrowNotFoundExceptionWhenThreadNotFound() {
+            String id = UUID.randomUUID().toString();
+            String title = "New title";
+            String body = "New body";
+            UpdateThread updateThread = new UpdateThread(id, title, body);
+
+            NotFoundException exception = Assertions.assertThrows(
+                    NotFoundException.class,
+                    () -> threadRepositoryImpl.updateThreadById(updateThread)
+            );
+            Assertions.assertEquals("THREAD_REPOSITORY_IMPL.THREAD_NOT_FOUND", exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("should update thread and return updated thread correctly")
+        public void shouldUpdateThreadAndReturnUpdatedThreadCorrectly() {
+            String username = "user";
+            String fullname = "Fullname";
+            String password = "password";
+
+            UserJpaEntity userJpaEntity = new UserJpaEntity(username, fullname, password);
+            UserJpaEntity savedUser = userJpaRepository.save(userJpaEntity);
+
+            String title = "Title";
+            String body = "Body";
+
+            ThreadJpaEntity threadJpaEntity = new ThreadJpaEntity(savedUser, title, body);
+            threadJpaEntity.setCreatedAt(LocalDateTime.of(2025, 1, 1, 0, 0, 0, 0)
+                    .toInstant(ZoneOffset.UTC));
+            ThreadJpaEntity savedThread = threadJpaRepository.save(threadJpaEntity);
+
+            String newTitle = "New title";
+            String newBody = "New body";
+            UpdateThread updateThread = new UpdateThread(savedThread.getId(), newTitle, newBody);
+
+            ThreadDetail result = threadRepositoryImpl.updateThreadById(updateThread);
+
+            Assertions.assertEquals(savedThread.getId(), result.getId());
+            Assertions.assertEquals(newTitle, result.getTitle());
+            Assertions.assertEquals(newBody, result.getBody());
+            Assertions.assertTrue(result.getUpdatedAt().isAfter(savedThread.getCreatedAt()) || result.getUpdatedAt().equals(savedThread.getCreatedAt()));
+            Assertions.assertEquals(savedUser.getId(), result.getOwner().getId());
+            Assertions.assertEquals(savedUser.getUsername(), result.getOwner().getUsername());
+            Assertions.assertEquals(savedUser.getFullname(), result.getOwner().getFullname());
         }
     }
 }

@@ -3,15 +3,19 @@ package forum.api.java.interfaces.http.api.threads;
 import forum.api.java.applications.usecase.AddThreadUseCase;
 import forum.api.java.applications.usecase.GetThreadDetailUseCase;
 import forum.api.java.applications.usecase.GetThreadPaginationListUseCase;
+import forum.api.java.applications.usecase.UpdateThreadUseCase;
 import forum.api.java.commons.models.PagedSearchResult;
 import forum.api.java.domain.thread.entity.AddThread;
 import forum.api.java.domain.thread.entity.AddedThread;
 import forum.api.java.domain.thread.entity.ThreadDetail;
+import forum.api.java.domain.thread.entity.UpdateThread;
 import forum.api.java.interfaces.http.api.common.response.UserThreadDetailResponse;
 import forum.api.java.interfaces.http.api.threads.dto.request.AddThreadRequest;
+import forum.api.java.interfaces.http.api.threads.dto.request.UpdateThreadRequest;
 import forum.api.java.interfaces.http.api.threads.dto.response.AddThreadResponse;
 import forum.api.java.interfaces.http.api.threads.dto.response.GetThreadDetailResponse;
 import forum.api.java.interfaces.http.api.threads.dto.response.GetThreadPaginationListResponse;
+import org.hibernate.sql.Update;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,15 +27,18 @@ public class ThreadsController {
     private final AddThreadUseCase addThreadUseCase;
     private final GetThreadDetailUseCase getThreadDetailUseCase;
     private final GetThreadPaginationListUseCase getThreadPaginationListUseCase;
+    private final UpdateThreadUseCase updateThreadUseCase;
 
     public ThreadsController(
             AddThreadUseCase addThreadUseCase,
             GetThreadDetailUseCase getThreadDetailUseCase,
-            GetThreadPaginationListUseCase getThreadPaginationListUseCase
+            GetThreadPaginationListUseCase getThreadPaginationListUseCase,
+            UpdateThreadUseCase updateThreadUseCase
     ) {
         this.addThreadUseCase = addThreadUseCase;
         this.getThreadDetailUseCase = getThreadDetailUseCase;
         this.getThreadPaginationListUseCase = getThreadPaginationListUseCase;
+        this.updateThreadUseCase = updateThreadUseCase;
     }
 
     @PostMapping("add-thread")
@@ -79,6 +86,27 @@ public class ThreadsController {
                 result.getSize(),
                 result.getTotalElements(),
                 result.getTotalPages()
+        );
+    }
+
+    @PatchMapping("update-thread/{id}")
+    public GetThreadDetailResponse updateThreadAction(@PathVariable("id") String threadId, @RequestBody UpdateThreadRequest updateThreadRequest) {
+        UpdateThread updateThread = new UpdateThread(threadId, updateThreadRequest.getTitle(), updateThreadRequest.getBody());
+        ThreadDetail result = updateThreadUseCase.execute(updateThread);
+
+        UserThreadDetailResponse owner = new UserThreadDetailResponse(
+                result.getOwner().getId(),
+                result.getOwner().getUsername(),
+                result.getOwner().getFullname()
+        );
+
+        return new GetThreadDetailResponse(
+                result.getId(),
+                result.getTitle(),
+                result.getBody(),
+                result.getCreatedAt(),
+                result.getUpdatedAt(),
+                owner
         );
     }
 }

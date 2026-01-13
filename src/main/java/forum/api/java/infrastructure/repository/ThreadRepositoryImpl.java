@@ -6,6 +6,7 @@ import forum.api.java.domain.thread.ThreadRepository;
 import forum.api.java.domain.thread.entity.AddThread;
 import forum.api.java.domain.thread.entity.AddedThread;
 import forum.api.java.domain.thread.entity.ThreadDetail;
+import forum.api.java.domain.thread.entity.UpdateThread;
 import forum.api.java.infrastructure.persistence.threads.ThreadJpaRepository;
 import forum.api.java.infrastructure.persistence.threads.entity.ThreadJpaEntity;
 import forum.api.java.infrastructure.persistence.threads.mapper.ThreadJpaMapper;
@@ -16,6 +17,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
+
+import java.time.Instant;
 
 @Repository
 public class ThreadRepositoryImpl implements ThreadRepository {
@@ -51,5 +54,19 @@ public class ThreadRepositoryImpl implements ThreadRepository {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         Page<ThreadJpaEntity> result = threadJpaRepository.findByTitleContaining(title, pageable);
         return ThreadJpaMapper.toPagedThreadDetailDomain(result);
+    }
+
+    @Override
+    public ThreadDetail updateThreadById(UpdateThread updateThread) {
+        ThreadJpaEntity threadJpaEntity = threadJpaRepository
+                .findById(updateThread.getThreadId())
+                .orElseThrow(() -> new NotFoundException("THREAD_REPOSITORY_IMPL.THREAD_NOT_FOUND"));
+
+        threadJpaEntity.setTitle(updateThread.getTitle());
+        threadJpaEntity.setBody(updateThread.getBody());
+        threadJpaEntity.setUpdatedAt(Instant.now());
+        threadJpaRepository.save(threadJpaEntity);
+
+        return ThreadJpaMapper.toThreadDetailDomain(threadJpaEntity);
     }
 }

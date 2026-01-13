@@ -28,5 +28,11 @@ public class ThreadRepositoryTest {
                 () -> threadRepository.getThreadPaginationList(null, 0, 0)
         );
         Assertions.assertEquals("THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED", getThreadPaginationListError.getMessage());
+
+        UnsupportedOperationException updateThreadByIdError = Assertions.assertThrows(
+                UnsupportedOperationException.class,
+                () -> threadRepository.updateThreadById(null)
+        );
+        Assertions.assertEquals("THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED", updateThreadByIdError.getMessage());
     }
 }
