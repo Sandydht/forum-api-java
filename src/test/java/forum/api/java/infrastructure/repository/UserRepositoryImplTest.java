@@ -5,6 +5,7 @@ import forum.api.java.commons.exceptions.NotFoundException;
 import forum.api.java.domain.user.entity.RegisterUser;
 import forum.api.java.domain.user.entity.RegisteredUser;
 import forum.api.java.domain.user.entity.UserDetail;
+import forum.api.java.domain.user.entity.UserProfile;
 import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
 import forum.api.java.infrastructure.persistence.users.entity.UserJpaEntity;
 import org.junit.jupiter.api.*;
@@ -143,6 +144,40 @@ public class UserRepositoryImplTest {
             Assertions.assertEquals(savedUser.getUsername(), result.getUsername());
             Assertions.assertEquals(savedUser.getFullname(), result.getFullname());
             Assertions.assertEquals(savedUser.getPassword(), result.getPassword());
+        }
+    }
+
+    @Nested
+    @DisplayName("getUserProfile function")
+    public class GetUserProfileFunction {
+        @Test
+        @DisplayName("should throw NotFoundException when user profile not found")
+        public void shouldThrowNotFoundExceptionWhenUserProfileNotFound() {
+            String userId = "user-id";
+
+            NotFoundException exception = Assertions.assertThrows(
+                    NotFoundException.class,
+                    () -> userRepositoryImpl.getUserProfile(userId)
+            );
+
+            Assertions.assertEquals("USER_REPOSITORY_IMPL.USER_NOT_FOUND", exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("should return user profile data correctly")
+        public void shouldReturnUserProfileDataCorrectly() {
+            String username = "user";
+            String fullname = "Fullname";
+            String password = "password";
+
+            UserJpaEntity userJpaEntity = new UserJpaEntity(username, fullname, password);
+            UserJpaEntity savedUser = userJpaRepository.save(userJpaEntity);
+
+            UserProfile result = userRepositoryImpl.getUserProfile(savedUser.getId());
+
+            Assertions.assertEquals(savedUser.getId(), result.getId());
+            Assertions.assertEquals(savedUser.getUsername(), result.getUsername());
+            Assertions.assertEquals(savedUser.getFullname(), result.getFullname());
         }
     }
 }

@@ -19,20 +19,26 @@ public class UserRepositoryTest {
 
         UnsupportedOperationException verifyAvailableUsernameError = Assertions.assertThrows(
                 UnsupportedOperationException.class,
-                () -> userRepository.verifyAvailableUsername("")
+                () -> userRepository.verifyAvailableUsername(null)
         );
         Assertions.assertEquals("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED", verifyAvailableUsernameError.getMessage());
 
         UnsupportedOperationException getUserByUsernameError = Assertions.assertThrows(
                 UnsupportedOperationException.class,
-                () -> userRepository.getUserByUsername("")
+                () -> userRepository.getUserByUsername(null)
         );
         Assertions.assertEquals("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED", getUserByUsernameError.getMessage());
 
         UnsupportedOperationException getUserByIdError = Assertions.assertThrows(
                 UnsupportedOperationException.class,
-                () -> userRepository.getUserById("")
+                () -> userRepository.getUserById(null)
         );
         Assertions.assertEquals("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED", getUserByIdError.getMessage());
+
+        UnsupportedOperationException getUserProfileError = Assertions.assertThrows(
+                UnsupportedOperationException.class,
+                () -> userRepository.getUserProfile(null)
+        );
+        Assertions.assertEquals("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED", getUserProfileError.getMessage());
     }
 }

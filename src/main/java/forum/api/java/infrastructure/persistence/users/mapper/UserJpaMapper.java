@@ -2,6 +2,7 @@ package forum.api.java.infrastructure.persistence.users.mapper;
 
 import forum.api.java.domain.user.entity.RegisteredUser;
 import forum.api.java.domain.user.entity.UserDetail;
+import forum.api.java.domain.user.entity.UserProfile;
 import forum.api.java.infrastructure.persistence.users.entity.UserJpaEntity;
 
 public class UserJpaMapper {
@@ -19,6 +20,14 @@ public class UserJpaMapper {
                 userJpaEntity.getUsername(),
                 userJpaEntity.getFullname(),
                 userJpaEntity.getPassword()
+        );
+    }
+
+    public static UserProfile toUserProfileDomain(UserJpaEntity userJpaEntity) {
+        return new UserProfile(
+                userJpaEntity.getId(),
+                userJpaEntity.getUsername(),
+                userJpaEntity.getFullname()
         );
     }
 }

@@ -4,6 +4,7 @@ import forum.api.java.applications.security.AuthenticationTokenManager;
 import forum.api.java.applications.usecase.*;
 import forum.api.java.domain.authentication.AuthenticationRepository;
 import forum.api.java.domain.thread.ThreadRepository;
+import forum.api.java.domain.user.UserRepository;
 import forum.api.java.infrastructure.repository.AuthenticationRepositoryImpl;
 import forum.api.java.infrastructure.repository.ThreadRepositoryImpl;
 import forum.api.java.infrastructure.repository.UserRepositoryImpl;
@@ -81,5 +82,10 @@ public class UseCaseConfig {
     @Bean
     public DeleteThreadUseCase deleteThreadUseCase(ThreadRepository threadRepository) {
         return new DeleteThreadUseCase(threadRepository);
+    }
+
+    @Bean
+    public GetUserProfileUseCase getUserProfileUseCase(UserRepository userRepository) {
+        return new GetUserProfileUseCase(userRepository);
     }
 }

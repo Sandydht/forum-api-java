@@ -6,6 +6,7 @@ import forum.api.java.domain.user.UserRepository;
 import forum.api.java.domain.user.entity.RegisterUser;
 import forum.api.java.domain.user.entity.RegisteredUser;
 import forum.api.java.domain.user.entity.UserDetail;
+import forum.api.java.domain.user.entity.UserProfile;
 import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
 import forum.api.java.infrastructure.persistence.users.entity.UserJpaEntity;
 import forum.api.java.infrastructure.persistence.users.mapper.UserJpaMapper;
@@ -41,5 +42,10 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public UserDetail getUserById(String id) {
         return userJpaRepository.findById(id).map(UserJpaMapper::toUserDetailDomain).orElseThrow(() -> new NotFoundException("USER_REPOSITORY_IMPL.USER_NOT_FOUND"));
+    }
+
+    @Override
+    public UserProfile getUserProfile(String id) {
+        return userJpaRepository.findById(id).map(UserJpaMapper::toUserProfileDomain).orElseThrow(() -> new NotFoundException("USER_REPOSITORY_IMPL.USER_NOT_FOUND"));
     }
 }
