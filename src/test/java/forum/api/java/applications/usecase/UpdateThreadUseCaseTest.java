@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Optional;
 import java.util.UUID;
 
 @DisplayName("Update thread use case")
@@ -36,6 +37,7 @@ public class UpdateThreadUseCaseTest {
         Instant createdAt = LocalDateTime.of(2025, 1, 1, 0, 0, 0)
                 .toInstant(ZoneOffset.UTC);
         Instant updatedAt = Instant.now();
+        Optional<Instant> deletedAt = Optional.empty();
 
         String userId = UUID.randomUUID().toString();
         String username = "user";
@@ -44,7 +46,7 @@ public class UpdateThreadUseCaseTest {
         UserThreadDetail userThreadDetail = new UserThreadDetail(userId, username, fullname);
 
         UpdateThread updateThread = new UpdateThread(threadId, title, body);
-        ThreadDetail threadDetail = new ThreadDetail(threadId, title, body, createdAt, updatedAt, userThreadDetail);
+        ThreadDetail threadDetail = new ThreadDetail(threadId, title, body, createdAt, updatedAt, deletedAt, userThreadDetail);
 
         Mockito.when(threadRepository.updateThreadById(updateThread)).thenReturn(threadDetail);
 
@@ -54,6 +56,7 @@ public class UpdateThreadUseCaseTest {
         Assertions.assertEquals(title, result.getTitle());
         Assertions.assertEquals(body, result.getBody());
         Assertions.assertTrue(result.getUpdatedAt().isAfter(createdAt) || result.getUpdatedAt().equals(createdAt));
+        Assertions.assertEquals(deletedAt, result.getDeletedAt());
         Assertions.assertEquals(userId, result.getOwner().getId());
         Assertions.assertEquals(username, result.getOwner().getUsername());
         Assertions.assertEquals(fullname, result.getOwner().getFullname());

@@ -102,6 +102,8 @@ public class ThreadRepositoryImplTest {
             Assertions.assertEquals(savedThread.getId(), threadDetail.getId());
             Assertions.assertEquals(title, threadDetail.getTitle());
             Assertions.assertEquals(body, threadDetail.getBody());
+            Assertions.assertNotNull(threadDetail.getCreatedAt());
+            Assertions.assertNotNull(threadDetail.getUpdatedAt());
             Assertions.assertEquals(savedUser.getId(), threadDetail.getOwner().getId());
             Assertions.assertEquals(savedUser.getUsername(), threadDetail.getOwner().getUsername());
             Assertions.assertEquals(savedUser.getFullname(), threadDetail.getOwner().getFullname());
@@ -231,6 +233,46 @@ public class ThreadRepositoryImplTest {
             Assertions.assertEquals(savedUser.getId(), result.getOwner().getId());
             Assertions.assertEquals(savedUser.getUsername(), result.getOwner().getUsername());
             Assertions.assertEquals(savedUser.getFullname(), result.getOwner().getFullname());
+        }
+    }
+
+    @Nested
+    @DisplayName("deleteThreadById function")
+    public class DeleteThreadByIdFunction {
+        @Test
+        @DisplayName("should throw NotFoundException when thread not found")
+        public void shouldThrowNotFoundExceptionWhenThreadNotFound() {
+            String id = UUID.randomUUID().toString();
+
+            NotFoundException exception = Assertions.assertThrows(
+                    NotFoundException.class,
+                    () -> threadRepositoryImpl.deleteThreadById(id)
+            );
+            Assertions.assertEquals("THREAD_REPOSITORY_IMPL.THREAD_NOT_FOUND", exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("should soft delete thread and return thread data correctly")
+        public void shouldSoftDeleteThreadAndReturnThreadDataCorrectly() {
+            String username = "user";
+            String fullname = "Fullname";
+            String password = "password";
+
+            UserJpaEntity userJpaEntity = new UserJpaEntity(username, fullname, password);
+            UserJpaEntity savedUser = userJpaRepository.save(userJpaEntity);
+
+            String title = "Title";
+            String body = "Body";
+
+            ThreadJpaEntity threadJpaEntity = new ThreadJpaEntity(savedUser, title, body);
+            ThreadJpaEntity savedThread = threadJpaRepository.save(threadJpaEntity);
+
+            Assertions.assertNull(savedThread.getDeletedAt()); // when not doing soft delete
+
+            ThreadDetail result = threadRepositoryImpl.deleteThreadById(savedThread.getId());
+
+            Assertions.assertEquals(savedThread.getId(), result.getId());
+            Assertions.assertNotNull(result.getDeletedAt());
         }
     }
 }

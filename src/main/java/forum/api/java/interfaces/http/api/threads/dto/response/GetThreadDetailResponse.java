@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.util.Optional;
 
 @Data
 @AllArgsConstructor
@@ -18,5 +19,6 @@ public class GetThreadDetailResponse {
     private String body;
     private Instant createdAt;
     private Instant updatedAt;
+    private Optional<Instant> deletedAt;
     private UserThreadDetailResponse owner;
 }

@@ -77,4 +77,9 @@ public class UseCaseConfig {
     public UpdateThreadUseCase updateThreadUseCase(ThreadRepository threadRepository) {
         return new UpdateThreadUseCase(threadRepository);
     }
+
+    @Bean
+    public DeleteThreadUseCase deleteThreadUseCase(ThreadRepository threadRepository) {
+        return new DeleteThreadUseCase(threadRepository);
+    }
 }

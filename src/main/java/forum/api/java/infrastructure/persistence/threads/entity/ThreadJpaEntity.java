@@ -4,7 +4,10 @@ import forum.api.java.infrastructure.persistence.users.entity.UserJpaEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
@@ -14,13 +17,15 @@ import java.time.Instant;
 @Entity
 @Table(name = "threads")
 @EntityListeners(AuditingEntityListener.class)
+@SQLDelete(sql = "UPDATE threads SET deleted_at = NOW() WHERE id = ?")
+@Where(clause = "deleted_at IS NULL")
 public class ThreadJpaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false) // foreign key ke user
+    @JoinColumn(name = "user_id", nullable = false) // foreign key to user
     private UserJpaEntity user;
 
     @Column(nullable = false)
@@ -34,7 +39,11 @@ public class ThreadJpaEntity {
     private Instant createdAt;
 
     @Column(name = "updated_at", nullable = false)
+    @LastModifiedDate
     private Instant updatedAt;
+
+    @Column(name = "deleted_at")
+    private Instant deletedAt;
 
     protected ThreadJpaEntity() {}
 

@@ -225,4 +225,37 @@ public class ThreadsControllerTest {
                     .andExpect(jsonPath("$.body").value(newBody));
         }
     }
+
+    @Nested
+    @DisplayName("DELETE /api/threads/delete-thread/{id}")
+    public class DeleteThreadAction {
+        private final String urlTemplate = "/api/threads/delete-thread/{id}";
+
+        @Test
+        @DisplayName("should throw NotFoundException when thread not found")
+        public void shouldThrowNotFoundExceptionWhenThreadNotFound() throws Exception {
+            String wrongId = UUID.randomUUID().toString();
+
+            mockMvc.perform(delete(urlTemplate, wrongId)
+                            .header("Authorization", "Bearer " + accessToken)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isNotFound());
+        }
+
+        @Test
+        @DisplayName("should delete thread and return thread data correctly")
+        public void shouldDeleteThreadAndReturnThreadDataCorrectly() throws Exception {
+            String title = "Title";
+            String body = "Body";
+
+            ThreadJpaEntity threadJpaEntity = new ThreadJpaEntity(savedUser, title, body);
+            ThreadJpaEntity savedThread = threadJpaRepository.save(threadJpaEntity);
+
+            mockMvc.perform(delete(urlTemplate, savedThread.getId())
+                            .header("Authorization", "Bearer " + accessToken)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.deletedAt").isNotEmpty());
+        }
+    }
 }

@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @DisplayName("Get thread pagination list use case")
@@ -39,7 +40,8 @@ public class GetThreadPaginationListUseCaseTest {
         String body = "Body";
         Instant createdAt = Instant.now();
         Instant updatedAt = Instant.now();
-        ThreadDetail threadDetail = new ThreadDetail(threadId, title, body, createdAt, updatedAt, userThreadDetail);
+        Optional<Instant> deletedAt = Optional.empty();
+        ThreadDetail threadDetail = new ThreadDetail(threadId, title, body, createdAt, updatedAt, deletedAt, userThreadDetail);
 
         List<ThreadDetail> dummyData = List.of(threadDetail, threadDetail, threadDetail);
         int page = 1;

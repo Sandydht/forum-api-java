@@ -13,6 +13,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
 
 @DisplayName("Get thread detail use case")
@@ -32,13 +33,14 @@ public class GetThreadDetailUseCaseTest {
         String body = "Body";
         Instant createdAt = Instant.now();
         Instant updatedAt = Instant.now();
+        Optional<Instant> deletedAt = Optional.empty();
 
         String userId = UUID.randomUUID().toString();
         String username = "user";
         String fullname = "Fullname";
         UserThreadDetail userThreadDetail = new UserThreadDetail(userId, username, fullname);
 
-        ThreadDetail threadDetail = new ThreadDetail(id, title, body, createdAt, updatedAt, userThreadDetail);
+        ThreadDetail threadDetail = new ThreadDetail(id, title, body, createdAt, updatedAt, deletedAt, userThreadDetail);
 
         Mockito.when(threadRepository.getThreadById(id)).thenReturn(threadDetail);
 
@@ -49,6 +51,7 @@ public class GetThreadDetailUseCaseTest {
         Assertions.assertEquals(body, threadEntity.getBody());
         Assertions.assertEquals(createdAt, threadEntity.getCreatedAt());
         Assertions.assertEquals(updatedAt, threadEntity.getUpdatedAt());
+        Assertions.assertEquals(deletedAt, threadEntity.getDeletedAt());
         Assertions.assertEquals(userId, threadEntity.getOwner().getId());
         Assertions.assertEquals(username, threadEntity.getOwner().getUsername());
         Assertions.assertEquals(fullname, threadEntity.getOwner().getFullname());

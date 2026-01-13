@@ -8,6 +8,7 @@ import forum.api.java.infrastructure.persistence.threads.entity.ThreadJpaEntity;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Optional;
 
 public class ThreadJpaMapper {
     public static AddedThread toAddedThreadDomain(ThreadJpaEntity threadJpaEntity) {
@@ -31,6 +32,7 @@ public class ThreadJpaMapper {
                 threadJpaEntity.getBody(),
                 threadJpaEntity.getCreatedAt(),
                 threadJpaEntity.getUpdatedAt(),
+                Optional.ofNullable(threadJpaEntity.getDeletedAt()),
                 userThreadDetail
         );
     }

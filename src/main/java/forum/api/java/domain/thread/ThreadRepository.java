@@ -22,4 +22,8 @@ public interface ThreadRepository {
     default ThreadDetail updateThreadById(UpdateThread updateThread) {
         throw new UnsupportedOperationException("THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED");
     }
+
+    default ThreadDetail deleteThreadById(String id) {
+        throw new UnsupportedOperationException("THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED");
+    }
 }

@@ -34,5 +34,11 @@ public class ThreadRepositoryTest {
                 () -> threadRepository.updateThreadById(null)
         );
         Assertions.assertEquals("THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED", updateThreadByIdError.getMessage());
+
+        UnsupportedOperationException deleteThreadByIdError = Assertions.assertThrows(
+                UnsupportedOperationException.class,
+                () -> threadRepository.deleteThreadById(null)
+        );
+        Assertions.assertEquals("THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED", deleteThreadByIdError.getMessage());
     }
 }

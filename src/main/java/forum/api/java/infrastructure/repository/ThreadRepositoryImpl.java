@@ -69,4 +69,16 @@ public class ThreadRepositoryImpl implements ThreadRepository {
 
         return ThreadJpaMapper.toThreadDetailDomain(threadJpaEntity);
     }
+
+    @Override
+    public ThreadDetail deleteThreadById(String id) {
+        ThreadJpaEntity threadJpaEntity = threadJpaRepository
+                .findById(id)
+                .orElseThrow(() -> new NotFoundException("THREAD_REPOSITORY_IMPL.THREAD_NOT_FOUND"));
+
+        threadJpaEntity.setDeletedAt(Instant.now());
+        threadJpaRepository.save(threadJpaEntity);
+
+        return ThreadJpaMapper.toThreadDetailDomain(threadJpaEntity);
+    }
 }

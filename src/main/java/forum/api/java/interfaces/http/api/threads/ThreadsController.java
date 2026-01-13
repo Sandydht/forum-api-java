@@ -1,9 +1,6 @@
 package forum.api.java.interfaces.http.api.threads;
 
-import forum.api.java.applications.usecase.AddThreadUseCase;
-import forum.api.java.applications.usecase.GetThreadDetailUseCase;
-import forum.api.java.applications.usecase.GetThreadPaginationListUseCase;
-import forum.api.java.applications.usecase.UpdateThreadUseCase;
+import forum.api.java.applications.usecase.*;
 import forum.api.java.commons.models.PagedSearchResult;
 import forum.api.java.domain.thread.entity.AddThread;
 import forum.api.java.domain.thread.entity.AddedThread;
@@ -15,11 +12,11 @@ import forum.api.java.interfaces.http.api.threads.dto.request.UpdateThreadReques
 import forum.api.java.interfaces.http.api.threads.dto.response.AddThreadResponse;
 import forum.api.java.interfaces.http.api.threads.dto.response.GetThreadDetailResponse;
 import forum.api.java.interfaces.http.api.threads.dto.response.GetThreadPaginationListResponse;
-import org.hibernate.sql.Update;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/threads")
@@ -28,17 +25,20 @@ public class ThreadsController {
     private final GetThreadDetailUseCase getThreadDetailUseCase;
     private final GetThreadPaginationListUseCase getThreadPaginationListUseCase;
     private final UpdateThreadUseCase updateThreadUseCase;
+    private final DeleteThreadUseCase deleteThreadUseCase;
 
     public ThreadsController(
             AddThreadUseCase addThreadUseCase,
             GetThreadDetailUseCase getThreadDetailUseCase,
             GetThreadPaginationListUseCase getThreadPaginationListUseCase,
-            UpdateThreadUseCase updateThreadUseCase
+            UpdateThreadUseCase updateThreadUseCase,
+            DeleteThreadUseCase deleteThreadUseCase
     ) {
         this.addThreadUseCase = addThreadUseCase;
         this.getThreadDetailUseCase = getThreadDetailUseCase;
         this.getThreadPaginationListUseCase = getThreadPaginationListUseCase;
         this.updateThreadUseCase = updateThreadUseCase;
+        this.deleteThreadUseCase = deleteThreadUseCase;
     }
 
     @PostMapping("add-thread")
@@ -64,6 +64,7 @@ public class ThreadsController {
                 threadDetail.getBody(),
                 threadDetail.getCreatedAt(),
                 threadDetail.getUpdatedAt(),
+                threadDetail.getDeletedAt(),
                 owner
         );
     }
@@ -77,6 +78,7 @@ public class ThreadsController {
             thread.getBody(),
             thread.getCreatedAt(),
             thread.getUpdatedAt(),
+            thread.getDeletedAt(),
             new UserThreadDetailResponse(thread.getOwner().getId(), thread.getOwner().getUsername(), thread.getOwner().getFullname())
         )).toList();
 
@@ -106,6 +108,28 @@ public class ThreadsController {
                 result.getBody(),
                 result.getCreatedAt(),
                 result.getUpdatedAt(),
+                result.getDeletedAt(),
+                owner
+        );
+    }
+
+    @DeleteMapping("delete-thread/{id}")
+    public GetThreadDetailResponse deleteThreadAction(@PathVariable("id") String threadId) {
+        ThreadDetail result = deleteThreadUseCase.execute(threadId);
+
+        UserThreadDetailResponse owner = new UserThreadDetailResponse(
+                result.getOwner().getId(),
+                result.getOwner().getUsername(),
+                result.getOwner().getFullname()
+        );
+
+        return new GetThreadDetailResponse(
+                result.getId(),
+                result.getTitle(),
+                result.getBody(),
+                result.getCreatedAt(),
+                result.getUpdatedAt(),
+                result.getDeletedAt(),
                 owner
         );
     }
