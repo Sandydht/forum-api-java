@@ -1,6 +1,7 @@
 package forum.api.java.applications.usecase;
 
 import forum.api.java.domain.thread.ThreadRepository;
+import forum.api.java.domain.thread.entity.AddThread;
 import forum.api.java.domain.thread.entity.AddedThread;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -30,14 +31,15 @@ public class AddThreadUseCaseTest {
         String title = "Title";
         String body = "Body";
 
-        Mockito.when(threadRepository.addThread(userId, title, body)).thenReturn(new AddedThread(id, title, body));
+        AddThread addThread = new AddThread(userId, title, body);
+        Mockito.when(threadRepository.addThread(addThread)).thenReturn(new AddedThread(id, title, body));
 
-        AddedThread addedThread = addThreadUseCase.execute(userId, title, body);
+        AddedThread addedThread = addThreadUseCase.execute(addThread);
 
         Assertions.assertEquals(id, addedThread.getId());
         Assertions.assertEquals(title, addedThread.getTitle());
         Assertions.assertEquals(body, addedThread.getBody());
 
-        Mockito.verify(threadRepository, Mockito.times(1)).addThread(userId, title, body);
+        Mockito.verify(threadRepository, Mockito.times(1)).addThread(addThread);
     }
 }

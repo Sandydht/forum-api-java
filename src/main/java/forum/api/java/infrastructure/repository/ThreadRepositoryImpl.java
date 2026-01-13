@@ -3,6 +3,7 @@ package forum.api.java.infrastructure.repository;
 import forum.api.java.commons.exceptions.NotFoundException;
 import forum.api.java.commons.models.PagedSearchResult;
 import forum.api.java.domain.thread.ThreadRepository;
+import forum.api.java.domain.thread.entity.AddThread;
 import forum.api.java.domain.thread.entity.AddedThread;
 import forum.api.java.domain.thread.entity.ThreadDetail;
 import forum.api.java.infrastructure.persistence.threads.ThreadJpaRepository;
@@ -27,11 +28,11 @@ public class ThreadRepositoryImpl implements ThreadRepository {
     }
 
     @Override
-    public AddedThread addThread(String userId, String title, String body) {
-        UserJpaEntity userJpaEntity = userJpaRepository.findById(userId)
+    public AddedThread addThread(AddThread addThread) {
+        UserJpaEntity userJpaEntity = userJpaRepository.findById(addThread.getUserId())
                 .orElseThrow(() -> new NotFoundException("THREAD_REPOSITORY_IMPL.USER_NOT_FOUND"));
 
-        ThreadJpaEntity threadJpaEntity = new ThreadJpaEntity(userJpaEntity, title, body);
+        ThreadJpaEntity threadJpaEntity = new ThreadJpaEntity(userJpaEntity, addThread.getTitle(), addThread.getBody());
         ThreadJpaEntity savedThread = threadJpaRepository.save(threadJpaEntity);
 
         return ThreadJpaMapper.toAddedThreadDomain(savedThread);

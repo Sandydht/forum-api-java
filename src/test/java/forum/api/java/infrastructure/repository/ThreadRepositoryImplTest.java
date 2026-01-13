@@ -2,6 +2,7 @@ package forum.api.java.infrastructure.repository;
 
 import forum.api.java.commons.exceptions.NotFoundException;
 import forum.api.java.commons.models.PagedSearchResult;
+import forum.api.java.domain.thread.entity.AddThread;
 import forum.api.java.domain.thread.entity.AddedThread;
 import forum.api.java.domain.thread.entity.ThreadDetail;
 import forum.api.java.infrastructure.persistence.threads.ThreadJpaRepository;
@@ -53,7 +54,8 @@ public class ThreadRepositoryImplTest {
             String title = "Title";
             String body = "Body";
 
-            AddedThread addedThread = threadRepositoryImpl.addThread(savedUser.getId(), title, body);
+            AddThread addThread = new AddThread(savedUser.getId(), title, body);
+            AddedThread addedThread = threadRepositoryImpl.addThread(addThread);
 
             Assertions.assertNotNull(addedThread.getId());
             Assertions.assertEquals(title, addedThread.getTitle());

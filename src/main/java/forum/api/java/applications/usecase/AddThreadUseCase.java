@@ -1,6 +1,7 @@
 package forum.api.java.applications.usecase;
 
 import forum.api.java.domain.thread.ThreadRepository;
+import forum.api.java.domain.thread.entity.AddThread;
 import forum.api.java.domain.thread.entity.AddedThread;
 
 public class AddThreadUseCase {
@@ -10,7 +11,7 @@ public class AddThreadUseCase {
         this.threadRepository = threadRepository;
     }
 
-    public AddedThread execute(String userId, String title, String body) {
-        return threadRepository.addThread(userId, title, body);
+    public AddedThread execute(AddThread addThread) {
+        return threadRepository.addThread(addThread);
     }
 }

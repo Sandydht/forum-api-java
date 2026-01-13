@@ -13,7 +13,7 @@ public class ThreadRepositoryTest {
     public void shouldThrowErrorWhenInvokeAbstractBehavior() {
         UnsupportedOperationException addThreadError = Assertions.assertThrows(
                 UnsupportedOperationException.class,
-                () -> threadRepository.addThread(null,null, null)
+                () -> threadRepository.addThread(null)
         );
         Assertions.assertEquals("THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED", addThreadError.getMessage());
 

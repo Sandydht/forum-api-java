@@ -4,6 +4,7 @@ import forum.api.java.applications.usecase.AddThreadUseCase;
 import forum.api.java.applications.usecase.GetThreadDetailUseCase;
 import forum.api.java.applications.usecase.GetThreadPaginationListUseCase;
 import forum.api.java.commons.models.PagedSearchResult;
+import forum.api.java.domain.thread.entity.AddThread;
 import forum.api.java.domain.thread.entity.AddedThread;
 import forum.api.java.domain.thread.entity.ThreadDetail;
 import forum.api.java.interfaces.http.api.common.response.UserThreadDetailResponse;
@@ -35,7 +36,8 @@ public class ThreadsController {
 
     @PostMapping("add-thread")
     public AddThreadResponse addThreadAction(@AuthenticationPrincipal String userId, @RequestBody AddThreadRequest addThreadRequest) {
-        AddedThread addedThread = addThreadUseCase.execute(userId, addThreadRequest.getTitle(), addThreadRequest.getBody());
+        AddThread addThread = new AddThread(userId, addThreadRequest.getTitle(), addThreadRequest.getBody());
+        AddedThread addedThread = addThreadUseCase.execute(addThread);
         return new AddThreadResponse(addedThread.getId(), addedThread.getTitle(), addedThread.getBody());
     }
 
