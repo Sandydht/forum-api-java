@@ -33,20 +33,20 @@ public class AuthenticationsController {
         this.logoutUserUseCase = logoutUserUseCase;
     }
 
-    @PostMapping("login-account")
+    @PostMapping("/login-account")
     public UserLoginResponse userLoginAccount(@RequestBody UserLoginRequest request) {
         LoginUser loginUser = new LoginUser(request.getUsername(), request.getPassword());
         NewAuthentication loggedInUser = loginUserUseCase.execute(loginUser);
         return new UserLoginResponse(loggedInUser.getAccessToken(), loggedInUser.getRefreshToken());
     }
 
-    @PostMapping("refresh-authentication")
+    @PostMapping("/refresh-authentication")
     public RefreshAuthenticationResponse getRefreshAuthentication(@RequestBody RefreshAuthenticationRequest request) {
         String newAccessToken = refreshAuthenticationUseCase.execute(request.getRefreshToken());
         return new RefreshAuthenticationResponse(newAccessToken);
     }
 
-    @PostMapping("logout-account")
+    @PostMapping("/logout-account")
     public UserLogoutResponse userLogoutAccount(@AuthenticationPrincipal String userId) {
         logoutUserUseCase.execute(userId);
         return new UserLogoutResponse("See you!");

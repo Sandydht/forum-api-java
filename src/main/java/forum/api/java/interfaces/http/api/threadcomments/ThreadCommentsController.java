@@ -17,7 +17,7 @@ public class ThreadCommentsController {
         this.addThreadCommentUseCase = addThreadCommentUseCase;
     }
 
-    @PostMapping("add-comment/{thread-id}")
+    @PostMapping("/add-comment/{thread-id}")
     public AddThreadCommentResponse addThreadCommentAction(@AuthenticationPrincipal String userId, @PathVariable("thread-id") String threadId, @RequestBody AddThreadCommentRequest addThreadCommentRequest) {
         AddThreadComment addThreadComment = new AddThreadComment(userId, threadId, addThreadCommentRequest.getContent());
         AddedThreadComment result = addThreadCommentUseCase.execute(addThreadComment);

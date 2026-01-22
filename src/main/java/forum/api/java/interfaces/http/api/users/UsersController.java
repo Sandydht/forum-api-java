@@ -25,14 +25,14 @@ public class UsersController {
         this.getUserProfileUseCase = getUserProfileUseCase;
     }
 
-    @PostMapping("register-account")
+    @PostMapping("/register-account")
     public UserRegisterResponse userRegistrationAccountAction(@RequestBody UserRegisterRequest userRegisterRequest) {
         RegisterUser registerUser = new RegisterUser(userRegisterRequest.getUsername(), userRegisterRequest.getFullname(), userRegisterRequest.getPassword());
         RegisteredUser registeredUser = registerUserUseCase.execute(registerUser);
         return new UserRegisterResponse(registeredUser.getId(), registeredUser.getUsername(), registeredUser.getFullname());
     }
 
-    @GetMapping("get-profile")
+    @GetMapping("/get-profile")
     public UserProfileResponse userProfileAction(@AuthenticationPrincipal String userId) {
         UserProfile result = getUserProfileUseCase.execute(userId);
         return new UserProfileResponse(result.getId(), result.getUsername(), result.getFullname());

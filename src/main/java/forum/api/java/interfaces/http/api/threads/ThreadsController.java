@@ -16,7 +16,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/threads")
@@ -41,7 +40,7 @@ public class ThreadsController {
         this.deleteThreadUseCase = deleteThreadUseCase;
     }
 
-    @PostMapping("add-thread")
+    @PostMapping("/add-thread")
     public AddThreadResponse addThreadAction(@AuthenticationPrincipal String userId, @RequestBody AddThreadRequest addThreadRequest) {
         AddThread addThread = new AddThread(userId, addThreadRequest.getTitle(), addThreadRequest.getBody());
         AddedThread addedThread = addThreadUseCase.execute(addThread);
@@ -55,7 +54,7 @@ public class ThreadsController {
         );
     }
 
-    @GetMapping("thread-detail/{id}")
+    @GetMapping("/thread-detail/{id}")
     public GetThreadDetailResponse getThreadDetailAction(@PathVariable("id") String threadId) {
         ThreadDetail threadDetail = getThreadDetailUseCase.execute(threadId);
 
@@ -76,7 +75,7 @@ public class ThreadsController {
         );
     }
 
-    @GetMapping("thread-pagination-list")
+    @GetMapping("/thread-pagination-list")
     public GetThreadPaginationListResponse getThreadPaginationListAction(@RequestParam(defaultValue = "") String title, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         PagedSearchResult<ThreadDetail> result = getThreadPaginationListUseCase.execute(title, page, size);
         List<GetThreadDetailResponse> resultData = result.getData().stream().map(thread -> new GetThreadDetailResponse(
@@ -98,7 +97,7 @@ public class ThreadsController {
         );
     }
 
-    @PatchMapping("update-thread/{id}")
+    @PatchMapping("/update-thread/{id}")
     public GetThreadDetailResponse updateThreadAction(@PathVariable("id") String threadId, @RequestBody UpdateThreadRequest updateThreadRequest) {
         UpdateThread updateThread = new UpdateThread(threadId, updateThreadRequest.getTitle(), updateThreadRequest.getBody());
         ThreadDetail result = updateThreadUseCase.execute(updateThread);
@@ -120,7 +119,7 @@ public class ThreadsController {
         );
     }
 
-    @DeleteMapping("delete-thread/{id}")
+    @DeleteMapping("/delete-thread/{id}")
     public GetThreadDetailResponse deleteThreadAction(@PathVariable("id") String threadId) {
         ThreadDetail result = deleteThreadUseCase.execute(threadId);
 
