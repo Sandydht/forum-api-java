@@ -25,4 +25,8 @@ public interface UserRepository {
     default UserProfile getUserProfile(String id) {
         throw new UnsupportedOperationException("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED");
     }
+
+    default void checkAvailableUserById(String id) {
+        throw new UnsupportedOperationException("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED");
+    }
 }

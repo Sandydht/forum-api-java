@@ -48,4 +48,9 @@ public class UserRepositoryImpl implements UserRepository {
     public UserProfile getUserProfile(String id) {
         return userJpaRepository.findById(id).map(UserJpaMapper::toUserProfileDomain).orElseThrow(() -> new NotFoundException("USER_REPOSITORY_IMPL.USER_NOT_FOUND"));
     }
+
+    @Override
+    public void checkAvailableUserById(String id) {
+        userJpaRepository.findById(id).orElseThrow(() -> new NotFoundException("USER_REPOSITORY_IMPL.USER_NOT_FOUND"));
+    }
 }

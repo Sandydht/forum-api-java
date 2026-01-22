@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 @DisplayName("UserRepository interface")
 public class UserRepositoryTest {
-    private final UserRepository userRepository = new UserRepository() {};;
+    private final UserRepository userRepository = new UserRepository() {};
 
     @Test
     @DisplayName("should throw error when invoke abstract behavior")
@@ -40,5 +40,11 @@ public class UserRepositoryTest {
                 () -> userRepository.getUserProfile(null)
         );
         Assertions.assertEquals("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED", getUserProfileError.getMessage());
+
+        UnsupportedOperationException checkAvailableUserByIdError = Assertions.assertThrows(
+                UnsupportedOperationException.class,
+                () -> userRepository.checkAvailableUserById(null)
+        );
+        Assertions.assertEquals("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED", checkAvailableUserByIdError.getMessage());
     }
 }

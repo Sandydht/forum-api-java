@@ -81,4 +81,11 @@ public class ThreadRepositoryImpl implements ThreadRepository {
 
         return ThreadJpaMapper.toThreadDetailDomain(threadJpaEntity);
     }
+
+    @Override
+    public void checkAvailableThreadById(String id) {
+        threadJpaRepository
+                .findById(id)
+                .orElseThrow(() -> new NotFoundException("THREAD_REPOSITORY_IMPL.THREAD_NOT_FOUND"));
+    }
 }

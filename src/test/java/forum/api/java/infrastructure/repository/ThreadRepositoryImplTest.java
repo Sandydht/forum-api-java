@@ -45,6 +45,22 @@ public class ThreadRepositoryImplTest {
     @DisplayName("addThread function")
     public class AddThreadFunction {
         @Test
+        @DisplayName("should throw NotFoundException when user not found")
+        public void shouldThrowNotFoundExceptionWhenUserNotFound() {
+            String userId = UUID.randomUUID().toString();
+            String title = "Title";
+            String body = "Body";
+
+            AddThread addThread = new AddThread(userId, title, body);
+
+            NotFoundException exception = Assertions.assertThrows(
+                    NotFoundException.class,
+                    () -> threadRepositoryImpl.addThread(addThread)
+            );
+            Assertions.assertEquals("THREAD_REPOSITORY_IMPL.USER_NOT_FOUND", exception.getMessage());
+        }
+
+        @Test
         @DisplayName("should persist add thread and return added thread correctly")
         public void shouldPersistAddThreadAndReturnAddedThreadCorrectly() {
             String username = "user";
@@ -273,6 +289,42 @@ public class ThreadRepositoryImplTest {
 
             Assertions.assertEquals(savedThread.getId(), result.getId());
             Assertions.assertNotNull(result.getDeletedAt());
+        }
+    }
+
+    @Nested
+    @DisplayName("checkAvailableThreadById function")
+    public class CheckAvailableThreadByIdFunction {
+        @Test
+        @DisplayName("should throw NotFoundException when thread not found")
+        public void shouldThrowNotFoundExceptionWhenThreadNotFound() {
+            String id = UUID.randomUUID().toString();
+
+            NotFoundException exception = Assertions.assertThrows(
+                    NotFoundException.class,
+                    () -> threadRepositoryImpl.checkAvailableThreadById(id)
+            );
+
+            Assertions.assertEquals("THREAD_REPOSITORY_IMPL.THREAD_NOT_FOUND", exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("should not throw NotFoundException when thread is found")
+        public void shouldNotThrowNotFoundExceptionWhenThreadIsFound() {
+            String username = "user";
+            String fullname = "Fullname";
+            String password = "password";
+
+            UserJpaEntity userJpaEntity = new UserJpaEntity(username, fullname, password);
+            UserJpaEntity savedUser = userJpaRepository.save(userJpaEntity);
+
+            String title = "Title";
+            String body = "Body";
+
+            ThreadJpaEntity threadJpaEntity = new ThreadJpaEntity(savedUser, title, body);
+            ThreadJpaEntity savedThread = threadJpaRepository.save(threadJpaEntity);
+
+            Assertions.assertDoesNotThrow(() -> threadRepositoryImpl.checkAvailableThreadById(savedThread.getId()));
         }
     }
 }

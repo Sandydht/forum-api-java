@@ -16,6 +16,8 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @DataJpaTest
 @Transactional
 @Rollback
@@ -178,6 +180,36 @@ public class UserRepositoryImplTest {
             Assertions.assertEquals(savedUser.getId(), result.getId());
             Assertions.assertEquals(savedUser.getUsername(), result.getUsername());
             Assertions.assertEquals(savedUser.getFullname(), result.getFullname());
+        }
+    }
+
+    @Nested
+    @DisplayName("checkAvailableUserById function")
+    public class CheckAvailableUserByIdFunction {
+        @Test
+        @DisplayName("should throw NotFoundException when user not found")
+        public void shouldThrowNotFoundExceptionWhenUserNotFound() {
+            String userId = "user-id";
+
+            NotFoundException exception = Assertions.assertThrows(
+                    NotFoundException.class,
+                    () -> userRepositoryImpl.checkAvailableUserById(userId)
+            );
+
+            Assertions.assertEquals("USER_REPOSITORY_IMPL.USER_NOT_FOUND", exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("should not throw NotFoundException when user is found")
+        public void shouldNotThrowNotFoundExceptionWhenUserIsFound() {
+            String username = "user";
+            String fullname = "Fullname";
+            String password = "password";
+
+            UserJpaEntity userJpaEntity = new UserJpaEntity(username, fullname, password);
+            UserJpaEntity savedUser = userJpaRepository.save(userJpaEntity);
+
+            Assertions.assertDoesNotThrow(() -> userRepositoryImpl.checkAvailableUserById(savedUser.getId()));
         }
     }
 }
