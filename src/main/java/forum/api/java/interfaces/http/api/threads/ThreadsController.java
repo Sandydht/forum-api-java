@@ -16,6 +16,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/threads")
@@ -44,7 +45,14 @@ public class ThreadsController {
     public AddThreadResponse addThreadAction(@AuthenticationPrincipal String userId, @RequestBody AddThreadRequest addThreadRequest) {
         AddThread addThread = new AddThread(userId, addThreadRequest.getTitle(), addThreadRequest.getBody());
         AddedThread addedThread = addThreadUseCase.execute(addThread);
-        return new AddThreadResponse(addedThread.getId(), addedThread.getTitle(), addedThread.getBody());
+        return new AddThreadResponse(
+                addedThread.getId(),
+                addedThread.getTitle(),
+                addedThread.getBody(),
+                addedThread.getCreatedAt(),
+                addedThread.getUpdatedAt(),
+                addedThread.getDeletedAt()
+        );
     }
 
     @GetMapping("thread-detail/{id}")

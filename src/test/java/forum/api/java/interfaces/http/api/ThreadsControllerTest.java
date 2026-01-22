@@ -87,7 +87,9 @@ public class ThreadsControllerTest {
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.id").exists())
                     .andExpect(jsonPath("$.title").value(request.getTitle()))
-                    .andExpect(jsonPath("$.body").value(request.getBody()));
+                    .andExpect(jsonPath("$.body").value(request.getBody()))
+                    .andExpect(jsonPath("$.createdAt").exists())
+                    .andExpect(jsonPath("$.updatedAt").exists());
         }
     }
 

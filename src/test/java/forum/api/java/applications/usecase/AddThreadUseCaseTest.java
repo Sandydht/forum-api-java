@@ -14,6 +14,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
 
 @DisplayName("Add thread use case")
@@ -34,18 +36,24 @@ public class AddThreadUseCaseTest {
         String id = UUID.randomUUID().toString();
         String title = "Title";
         String body = "Body";
+        Instant createdAt = Instant.now();
+        Instant updatedAt = Instant.now();
+        Optional<Instant> deletedAt = Optional.empty();
 
         String userId = UUID.randomUUID().toString();
 
         AddThread addThread = new AddThread(userId, title, body);
         Mockito.doNothing().when(userRepository).checkAvailableUserById(userId);
-        Mockito.when(threadRepository.addThread(addThread)).thenReturn(new AddedThread(id, title, body));
+        Mockito.when(threadRepository.addThread(addThread)).thenReturn(new AddedThread(id, title, body, createdAt, updatedAt, deletedAt));
 
         AddedThread addedThread = addThreadUseCase.execute(addThread);
 
         Assertions.assertEquals(id, addedThread.getId());
         Assertions.assertEquals(title, addedThread.getTitle());
         Assertions.assertEquals(body, addedThread.getBody());
+        Assertions.assertEquals(createdAt, addedThread.getCreatedAt());
+        Assertions.assertEquals(updatedAt, addedThread.getUpdatedAt());
+        Assertions.assertEquals(deletedAt, addedThread.getDeletedAt());
 
         Mockito.verify(userRepository, Mockito.times(1)).checkAvailableUserById(userId);
         Mockito.verify(threadRepository, Mockito.times(1)).addThread(addThread);

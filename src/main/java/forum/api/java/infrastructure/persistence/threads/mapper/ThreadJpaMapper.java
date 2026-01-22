@@ -15,7 +15,10 @@ public class ThreadJpaMapper {
         return new AddedThread(
                 threadJpaEntity.getId(),
                 threadJpaEntity.getTitle(),
-                threadJpaEntity.getBody()
+                threadJpaEntity.getBody(),
+                threadJpaEntity.getCreatedAt(),
+                threadJpaEntity.getUpdatedAt(),
+                Optional.ofNullable(threadJpaEntity.getDeletedAt())
         );
     }
 
