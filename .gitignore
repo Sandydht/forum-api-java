@@ -44,4 +44,4 @@ Thumbs.db
 *~
 
 # application.properties file
-application.properties
+**/application*.properties
