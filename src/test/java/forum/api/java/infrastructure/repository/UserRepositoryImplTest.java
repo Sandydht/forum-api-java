@@ -1,5 +1,6 @@
 package forum.api.java.infrastructure.repository;
 
+import forum.api.java.applications.service.PhoneNumberNormalizer;
 import forum.api.java.commons.exceptions.InvariantException;
 import forum.api.java.commons.exceptions.NotFoundException;
 import forum.api.java.domain.user.entity.RegisterUser;
@@ -37,7 +38,7 @@ public class UserRepositoryImplTest {
         public void shouldThrowInvariantExceptionWhenUsernameAvailable() {
             String username = "user";
             String email = "example@email.com";
-            String phoneNumber = "6281123123123";
+            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
             String password = "password";
             String fullname = "Fullname";
 
@@ -68,7 +69,7 @@ public class UserRepositoryImplTest {
         public void shouldPersistRegisterUserAndReturnRegisteredUserCorrectly() {
             String username = "user";
             String email = "example@email.com";
-            String phoneNumber = "6281123123123";
+            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
             String fullname = "Fullname";
             String password = "password123";
             String captchaToken = "captcha-token";
@@ -103,7 +104,7 @@ public class UserRepositoryImplTest {
         public void shouldReturnUserDetailCorrectlyWhenUserExists() {
             String username = "user";
             String email = "example@email.com";
-            String phoneNumber = "6281123123123";
+            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
             String fullname = "Fullname";
             String password = "password";
 
@@ -140,7 +141,7 @@ public class UserRepositoryImplTest {
         public void shouldReturnUserDetailCorrectlyWhenUserExists() {
             String username = "user";
             String email = "example@email.com";
-            String phoneNumber = "6281123123123";
+            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
             String fullname = "Fullname";
             String password = "password";
 
@@ -177,7 +178,7 @@ public class UserRepositoryImplTest {
         public void shouldReturnUserProfileDataCorrectly() {
             String username = "user";
             String email = "example@email.com";
-            String phoneNumber = "6281123123123";
+            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
             String fullname = "Fullname";
             String password = "password";
 
@@ -213,7 +214,7 @@ public class UserRepositoryImplTest {
         public void shouldNotThrowNotFoundExceptionWhenUserIsFound() {
             String username = "user";
             String email = "example@email.com";
-            String phoneNumber = "6281123123123";
+            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
             String fullname = "Fullname";
             String password = "password";
 
@@ -221,6 +222,68 @@ public class UserRepositoryImplTest {
             UserJpaEntity savedUser = userJpaRepository.save(userJpaEntity);
 
             Assertions.assertDoesNotThrow(() -> userRepositoryImpl.checkAvailableUserById(savedUser.getId()));
+        }
+    }
+
+    @Nested
+    @DisplayName("verifyAvailableEmail function")
+    public class VerifyAvailableEmailFunction {
+        @Test
+        @DisplayName("should throw InvarianException when email available")
+        public void shouldThrowInvariantExceptionWhenUsernameAvailable() {
+            String username = "user";
+            String email = "example@email.com";
+            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
+            String password = "password";
+            String fullname = "Fullname";
+
+            UserJpaEntity userJpaEntity = new UserJpaEntity(null, username, email, phoneNumber, fullname, password);
+            userJpaRepository.save(userJpaEntity);
+
+            InvariantException verifyAvailableUsernameError = Assertions.assertThrows(
+                    InvariantException.class,
+                    () -> userRepositoryImpl.verifyAvailableEmail(email)
+            );
+
+            Assertions.assertEquals("USER_REPOSITORY_IMPL.EMAIL_ALREADY_EXIST", verifyAvailableUsernameError.getMessage());
+        }
+
+        @Test
+        @DisplayName("should not throw InvarianException when email not available")
+        public void shouldNotThrowInvariantExceptionWhenUsernameNotAvailable() {
+            String email = "example@email.com";
+            Assertions.assertDoesNotThrow(() -> userRepositoryImpl.verifyAvailableEmail(email));
+        }
+    }
+
+    @Nested
+    @DisplayName("verifyAvailablePhoneNumber function")
+    public class VerifyAvailablePhoneNumberFunction {
+        @Test
+        @DisplayName("should throw InvarianException when phone number available")
+        public void shouldThrowInvariantExceptionWhenUsernameAvailable() {
+            String username = "user";
+            String email = "example@email.com";
+            String phoneNumber = "+6281123123123";
+            String password = "password";
+            String fullname = "Fullname";
+
+            UserJpaEntity userJpaEntity = new UserJpaEntity(null, username, email, phoneNumber, fullname, password);
+            userJpaRepository.save(userJpaEntity);
+
+            InvariantException verifyAvailableUsernameError = Assertions.assertThrows(
+                    InvariantException.class,
+                    () -> userRepositoryImpl.verifyAvailablePhoneNumber(phoneNumber)
+            );
+
+            Assertions.assertEquals("USER_REPOSITORY_IMPL.PHONE_NUMBER_ALREADY_EXIST", verifyAvailableUsernameError.getMessage());
+        }
+
+        @Test
+        @DisplayName("should not throw InvarianException when phone Number not available")
+        public void shouldNotThrowInvariantExceptionWhenUsernameNotAvailable() {
+            String phoneNumber = "+6281123123123";
+            Assertions.assertDoesNotThrow(() -> userRepositoryImpl.verifyAvailablePhoneNumber(phoneNumber));
         }
     }
 }

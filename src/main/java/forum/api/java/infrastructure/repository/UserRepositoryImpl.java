@@ -53,4 +53,18 @@ public class UserRepositoryImpl implements UserRepository {
     public void checkAvailableUserById(String id) {
         userJpaRepository.findById(id).orElseThrow(() -> new NotFoundException("USER_REPOSITORY_IMPL.USER_NOT_FOUND"));
     }
+
+    @Override
+    public void verifyAvailableEmail(String email) {
+        if (userJpaRepository.findByEmail(email).isPresent()) {
+            throw new InvariantException("USER_REPOSITORY_IMPL.EMAIL_ALREADY_EXIST");
+        }
+    }
+
+    @Override
+    public void verifyAvailablePhoneNumber(String phoneNumber) {
+        if (userJpaRepository.findByPhoneNumber(phoneNumber).isPresent()) {
+            throw new InvariantException("USER_REPOSITORY_IMPL.PHONE_NUMBER_ALREADY_EXIST");
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package forum.api.java.infrastructure.repository;
 
+import forum.api.java.applications.service.PhoneNumberNormalizer;
 import forum.api.java.commons.exceptions.NotFoundException;
 import forum.api.java.infrastructure.persistence.authentications.AuthenticationJpaRepository;
 import forum.api.java.infrastructure.persistence.authentications.entity.RefreshTokenJpaEntity;
@@ -44,7 +45,7 @@ public class AuthenticationRepositoryImplTest {
         public void testAddTokenToDatabase() {
             String username = "user";
             String email = "example@email.com";
-            String phoneNumber = "6281123123123";
+            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
             String fullname = "Fullname";
             String password = "password";
             String fakeRefreshToken = "fake-refresh-token";
@@ -71,7 +72,7 @@ public class AuthenticationRepositoryImplTest {
         public void testDeleteExpiredTokensFromDatabase() {
             String username = "user";
             String email = "example@email.com";
-            String phoneNumber = "6281123123123";
+            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
             String fullname = "Fullname";
             String password = "password";
 
@@ -111,7 +112,7 @@ public class AuthenticationRepositoryImplTest {
         public void testShouldNotThrowNotFoundExceptionWhenTokenIsFound() {
             String username = "username";
             String email = "example@email.com";
-            String phoneNumber = "6281123123123";
+            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
             String fullname = "Fullname";
             String password = "password";
             String validToken = "valid-token";
@@ -144,7 +145,7 @@ public class AuthenticationRepositoryImplTest {
         public void testShouldDeleteTokenFromDatabase() {
             String username = "user";
             String email = "example@email.com";
-            String phoneNumber = "6281123123123";
+            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
             String fullname = "Fullname";
             String password = "password";
             String refreshToken = "refresh-token";
@@ -181,7 +182,7 @@ public class AuthenticationRepositoryImplTest {
         public void shouldDeleteTokenFromDatabase() {
             String username = "user";
             String email = "example@email.com";
-            String phoneNumber = "6281123123123";
+            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
             String fullname = "Fullname";
             String password = "password";
             String refreshToken = "refresh-token";

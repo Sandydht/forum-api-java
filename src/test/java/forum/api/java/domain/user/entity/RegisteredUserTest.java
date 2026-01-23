@@ -1,5 +1,6 @@
 package forum.api.java.domain.user.entity;
 
+import forum.api.java.applications.service.PhoneNumberNormalizer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,7 +17,7 @@ public class RegisteredUserTest {
         String id = UUID.randomUUID().toString();
         String username = "user";
         String email = "example@email.com";
-        String phoneNumber = "6281123123123";
+        String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
         String fullname = "Fullname";
 
         return Stream.of(
@@ -50,7 +51,7 @@ public class RegisteredUserTest {
         String id = UUID.randomUUID().toString();
         String invalidUsername = "invalidusernameinvalidusernameinvalidusernameinvalidusername";
         String email = "example@email.com";
-        String phoneNumber = "6281123123123";
+        String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
         String fullname = "Fullname";
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
@@ -66,7 +67,7 @@ public class RegisteredUserTest {
         String id = UUID.randomUUID().toString();
         String invalidUsername = "Invalid Username";
         String email = "example@email.com";
-        String phoneNumber = "6281123123123";
+        String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
         String fullname = "Fullname";
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
@@ -82,7 +83,7 @@ public class RegisteredUserTest {
         String id = UUID.randomUUID().toString();
         String username = "user";
         String email = "invalid email";
-        String phoneNumber = "6281123123123";
+        String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
         String fullname = "Fullname";
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
@@ -114,7 +115,7 @@ public class RegisteredUserTest {
         String id = UUID.randomUUID().toString();
         String username = "user";
         String email = "example@email.com";
-        String phoneNumber = "6281123123123";
+        String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
         String fullname = "Fullname";
 
         RegisteredUser registeredUser = new RegisteredUser(id, username, email, phoneNumber, fullname);

@@ -2,6 +2,7 @@ package forum.api.java.interfaces.http.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
+import forum.api.java.applications.service.PhoneNumberNormalizer;
 import forum.api.java.infrastructure.persistence.authentications.AuthenticationJpaRepository;
 import forum.api.java.infrastructure.persistence.authentications.entity.RefreshTokenJpaEntity;
 import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
@@ -35,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AuthenticationsControllerTest {
     private final String username = "username";
     private final String email = "example@email.com";
-    private final String phoneNumber = "6281123123123";
+    private final String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
     private final String fullname = "Fullname";
     private final String password = "password123";
     private final String captchaToken = "captcha-token";

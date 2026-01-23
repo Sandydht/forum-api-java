@@ -29,4 +29,12 @@ public interface UserRepository {
     default void checkAvailableUserById(String id) {
         throw new UnsupportedOperationException("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED");
     }
+
+    default void verifyAvailableEmail(String email) {
+        throw new UnsupportedOperationException("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED");
+    }
+
+    default void verifyAvailablePhoneNumber(String phoneNumber) {
+        throw new UnsupportedOperationException("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED");
+    }
 }

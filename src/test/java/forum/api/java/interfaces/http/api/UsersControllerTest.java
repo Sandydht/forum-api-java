@@ -1,6 +1,7 @@
 package forum.api.java.interfaces.http.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import forum.api.java.applications.service.PhoneNumberNormalizer;
 import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
 import forum.api.java.infrastructure.persistence.users.entity.UserJpaEntity;
 import forum.api.java.infrastructure.security.GoogleCaptchaService;
@@ -63,7 +64,7 @@ public class UsersControllerTest {
         public void shouldRegisterAccountSuccessfully() throws Exception {
             String username = "user";
             String email = "example@email.com";
-            String phoneNumber = "6281123123123";
+            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
             String fullname = "Fullname";
             String password = "password123";
             String captchaToken = "captcha-token";
@@ -86,7 +87,7 @@ public class UsersControllerTest {
         public void shouldReturn400IfTheUsernameIsAlreadyExist() throws Exception{
             String username = "user";
             String email = "example@email.com";
-            String phoneNumber = "6281123123123";
+            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
             String fullname = "Fullname";
             String password = "password123";
             String captchaToken = "captcha-token";
@@ -103,11 +104,53 @@ public class UsersControllerTest {
         }
 
         @Test
+        @DisplayName("should return 400 if the email is already exist")
+        public void shouldReturn400IfTheEmailIsAlreadyExist() throws Exception{
+            String username = "user";
+            String email = "example@email.com";
+            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
+            String fullname = "Fullname";
+            String password = "password123";
+            String captchaToken = "captcha-token";
+
+            userJpaRepository.save(new UserJpaEntity(null, "user1", email, phoneNumber, fullname, password));
+
+            UserRegisterRequest request = new UserRegisterRequest(username, email, phoneNumber, fullname, password, captchaToken);
+
+            mockMvc.perform(post(urlTemplate)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)).with(csrf()))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.message").value("Email already exist"));
+        }
+
+        @Test
+        @DisplayName("should return 400 if the phone number is already exist")
+        public void shouldReturn400IfThePhoneNumberIsAlreadyExist() throws Exception{
+            String username = "user";
+            String email = "example@email.com";
+            String phoneNumber = "+6281123123123";
+            String fullname = "Fullname";
+            String password = "password123";
+            String captchaToken = "captcha-token";
+
+            userJpaRepository.save(new UserJpaEntity(null, "user1", "example1@email.com", phoneNumber, fullname, password));
+
+            UserRegisterRequest request = new UserRegisterRequest(username, email, phoneNumber, fullname, password, captchaToken);
+
+            mockMvc.perform(post(urlTemplate)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)).with(csrf()))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.message").value("Phone number already exist"));
+        }
+
+        @Test
         @DisplayName("should return 400 if the username contains restricted character")
         public void shouldReturn400IfTheUsernameContainsRestrictedCharacter() throws Exception {
             String username = "user 75";
             String email = "example@email.com";
-            String phoneNumber = "6281123123123";
+            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
             String fullname = "Fullname";
             String password = "password123";
             String captchaToken = "captcha-token";
@@ -126,7 +169,7 @@ public class UsersControllerTest {
         public void shouldReturn400IfTheUsernameContainsMoreThan50Character() throws Exception {
             String username = "user".repeat(51);
             String email = "example@email.com";
-            String phoneNumber = "6281123123123";
+            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
             String fullname = "Fullname";
             String password = "password123";
             String captchaToken = "captcha-token";
@@ -145,7 +188,7 @@ public class UsersControllerTest {
         public void shouldReturn400IfTheEmailIsInvalid() throws Exception {
             String username = "user";
             String email = "Invalid Email";
-            String phoneNumber = "6281123123123";
+            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
             String fullname = "Fullname";
             String password = "password123";
             String captchaToken = "captcha-token";
@@ -183,7 +226,7 @@ public class UsersControllerTest {
         public void shouldReturn400IfThePasswordLessThan8Characters() throws Exception {
             String username = "user";
             String email = "example@email.com";
-            String phoneNumber = "6281123123123";
+            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
             String fullname = "Fullname";
             String password = "secret1";
             String captchaToken = "captcha-token";
@@ -202,7 +245,7 @@ public class UsersControllerTest {
         public void shouldReturn400IfThePasswordNotContainLettersAndNumbers() throws Exception {
             String username = "user";
             String email = "example@email.com";
-            String phoneNumber = "6281123123123";
+            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
             String fullname = "Fullname";
             String password = "password";
             String captchaToken = "captcha-token";
@@ -221,7 +264,7 @@ public class UsersControllerTest {
         public void shouldReturn400IfThePasswordContainSpace() throws Exception {
             String username = "user";
             String email = "example@email.com";
-            String phoneNumber = "6281123123123";
+            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
             String fullname = "Fullname";
             String password = "pass word123";
             String captchaToken = "captcha-token";
@@ -246,7 +289,7 @@ public class UsersControllerTest {
         public void setUp() throws Exception {
             String username = "user";
             String email = "example@email.com";
-            String phoneNumber = "6281123123123";
+            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
             String fullname = "Fullname";
             String password = "password123";
             savedUser = userJpaRepository.save(new UserJpaEntity(null, username, email, phoneNumber, fullname, passwordHashImpl.hashPassword(password)));

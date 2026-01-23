@@ -28,6 +28,8 @@ public class DomainErrorTranslator {
         // USER_REPOSITORY_IMPL
         directories.put("USER_REPOSITORY_IMPL.USER_ALREADY_EXIST", new InvariantException("User already exist"));
         directories.put("USER_REPOSITORY_IMPL.USER_NOT_FOUND", new NotFoundException("User not found"));
+        directories.put("USER_REPOSITORY_IMPL.EMAIL_ALREADY_EXIST", new InvariantException("Email already exist"));
+        directories.put("USER_REPOSITORY_IMPL.PHONE_NUMBER_ALREADY_EXIST", new InvariantException("Phone number already exist"));
 
         // AUTHENTICATION_REPOSITORY_IMPL
         directories.put("AUTHENTICATION_REPOSITORY_IMPL.USER_NOT_FOUND", new NotFoundException("User not found"));

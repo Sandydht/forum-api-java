@@ -37,7 +37,7 @@ public class RegisterUserUseCaseTest {
         String id = UUID.randomUUID().toString();
         String username = "user";
         String email = "example@email.com";
-        String phoneNumber = "6281123123123";
+        String phoneNumber = "+6281123123123";
         String fullname = "Fullname";
         String password = "password123";
         String hashedPassword = "hashedPassword";
@@ -45,9 +45,11 @@ public class RegisterUserUseCaseTest {
 
         RegisterUser registerUser = new RegisterUser(username, email, phoneNumber, fullname, password, captchaToken);
 
+        Mockito.when(passwordHash.hashPassword(password)).thenReturn(hashedPassword);
         Mockito.doNothing().when(captchaService).verifyToken(captchaToken);
         Mockito.doNothing().when(userRepository).verifyAvailableUsername(username);
-        Mockito.when(passwordHash.hashPassword(password)).thenReturn(hashedPassword);
+        Mockito.doNothing().when(userRepository).verifyAvailableEmail(email);
+        Mockito.doNothing().when(userRepository).verifyAvailablePhoneNumber(phoneNumber);
         Mockito.when(userRepository.addUser(registerUser)).thenReturn(new RegisteredUser(
                 id,
                 registerUser.getUsername(),
@@ -65,9 +67,11 @@ public class RegisterUserUseCaseTest {
         Assertions.assertEquals("+6281123123123", registerUser.getPhoneNumber());
         Assertions.assertEquals(hashedPassword, registerUser.getPassword());
 
+        Mockito.verify(passwordHash, Mockito.times(1)).hashPassword(password);
         Mockito.verify(captchaService, Mockito.times(1)).verifyToken(captchaToken);
         Mockito.verify(userRepository, Mockito.times(1)).verifyAvailableUsername(username);
-        Mockito.verify(passwordHash, Mockito.times(1)).hashPassword(password);
+        Mockito.verify(userRepository, Mockito.times(1)).verifyAvailableEmail(email);
+        Mockito.verify(userRepository, Mockito.times(1)).verifyAvailablePhoneNumber(phoneNumber);
         Mockito.verify(userRepository, Mockito.times(1)).addUser(registerUser);
     }
 }

@@ -19,12 +19,14 @@ public class RegisterUserUseCase {
     }
 
     public RegisteredUser execute(RegisterUser registerUser) {
-        captchaService.verifyToken(registerUser.getCaptchaToken());
-        userRepository.verifyAvailableUsername(registerUser.getUsername());
         String normalizedPhoneNumber = PhoneNumberNormalizer.normalize(registerUser.getPhoneNumber());
         registerUser.setPhoneNumber(normalizedPhoneNumber);
         String hashedPassword = passwordHash.hashPassword(registerUser.getPassword());
         registerUser.setPassword(hashedPassword);
+        captchaService.verifyToken(registerUser.getCaptchaToken());
+        userRepository.verifyAvailableUsername(registerUser.getUsername());
+        userRepository.verifyAvailableEmail(registerUser.getEmail());
+        userRepository.verifyAvailablePhoneNumber(registerUser.getPhoneNumber());
         return userRepository.addUser(registerUser);
     }
 }

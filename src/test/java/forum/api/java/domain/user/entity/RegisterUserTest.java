@@ -1,5 +1,6 @@
 package forum.api.java.domain.user.entity;
 
+import forum.api.java.applications.service.PhoneNumberNormalizer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,7 @@ public class RegisterUserTest {
     private static Stream<Arguments> provideInvalidMissingData() {
         String username = "user";
         String email = "example@email.com";
-        String phoneNumber = "6281123123123";
+        String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
         String fullname = "Fullname";
         String password = "password123";
         String captchaToken = "captcha-token";
@@ -51,7 +52,7 @@ public class RegisterUserTest {
     public void shouldThrowErrorWhenUsernameContainsMoreThan50Character() {
         String invalidUsername = "invalidusernameinvalidusernameinvalidusernameinvalidusername";
         String email = "example@email.com";
-        String phoneNumber = "6281123123123";
+        String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
         String fullname = "Fullname";
         String password = "password123";
         String captchaToken = "captcha-token";
@@ -68,7 +69,7 @@ public class RegisterUserTest {
     public void shouldThrowErrorWhenUsernameContainsRestrictedCharacter() {
         String invalidUsername = "Invalid Username";
         String email = "example@email.com";
-        String phoneNumber = "6281123123123";
+        String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
         String fullname = "Fullname";
         String password = "password123";
         String captchaToken = "captcha-token";
@@ -85,7 +86,7 @@ public class RegisterUserTest {
     public void shouldThrowErrorWhenEmailIsInvalid() {
         String username = "user";
         String email = "invalid email";
-        String phoneNumber = "6281123123123";
+        String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
         String fullname = "Fullname";
         String password = "password123";
         String captchaToken = "captcha-token";
@@ -119,7 +120,7 @@ public class RegisterUserTest {
     public void shouldThrowErrorIfPasswordIsLessThan8Characters() {
         String username = "user";
         String email = "example@email.com";
-        String phoneNumber = "6281123123123";
+        String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
         String fullname = "Fullname";
         String password = "secret1";
         String captchaToken = "captcha-token";
@@ -136,7 +137,7 @@ public class RegisterUserTest {
     public void shouldThrowErrorIfThePasswordNotContainLettersAndNumbers() {
         String username = "user";
         String email = "example@email.com";
-        String phoneNumber = "6281123123123";
+        String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
         String fullname = "Fullname";
         String password = "password";
         String captchaToken = "captcha-token";
@@ -153,7 +154,7 @@ public class RegisterUserTest {
     public void shouldThrowErrorIfThePasswordContainSpace() {
         String username = "user";
         String email = "example@email.com";
-        String phoneNumber = "6281123123123";
+        String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
         String fullname = "Fullname";
         String password = "pass word123";
         String captchaToken = "captcha-token";
@@ -170,7 +171,7 @@ public class RegisterUserTest {
     public void shouldCreateObjectCorrectly() {
         String username = "user";
         String email = "example@email.com";
-        String phoneNumber = "6281123123123";
+        String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
         String fullname = "Fullname";
         String password = "password1234";
         String captchaToken = "captcha-token";
