@@ -64,8 +64,9 @@ public class UsersControllerTest {
             String username = "user";
             String fullname = "Fullname";
             String password = "password123";
+            String captchaToken = "captcha-token";
 
-            UserRegisterRequest request = new UserRegisterRequest(username, fullname, password);
+            UserRegisterRequest request = new UserRegisterRequest(username, fullname, password, captchaToken);
 
             mockMvc.perform(post(urlTemplate)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -82,10 +83,11 @@ public class UsersControllerTest {
             String username = "user";
             String fullname = "Fullname";
             String password = "password123";
+            String captchaToken = "captcha-token";
 
             userJpaRepository.save(new UserJpaEntity(username, fullname, password));
 
-            UserRegisterRequest request = new UserRegisterRequest(username, fullname, password);
+            UserRegisterRequest request = new UserRegisterRequest(username, fullname, password, captchaToken);
 
             mockMvc.perform(post(urlTemplate)
                             .contentType(MediaType.APPLICATION_JSON)
@@ -100,8 +102,9 @@ public class UsersControllerTest {
             String username = "user 75";
             String fullname = "Fullname";
             String password = "password123";
+            String captchaToken = "captcha-token";
 
-            UserRegisterRequest request = new UserRegisterRequest(username, fullname, password);
+            UserRegisterRequest request = new UserRegisterRequest(username, fullname, password, captchaToken);
 
             mockMvc.perform(post(urlTemplate)
                             .contentType(MediaType.APPLICATION_JSON)
@@ -116,8 +119,9 @@ public class UsersControllerTest {
             String username = "user".repeat(51);
             String fullname = "Fullname";
             String password = "password123";
+            String captchaToken = "captcha-token";
 
-            UserRegisterRequest request = new UserRegisterRequest(username, fullname, password);
+            UserRegisterRequest request = new UserRegisterRequest(username, fullname, password, captchaToken);
 
             mockMvc.perform(post(urlTemplate)
                             .contentType(MediaType.APPLICATION_JSON)
@@ -132,8 +136,9 @@ public class UsersControllerTest {
             String username = "user";
             String fullname = "Fullname";
             String password = "secret1";
+            String captchaToken = "captcha-token";
 
-            UserRegisterRequest request = new UserRegisterRequest(username, fullname, password);
+            UserRegisterRequest request = new UserRegisterRequest(username, fullname, password, captchaToken);
 
             mockMvc.perform(post(urlTemplate)
                             .contentType(MediaType.APPLICATION_JSON)
@@ -148,8 +153,9 @@ public class UsersControllerTest {
             String username = "user";
             String fullname = "Fullname";
             String password = "password";
+            String captchaToken = "captcha-token";
 
-            UserRegisterRequest request = new UserRegisterRequest(username, fullname, password);
+            UserRegisterRequest request = new UserRegisterRequest(username, fullname, password, captchaToken);
 
             mockMvc.perform(post(urlTemplate)
                             .contentType(MediaType.APPLICATION_JSON)
@@ -164,8 +170,9 @@ public class UsersControllerTest {
             String username = "user";
             String fullname = "Fullname";
             String password = "pass word123";
+            String captchaToken = "captcha-token";
 
-            UserRegisterRequest request = new UserRegisterRequest(username, fullname, password);
+            UserRegisterRequest request = new UserRegisterRequest(username, fullname, password, captchaToken);
 
             mockMvc.perform(post(urlTemplate)
                             .contentType(MediaType.APPLICATION_JSON)

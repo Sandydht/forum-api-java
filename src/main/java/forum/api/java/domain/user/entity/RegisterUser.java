@@ -13,19 +13,22 @@ public class RegisterUser {
     private final String username;
     private final String fullname;
     private String password;
+    private final String captchaToken;
 
-    public RegisterUser(String username, String fullname, String password) {
-        verifyPayload(username, fullname, password);
+    public RegisterUser(String username, String fullname, String password, String captchaToken) {
+        verifyPayload(username, fullname, password, captchaToken);
 
         this.username = username;
         this.fullname = fullname;
         this.password = password;
+        this.captchaToken = captchaToken;
     }
 
-    private static void verifyPayload(String username, String fullname, String password) {
+    private static void verifyPayload(String username, String fullname, String password, String captchaToken) {
         ValidationUtils.requireNotBlank(username, notContainNeededPropertyErrorMessage);
         ValidationUtils.requireNotBlank(fullname, notContainNeededPropertyErrorMessage);
         ValidationUtils.requireNotBlank(password, notContainNeededPropertyErrorMessage);
+        ValidationUtils.requireNotBlank(captchaToken, notContainNeededPropertyErrorMessage);
         ValidationUtils.usernameNotContainRestrictedCharacter(username, containRestrictedCharacterErrorMessage);
         ValidationUtils.usernameLimitCharacter(username, limitCharErrorMessage);
         ValidationUtils.passwordLimitCharacter(password, passwordLimitCharErrorMessage);
@@ -47,5 +50,9 @@ public class RegisterUser {
 
     public void setPassword(String hashedPassword) {
         this.password = hashedPassword;
+    }
+
+    public String getCaptchaToken() {
+        return captchaToken;
     }
 }

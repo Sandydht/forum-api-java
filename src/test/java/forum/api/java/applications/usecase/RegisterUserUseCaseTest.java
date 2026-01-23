@@ -35,8 +35,9 @@ public class RegisterUserUseCaseTest {
         String fullname = "Fullname";
         String password = "password123";
         String hashedPassword = "hashedPassword";
+        String captchaToken = "captcha-token";
 
-        RegisterUser registerUser = new RegisterUser(username, fullname, password);
+        RegisterUser registerUser = new RegisterUser(username, fullname, password, captchaToken);
 
         Mockito.doNothing().when(userRepository).verifyAvailableUsername(username);
         Mockito.when(passwordHash.hashPassword(password)).thenReturn(hashedPassword);

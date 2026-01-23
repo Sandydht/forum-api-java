@@ -16,8 +16,6 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
-
 @DataJpaTest
 @Transactional
 @Rollback
@@ -69,8 +67,9 @@ public class UserRepositoryImplTest {
             String username = "user";
             String fullname = "Fullname";
             String password = "password123";
+            String captchaToken = "captcha-token";
 
-            RegisterUser registerUser = new RegisterUser(username, fullname, password);
+            RegisterUser registerUser = new RegisterUser(username, fullname, password, captchaToken);
             RegisteredUser registeredUser = userRepositoryImpl.addUser(registerUser);
 
             Assertions.assertNotNull(registeredUser.getId());

@@ -118,5 +118,6 @@ public class LoginUserTest {
 
         Assertions.assertEquals(username, loginUser.getUsername());
         Assertions.assertEquals(password, loginUser.getPassword());
+        Assertions.assertEquals(captchaToken, loginUser.getCaptchaToken());
     }
 }

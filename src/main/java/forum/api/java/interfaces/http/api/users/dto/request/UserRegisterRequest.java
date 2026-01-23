@@ -32,4 +32,7 @@ public class UserRegisterRequest {
             message = "Password must not contain space"
     )
     private String password;
+
+    @NotBlank(message = "Captcha token is required")
+    private String captchaToken;
 }

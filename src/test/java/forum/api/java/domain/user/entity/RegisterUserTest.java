@@ -15,23 +15,26 @@ public class RegisterUserTest {
         String username = "user";
         String fullname = "Fullname";
         String password = "password123";
+        String captchaToken = "captcha-token";
 
         return Stream.of(
-                Arguments.of(null, fullname, password),
-                Arguments.of(username, null, password),
-                Arguments.of(username, fullname, null),
-                Arguments.of("  ", fullname, password),
-                Arguments.of(username, "  ", password),
-                Arguments.of(username, fullname, "  ")
+                Arguments.of(null, fullname, password, captchaToken),
+                Arguments.of(username, null, password, captchaToken),
+                Arguments.of(username, fullname, null, captchaToken),
+                Arguments.of(username, fullname, password, null),
+                Arguments.of("  ", fullname, password, captchaToken),
+                Arguments.of(username, "  ", password, captchaToken),
+                Arguments.of(username, fullname, "  ", captchaToken),
+                Arguments.of(username, fullname, password, "  ")
         );
     }
 
     @ParameterizedTest
     @DisplayName("should throw error when payload did not contain needed property")
     @MethodSource("provideInvalidMissingData")
-    public void shouldThrowErrorWhenPayloadDidNotContainNeededProperty(String username, String fullname, String password) {
+    public void shouldThrowErrorWhenPayloadDidNotContainNeededProperty(String username, String fullname, String password, String captchaToken) {
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            new RegisterUser(username, fullname, password);
+            new RegisterUser(username, fullname, password, captchaToken);
         });
 
         Assertions.assertEquals("REGISTER_USER.NOT_CONTAIN_NEEDED_PROPERTY", exception.getMessage());
@@ -43,9 +46,10 @@ public class RegisterUserTest {
         String invalidUsername = "invalidusernameinvalidusernameinvalidusernameinvalidusername";
         String fullname = "Fullname";
         String password = "password123";
+        String captchaToken = "captcha-token";
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            new RegisterUser(invalidUsername, fullname, password);
+            new RegisterUser(invalidUsername, fullname, password, captchaToken);
         });
 
         Assertions.assertEquals("REGISTER_USER.USERNAME_LIMIT_CHAR", exception.getMessage());
@@ -57,9 +61,10 @@ public class RegisterUserTest {
         String invalidUsername = "Invalid Username";
         String fullname = "Fullname";
         String password = "password123";
+        String captchaToken = "captcha-token";
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            new RegisterUser(invalidUsername, fullname, password);
+            new RegisterUser(invalidUsername, fullname, password, captchaToken);
         });
 
         Assertions.assertEquals("REGISTER_USER.USERNAME_CONTAIN_RESTRICTED_CHARACTER", exception.getMessage());
@@ -71,9 +76,10 @@ public class RegisterUserTest {
         String username = "user";
         String fullname = "Fullname";
         String password = "secret1";
+        String captchaToken = "captcha-token";
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            new RegisterUser(username, fullname, password);
+            new RegisterUser(username, fullname, password, captchaToken);
         });
 
         Assertions.assertEquals("REGISTER_USER.PASSWORD_MUST_BE_AT_LEAST_8_CHARACTERS", exception.getMessage());
@@ -85,9 +91,10 @@ public class RegisterUserTest {
         String username = "user";
         String fullname = "Fullname";
         String password = "password";
+        String captchaToken = "captcha-token";
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            new RegisterUser(username, fullname, password);
+            new RegisterUser(username, fullname, password, captchaToken);
         });
 
         Assertions.assertEquals("REGISTER_USER.PASSWORD_MUST_CONTAIN_LETTERS_AND_NUMBERS", exception.getMessage());
@@ -99,9 +106,10 @@ public class RegisterUserTest {
         String username = "user";
         String fullname = "Fullname";
         String password = "pass word123";
+        String captchaToken = "captcha-token";
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            new RegisterUser(username, fullname, password);
+            new RegisterUser(username, fullname, password, captchaToken);
         });
 
         Assertions.assertEquals("REGISTER_USER.PASSWORD_MUST_NOT_CONTAIN_SPACE", exception.getMessage());
@@ -113,11 +121,13 @@ public class RegisterUserTest {
         String username = "user";
         String fullname = "Fullname";
         String password = "password1234";
+        String captchaToken = "captcha-token";
 
-        RegisterUser registerUser = new RegisterUser(username, fullname, password);
+        RegisterUser registerUser = new RegisterUser(username, fullname, password, captchaToken);
 
         Assertions.assertEquals(username, registerUser.getUsername());
         Assertions.assertEquals(fullname, registerUser.getFullname());
         Assertions.assertEquals(password, registerUser.getPassword());
+        Assertions.assertEquals(captchaToken, registerUser.getCaptchaToken());
     }
 }

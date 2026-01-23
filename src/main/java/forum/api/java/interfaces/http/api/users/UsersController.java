@@ -27,7 +27,12 @@ public class UsersController {
 
     @PostMapping("/register-account")
     public UserRegisterResponse userRegistrationAccountAction(@RequestBody UserRegisterRequest userRegisterRequest) {
-        RegisterUser registerUser = new RegisterUser(userRegisterRequest.getUsername(), userRegisterRequest.getFullname(), userRegisterRequest.getPassword());
+        RegisterUser registerUser = new RegisterUser(
+                userRegisterRequest.getUsername(),
+                userRegisterRequest.getFullname(),
+                userRegisterRequest.getPassword(),
+                userRegisterRequest.getCaptchaToken()
+        );
         RegisteredUser registeredUser = registerUserUseCase.execute(registerUser);
         return new UserRegisterResponse(registeredUser.getId(), registeredUser.getUsername(), registeredUser.getFullname());
     }
