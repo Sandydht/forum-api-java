@@ -1,7 +1,6 @@
 package forum.api.java.interfaces.http.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import forum.api.java.applications.security.CaptchaService;
 import forum.api.java.applications.service.PhoneNumberNormalizer;
 import forum.api.java.infrastructure.persistence.threads.ThreadJpaRepository;
 import forum.api.java.infrastructure.persistence.threads.entity.ThreadJpaEntity;
@@ -14,9 +13,7 @@ import forum.api.java.interfaces.http.api.authentications.dto.response.UserLogin
 import forum.api.java.interfaces.http.api.threads.dto.request.AddThreadRequest;
 import forum.api.java.interfaces.http.api.threads.dto.request.UpdateThreadRequest;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
