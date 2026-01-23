@@ -43,11 +43,13 @@ public class AuthenticationRepositoryImplTest {
         @DisplayName("should add token to database")
         public void testAddTokenToDatabase() {
             String username = "user";
+            String email = "example@email.com";
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password";
             String fakeRefreshToken = "fake-refresh-token";
 
-            UserJpaEntity userJpaEntity = new UserJpaEntity(username, fullname, password);
+            UserJpaEntity userJpaEntity = new UserJpaEntity(null, username, email, phoneNumber, fullname, password);
             userJpaRepository.save(userJpaEntity);
 
             authenticationRepositoryImpl.addToken(username, fakeRefreshToken);
@@ -68,6 +70,8 @@ public class AuthenticationRepositoryImplTest {
         @DisplayName("should delete expired tokens from database")
         public void testDeleteExpiredTokensFromDatabase() {
             String username = "user";
+            String email = "example@email.com";
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password";
 
@@ -75,7 +79,7 @@ public class AuthenticationRepositoryImplTest {
             String validToken = "valid-token";
             Instant now = Instant.now();
 
-            UserJpaEntity user = userJpaRepository.save(new UserJpaEntity(username, fullname, password));
+            UserJpaEntity user = userJpaRepository.save(new UserJpaEntity(null, username, email, phoneNumber, fullname, password));
 
             authenticationJpaRepository.save(new RefreshTokenJpaEntity(user, expiredToken, now.minus(Duration.ofDays(1))));
             authenticationJpaRepository.save(new RefreshTokenJpaEntity(user, validToken, now.plus(Duration.ofDays(1))));
@@ -106,11 +110,13 @@ public class AuthenticationRepositoryImplTest {
         @DisplayName("should not throw NotFoundException when token is found")
         public void testShouldNotThrowNotFoundExceptionWhenTokenIsFound() {
             String username = "username";
+            String email = "example@email.com";
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password";
             String validToken = "valid-token";
 
-            UserJpaEntity user = userJpaRepository.save(new UserJpaEntity(username, fullname, password));
+            UserJpaEntity user = userJpaRepository.save(new UserJpaEntity(null, username, email, phoneNumber, fullname, password));
             authenticationJpaRepository.save(new RefreshTokenJpaEntity(user, validToken, Instant.now().plusSeconds(100)));
 
             Assertions.assertDoesNotThrow(() -> authenticationRepositoryImpl.checkAvailabilityToken(validToken));
@@ -137,11 +143,13 @@ public class AuthenticationRepositoryImplTest {
         @DisplayName("should delete token from database")
         public void testShouldDeleteTokenFromDatabase() {
             String username = "user";
+            String email = "example@email.com";
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password";
             String refreshToken = "refresh-token";
 
-            UserJpaEntity userJpaEntity = new UserJpaEntity(username, fullname, password);
+            UserJpaEntity userJpaEntity = new UserJpaEntity(null, username, email, phoneNumber, fullname, password);
             UserJpaEntity savedUser = userJpaRepository.save(userJpaEntity);
 
             RefreshTokenJpaEntity refreshTokenJpaEntity = new RefreshTokenJpaEntity(savedUser, refreshToken, Instant.now().plusSeconds(100));
@@ -172,11 +180,13 @@ public class AuthenticationRepositoryImplTest {
         @DisplayName("should delete token from database")
         public void shouldDeleteTokenFromDatabase() {
             String username = "user";
+            String email = "example@email.com";
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password";
             String refreshToken = "refresh-token";
 
-            UserJpaEntity userJpaEntity = new UserJpaEntity(username, fullname, password);
+            UserJpaEntity userJpaEntity = new UserJpaEntity(null, username, email, phoneNumber, fullname, password);
             UserJpaEntity savedUser = userJpaRepository.save(userJpaEntity);
 
             RefreshTokenJpaEntity refreshTokenJpaEntity = new RefreshTokenJpaEntity(savedUser, refreshToken, Instant.now().plusSeconds(100));

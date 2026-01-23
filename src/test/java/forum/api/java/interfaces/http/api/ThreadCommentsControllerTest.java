@@ -57,11 +57,13 @@ public class ThreadCommentsControllerTest {
     @BeforeEach
     public void setUp() throws Exception {
         String username = "user";
+        String email = "example@email.com";
+        String phoneNumber = "6281123123123";
         String fullname = "Fullname";
         String password = "password123";
 
         Mockito.doNothing().when(googleCaptchaService).verifyToken(captchaToken);
-        savedUser = userJpaRepository.save(new UserJpaEntity(username, fullname, passwordHashImpl.hashPassword(password)));
+        savedUser = userJpaRepository.save(new UserJpaEntity(null, username, email, phoneNumber, fullname, passwordHashImpl.hashPassword(password)));
 
         UserLoginRequest loginRequest = new UserLoginRequest(username, password, captchaToken);
         String responseString = mockMvc.perform(post("/api/authentications/login-account")

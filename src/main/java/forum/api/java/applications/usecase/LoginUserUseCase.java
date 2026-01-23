@@ -32,15 +32,11 @@ public class LoginUserUseCase {
 
     public NewAuthentication execute(LoginUser loginUser) {
         captchaService.verifyToken(loginUser.getCaptchaToken());
-
         UserDetail userDetail = userRepository.getUserByUsername(loginUser.getUsername());
         passwordHash.passwordCompare(loginUser.getPassword(), userDetail.getPassword());
-
         String accessToken = authenticationTokenManager.createAccessToken(userDetail.getId());
         String refreshToken = authenticationTokenManager.createRefreshToken(userDetail.getId());
-
         authenticationRepository.addToken(loginUser.getUsername(), refreshToken);
-
         return new NewAuthentication(accessToken, refreshToken);
     }
 }

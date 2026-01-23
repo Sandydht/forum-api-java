@@ -63,10 +63,12 @@ public class ThreadCommentRepositoryImplTest {
         @DisplayName("should throw NotFoundException when thread not found")
         public void shouldThrowNotFoundExceptionWhenThreadNotFound() {
             String username = "user";
+            String email = "example@email.com";
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password";
 
-            UserJpaEntity userJpaEntity = new UserJpaEntity(username, fullname, password);
+            UserJpaEntity userJpaEntity = new UserJpaEntity(null, username, email, phoneNumber, fullname, password);
             UserJpaEntity savedUser = userJpaRepository.save(userJpaEntity);
 
             String threadId = UUID.randomUUID().toString();
@@ -85,10 +87,12 @@ public class ThreadCommentRepositoryImplTest {
         @DisplayName("should persist add thread comment and return added thread comment correctly")
         public void shouldPersistAddThreadCommentAndReturnAddedThreadCommentCorrectly() {
             String username = "user";
+            String email = "example@email.com";
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password";
 
-            UserJpaEntity userJpaEntity = new UserJpaEntity(username, fullname, password);
+            UserJpaEntity userJpaEntity = new UserJpaEntity(null, username, email, phoneNumber, fullname, password);
             UserJpaEntity savedUser = userJpaRepository.save(userJpaEntity);
 
             String title = "Title";

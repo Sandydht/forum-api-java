@@ -10,6 +10,8 @@ public class UserJpaMapper {
         return new RegisteredUser(
                 userJpaEntity.getId(),
                 userJpaEntity.getUsername(),
+                userJpaEntity.getEmail(),
+                userJpaEntity.getPhoneNumber(),
                 userJpaEntity.getFullname()
         );
     }

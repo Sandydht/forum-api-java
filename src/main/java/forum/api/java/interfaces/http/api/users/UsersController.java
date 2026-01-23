@@ -29,12 +29,20 @@ public class UsersController {
     public UserRegisterResponse userRegistrationAccountAction(@RequestBody UserRegisterRequest userRegisterRequest) {
         RegisterUser registerUser = new RegisterUser(
                 userRegisterRequest.getUsername(),
+                userRegisterRequest.getEmail(),
+                userRegisterRequest.getPhoneNumber(),
                 userRegisterRequest.getFullname(),
                 userRegisterRequest.getPassword(),
                 userRegisterRequest.getCaptchaToken()
         );
         RegisteredUser registeredUser = registerUserUseCase.execute(registerUser);
-        return new UserRegisterResponse(registeredUser.getId(), registeredUser.getUsername(), registeredUser.getFullname());
+        return new UserRegisterResponse(
+                registeredUser.getId(),
+                registeredUser.getUsername(),
+                registeredUser.getEmail(),
+                registeredUser.getPhoneNumber(),
+                registeredUser.getFullname()
+        );
     }
 
     @GetMapping("/get-profile")

@@ -22,7 +22,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public RegisteredUser addUser(RegisterUser registerUser) {
-        UserJpaEntity userJpaEntity = new UserJpaEntity(registerUser.getUsername(), registerUser.getFullname(), registerUser.getPassword());
+        UserJpaEntity userJpaEntity = new UserJpaEntity(null, registerUser.getUsername(), registerUser.getEmail(), registerUser.getPhoneNumber(), registerUser.getFullname(), registerUser.getPassword());
         UserJpaEntity savedUser = userJpaRepository.save(userJpaEntity);
         return UserJpaMapper.toRegisteredUserDomain(savedUser);
     }

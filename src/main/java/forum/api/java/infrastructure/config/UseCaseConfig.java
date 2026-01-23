@@ -1,6 +1,7 @@
 package forum.api.java.infrastructure.config;
 
 import forum.api.java.applications.security.AuthenticationTokenManager;
+import forum.api.java.applications.security.CaptchaService;
 import forum.api.java.applications.usecase.*;
 import forum.api.java.domain.authentication.AuthenticationRepository;
 import forum.api.java.domain.thread.ThreadRepository;
@@ -20,11 +21,13 @@ public class UseCaseConfig {
     @Bean
     public RegisterUserUseCase registerUserUseCase(
             UserRepositoryImpl userRepositoryImpl,
-            PasswordHashImpl passwordHashImpl
+            PasswordHashImpl passwordHashImpl,
+            CaptchaService captchaService
     ) {
         return new RegisterUserUseCase(
                 userRepositoryImpl,
-                passwordHashImpl
+                passwordHashImpl,
+                captchaService
         );
     }
 

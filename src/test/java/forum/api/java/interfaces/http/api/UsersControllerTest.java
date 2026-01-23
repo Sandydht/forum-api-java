@@ -62,11 +62,13 @@ public class UsersControllerTest {
         @DisplayName("should register account successfully")
         public void shouldRegisterAccountSuccessfully() throws Exception {
             String username = "user";
+            String email = "example@email.com";
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password123";
             String captchaToken = "captcha-token";
 
-            UserRegisterRequest request = new UserRegisterRequest(username, fullname, password, captchaToken);
+            UserRegisterRequest request = new UserRegisterRequest(username, email, phoneNumber, fullname, password, captchaToken);
 
             mockMvc.perform(post(urlTemplate)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -74,6 +76,8 @@ public class UsersControllerTest {
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.id").exists())
                     .andExpect(jsonPath("$.username").value(request.getUsername()))
+                    .andExpect(jsonPath("$.email").value(request.getEmail()))
+                    .andExpect(jsonPath("$.phoneNumber").value("+6281123123123"))
                     .andExpect(jsonPath("$.fullname").value(request.getFullname()));
         }
 
@@ -81,13 +85,15 @@ public class UsersControllerTest {
         @DisplayName("should return 400 if the username is already exist")
         public void shouldReturn400IfTheUsernameIsAlreadyExist() throws Exception{
             String username = "user";
+            String email = "example@email.com";
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password123";
             String captchaToken = "captcha-token";
 
-            userJpaRepository.save(new UserJpaEntity(username, fullname, password));
+            userJpaRepository.save(new UserJpaEntity(null, username, email, phoneNumber, fullname, password));
 
-            UserRegisterRequest request = new UserRegisterRequest(username, fullname, password, captchaToken);
+            UserRegisterRequest request = new UserRegisterRequest(username, email, phoneNumber, fullname, password, captchaToken);
 
             mockMvc.perform(post(urlTemplate)
                             .contentType(MediaType.APPLICATION_JSON)
@@ -100,11 +106,13 @@ public class UsersControllerTest {
         @DisplayName("should return 400 if the username contains restricted character")
         public void shouldReturn400IfTheUsernameContainsRestrictedCharacter() throws Exception {
             String username = "user 75";
+            String email = "example@email.com";
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password123";
             String captchaToken = "captcha-token";
 
-            UserRegisterRequest request = new UserRegisterRequest(username, fullname, password, captchaToken);
+            UserRegisterRequest request = new UserRegisterRequest(username, email, phoneNumber, fullname, password, captchaToken);
 
             mockMvc.perform(post(urlTemplate)
                             .contentType(MediaType.APPLICATION_JSON)
@@ -117,11 +125,13 @@ public class UsersControllerTest {
         @DisplayName("should return 400 if the username contains more than 50 character")
         public void shouldReturn400IfTheUsernameContainsMoreThan50Character() throws Exception {
             String username = "user".repeat(51);
+            String email = "example@email.com";
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password123";
             String captchaToken = "captcha-token";
 
-            UserRegisterRequest request = new UserRegisterRequest(username, fullname, password, captchaToken);
+            UserRegisterRequest request = new UserRegisterRequest(username, email, phoneNumber, fullname, password, captchaToken);
 
             mockMvc.perform(post(urlTemplate)
                             .contentType(MediaType.APPLICATION_JSON)
@@ -131,14 +141,54 @@ public class UsersControllerTest {
         }
 
         @Test
+        @DisplayName("should return 400 if the email is invalid")
+        public void shouldReturn400IfTheEmailIsInvalid() throws Exception {
+            String username = "user";
+            String email = "Invalid Email";
+            String phoneNumber = "6281123123123";
+            String fullname = "Fullname";
+            String password = "password123";
+            String captchaToken = "captcha-token";
+
+            UserRegisterRequest request = new UserRegisterRequest(username, email, phoneNumber, fullname, password, captchaToken);
+
+            mockMvc.perform(post(urlTemplate)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)).with(csrf()))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.message").value("Cannot create a new user because the email is invalid"));
+        }
+
+        @Test
+        @DisplayName("should return 400 if the phone number is invalid")
+        public void shouldReturn400IfThePhoneNumberIsInvalid() throws Exception {
+            String username = "user";
+            String email = "example@email.com";
+            String phoneNumber = "Invalid Phone Number";
+            String fullname = "Fullname";
+            String password = "password123";
+            String captchaToken = "captcha-token";
+
+            UserRegisterRequest request = new UserRegisterRequest(username, email, phoneNumber, fullname, password, captchaToken);
+
+            mockMvc.perform(post(urlTemplate)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)).with(csrf()))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.message").value("Cannot create a new user because the phone number is invalid"));
+        }
+
+        @Test
         @DisplayName("should return 400 if the password less than 8 characters")
         public void shouldReturn400IfThePasswordLessThan8Characters() throws Exception {
             String username = "user";
+            String email = "example@email.com";
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "secret1";
             String captchaToken = "captcha-token";
 
-            UserRegisterRequest request = new UserRegisterRequest(username, fullname, password, captchaToken);
+            UserRegisterRequest request = new UserRegisterRequest(username, email, phoneNumber, fullname, password, captchaToken);
 
             mockMvc.perform(post(urlTemplate)
                             .contentType(MediaType.APPLICATION_JSON)
@@ -151,11 +201,13 @@ public class UsersControllerTest {
         @DisplayName("should return 400 if the password not contain letters and numbers")
         public void shouldReturn400IfThePasswordNotContainLettersAndNumbers() throws Exception {
             String username = "user";
+            String email = "example@email.com";
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password";
             String captchaToken = "captcha-token";
 
-            UserRegisterRequest request = new UserRegisterRequest(username, fullname, password, captchaToken);
+            UserRegisterRequest request = new UserRegisterRequest(username, email, phoneNumber, fullname, password, captchaToken);
 
             mockMvc.perform(post(urlTemplate)
                             .contentType(MediaType.APPLICATION_JSON)
@@ -168,11 +220,13 @@ public class UsersControllerTest {
         @DisplayName("should return 400 if the password contain space")
         public void shouldReturn400IfThePasswordContainSpace() throws Exception {
             String username = "user";
+            String email = "example@email.com";
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "pass word123";
             String captchaToken = "captcha-token";
 
-            UserRegisterRequest request = new UserRegisterRequest(username, fullname, password, captchaToken);
+            UserRegisterRequest request = new UserRegisterRequest(username, email, phoneNumber, fullname, password, captchaToken);
 
             mockMvc.perform(post(urlTemplate)
                             .contentType(MediaType.APPLICATION_JSON)
@@ -191,9 +245,11 @@ public class UsersControllerTest {
         @BeforeEach
         public void setUp() throws Exception {
             String username = "user";
+            String email = "example@email.com";
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password123";
-            savedUser = userJpaRepository.save(new UserJpaEntity(username, fullname, passwordHashImpl.hashPassword(password)));
+            savedUser = userJpaRepository.save(new UserJpaEntity(null, username, email, phoneNumber, fullname, passwordHashImpl.hashPassword(password)));
 
             UserLoginRequest loginRequest = new UserLoginRequest(username, password, captchaToken);
             String responseString = mockMvc.perform(post("/api/authentications/login-account")

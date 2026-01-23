@@ -64,10 +64,12 @@ public class ThreadRepositoryImplTest {
         @DisplayName("should persist add thread and return added thread correctly")
         public void shouldPersistAddThreadAndReturnAddedThreadCorrectly() {
             String username = "user";
+            String email = "example@email.com";
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password";
 
-            UserJpaEntity userJpaEntity = new UserJpaEntity(username, fullname, password);
+            UserJpaEntity userJpaEntity = new UserJpaEntity(null, username, email, phoneNumber, fullname, password);
             UserJpaEntity savedUser = userJpaRepository.save(userJpaEntity);
 
             String title = "Title";
@@ -101,10 +103,12 @@ public class ThreadRepositoryImplTest {
         @DisplayName("should not throw NotFoundException when thread is found")
         public void shouldNotThrowNotFoundExceptionWhenThreadIsFound() {
             String username = "user";
+            String email = "example@email.com";
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password";
 
-            UserJpaEntity userJpaEntity = new UserJpaEntity(username, fullname, password);
+            UserJpaEntity userJpaEntity = new UserJpaEntity(null, username, email, phoneNumber, fullname, password);
             UserJpaEntity savedUser = userJpaRepository.save(userJpaEntity);
 
             String title = "Title";
@@ -133,9 +137,11 @@ public class ThreadRepositoryImplTest {
         @DisplayName("should return paged threads correctly based on title search and pagination")
         public void shouldReturnPagedThreadsCorrectlyBasedOnTitleSearchAndPagination() {
             String username = "user";
+            String email = "example@email.com";
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password";
-            UserJpaEntity user = userJpaRepository.save(new UserJpaEntity(username, fullname, password));
+            UserJpaEntity user = userJpaRepository.save(new UserJpaEntity(null, username, email, phoneNumber, fullname, password));
 
             threadJpaRepository.save(new ThreadJpaEntity(user, "Belajar Spring Boot", "Konten Spring"));
             threadJpaRepository.save(new ThreadJpaEntity(user, "Belajar Java Dasar", "Konten Java"));
@@ -162,9 +168,11 @@ public class ThreadRepositoryImplTest {
         @DisplayName("should return empty data when title does not match any thread")
         public void shouldReturnEmptyDataWhenTitleNoMatch() {
             String username = "user";
+            String email = "example@email.com";
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password";
-            UserJpaEntity user = userJpaRepository.save(new UserJpaEntity(username, fullname, password));
+            UserJpaEntity user = userJpaRepository.save(new UserJpaEntity(null, username, email, phoneNumber, fullname, password));
 
             threadJpaRepository.save(new ThreadJpaEntity(user, "Thread A", "Body A"));
 
@@ -182,9 +190,11 @@ public class ThreadRepositoryImplTest {
         @DisplayName("should handle pagination correctly when data exceeds page size")
         public void shouldHandlePaginationCorrectly() {
             String username = "user";
+            String email = "example@email.com";
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password";
-            UserJpaEntity user = userJpaRepository.save(new UserJpaEntity(username, fullname, password));
+            UserJpaEntity user = userJpaRepository.save(new UserJpaEntity(null, username, email, phoneNumber, fullname, password));
 
             for (int i = 0; i < 3; i++) {
                 threadJpaRepository.save(new ThreadJpaEntity(user, "Java Thread " + i, "Body"));
@@ -222,10 +232,12 @@ public class ThreadRepositoryImplTest {
         @DisplayName("should update thread and return updated thread correctly")
         public void shouldUpdateThreadAndReturnUpdatedThreadCorrectly() {
             String username = "user";
+            String email = "example@email.com";
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password";
 
-            UserJpaEntity userJpaEntity = new UserJpaEntity(username, fullname, password);
+            UserJpaEntity userJpaEntity = new UserJpaEntity(null, username, email, phoneNumber, fullname, password);
             UserJpaEntity savedUser = userJpaRepository.save(userJpaEntity);
 
             String title = "Title";
@@ -271,10 +283,12 @@ public class ThreadRepositoryImplTest {
         @DisplayName("should soft delete thread and return thread data correctly")
         public void shouldSoftDeleteThreadAndReturnThreadDataCorrectly() {
             String username = "user";
+            String email = "example@email.com";
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password";
 
-            UserJpaEntity userJpaEntity = new UserJpaEntity(username, fullname, password);
+            UserJpaEntity userJpaEntity = new UserJpaEntity(null, username, email, phoneNumber, fullname, password);
             UserJpaEntity savedUser = userJpaRepository.save(userJpaEntity);
 
             String title = "Title";
@@ -312,10 +326,12 @@ public class ThreadRepositoryImplTest {
         @DisplayName("should not throw NotFoundException when thread is found")
         public void shouldNotThrowNotFoundExceptionWhenThreadIsFound() {
             String username = "user";
+            String email = "example@email.com";
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password";
 
-            UserJpaEntity userJpaEntity = new UserJpaEntity(username, fullname, password);
+            UserJpaEntity userJpaEntity = new UserJpaEntity(null, username, email, phoneNumber, fullname, password);
             UserJpaEntity savedUser = userJpaRepository.save(userJpaEntity);
 
             String title = "Title";

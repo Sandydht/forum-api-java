@@ -43,6 +43,26 @@ public class DomainErrorTranslatorTest {
         }
 
         @Test
+        @DisplayName("should translate REGISTER_USER.EMAIL_IS_INVALID correctly")
+        public void shouldTranslateRegisterUserEmailIsInvalid() {
+            Exception error = new Exception("REGISTER_USER.EMAIL_IS_INVALID");
+            RuntimeException result = domainErrorTranslator.translate(error);
+
+            Assertions.assertInstanceOf(InvariantException.class, result);
+            Assertions.assertEquals("Cannot create a new user because the email is invalid", result.getMessage());
+        }
+
+        @Test
+        @DisplayName("should translate REGISTER_USER.PHONE_NUMBER_IS_INVALID correctly")
+        public void shouldTranslateRegisterUserPhoneNumberIsInvalid() {
+            Exception error = new Exception("REGISTER_USER.PHONE_NUMBER_IS_INVALID");
+            RuntimeException result = domainErrorTranslator.translate(error);
+
+            Assertions.assertInstanceOf(InvariantException.class, result);
+            Assertions.assertEquals("Cannot create a new user because the phone number is invalid", result.getMessage());
+        }
+
+        @Test
         @DisplayName("should translate REGISTER_USER.PASSWORD_MUST_BE_AT_LEAST_8_CHARACTERS correctly")
         public void shouldTranslateRegisterUserMustBeAtLeast8Characters() {
             Exception error = new Exception("REGISTER_USER.PASSWORD_MUST_BE_AT_LEAST_8_CHARACTERS");

@@ -34,6 +34,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayName("AuthenticationsController")
 public class AuthenticationsControllerTest {
     private final String username = "username";
+    private final String email = "example@email.com";
+    private final String phoneNumber = "6281123123123";
     private final String fullname = "Fullname";
     private final String password = "password123";
     private final String captchaToken = "captcha-token";
@@ -59,7 +61,7 @@ public class AuthenticationsControllerTest {
     @BeforeEach
     public void setUp() {
         Mockito.doNothing().when(googleCaptchaService).verifyToken(captchaToken);
-        userJpaRepository.save(new UserJpaEntity(username, fullname, passwordHashImpl.hashPassword(password)));
+        userJpaRepository.save(new UserJpaEntity(null, username, email, phoneNumber, fullname, passwordHashImpl.hashPassword(password)));
     }
 
     @Nested

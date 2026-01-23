@@ -1,5 +1,6 @@
 package forum.api.java.applications.usecase;
 
+import forum.api.java.applications.security.CaptchaService;
 import forum.api.java.applications.security.PasswordHash;
 import forum.api.java.domain.user.UserRepository;
 import forum.api.java.domain.user.entity.RegisterUser;
@@ -24,32 +25,47 @@ public class RegisterUserUseCaseTest {
     @Mock
     private PasswordHash passwordHash;
 
+    @Mock
+    private CaptchaService captchaService;
+
     @InjectMocks
     private RegisterUserUseCase registerUserUseCase;
 
     @Test
     @DisplayName("should orchestrating the register user action correctly")
-    public void shouldOrchestratingThreRegisterUserActionCorrectly() {
+    public void shouldOrchestratingTheRegisterUserActionCorrectly() {
         String id = UUID.randomUUID().toString();
         String username = "user";
+        String email = "example@email.com";
+        String phoneNumber = "6281123123123";
         String fullname = "Fullname";
         String password = "password123";
         String hashedPassword = "hashedPassword";
         String captchaToken = "captcha-token";
 
-        RegisterUser registerUser = new RegisterUser(username, fullname, password, captchaToken);
+        RegisterUser registerUser = new RegisterUser(username, email, phoneNumber, fullname, password, captchaToken);
 
+        Mockito.doNothing().when(captchaService).verifyToken(captchaToken);
         Mockito.doNothing().when(userRepository).verifyAvailableUsername(username);
         Mockito.when(passwordHash.hashPassword(password)).thenReturn(hashedPassword);
-        Mockito.when(userRepository.addUser(registerUser)).thenReturn(new RegisteredUser(id, username, fullname));
+        Mockito.when(userRepository.addUser(registerUser)).thenReturn(new RegisteredUser(
+                id,
+                registerUser.getUsername(),
+                registerUser.getEmail(),
+                registerUser.getPhoneNumber(),
+                registerUser.getFullname()
+        ));
 
         RegisteredUser registeredUser = registerUserUseCase.execute(registerUser);
 
         Assertions.assertEquals(id, registeredUser.getId());
         Assertions.assertEquals(username, registeredUser.getUsername());
         Assertions.assertEquals(fullname, registeredUser.getFullname());
+
+        Assertions.assertEquals("+6281123123123", registerUser.getPhoneNumber());
         Assertions.assertEquals(hashedPassword, registerUser.getPassword());
 
+        Mockito.verify(captchaService, Mockito.times(1)).verifyToken(captchaToken);
         Mockito.verify(userRepository, Mockito.times(1)).verifyAvailableUsername(username);
         Mockito.verify(passwordHash, Mockito.times(1)).hashPassword(password);
         Mockito.verify(userRepository, Mockito.times(1)).addUser(registerUser);

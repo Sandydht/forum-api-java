@@ -36,10 +36,12 @@ public class UserRepositoryImplTest {
         @DisplayName("should throw InvarianException when username available")
         public void shouldThrowInvariantExceptionWhenUsernameAvailable() {
             String username = "user";
+            String email = "example@email.com";
+            String phoneNumber = "6281123123123";
             String password = "password";
             String fullname = "Fullname";
 
-            UserJpaEntity userJpaEntity = new UserJpaEntity(username, fullname, password);
+            UserJpaEntity userJpaEntity = new UserJpaEntity(null, username, email, phoneNumber, fullname, password);
             userJpaRepository.save(userJpaEntity);
 
             InvariantException verifyAvailableUsernameError = Assertions.assertThrows(
@@ -65,11 +67,13 @@ public class UserRepositoryImplTest {
         @DisplayName("should persist register user and return registered user correctly")
         public void shouldPersistRegisterUserAndReturnRegisteredUserCorrectly() {
             String username = "user";
+            String email = "example@email.com";
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password123";
             String captchaToken = "captcha-token";
 
-            RegisterUser registerUser = new RegisterUser(username, fullname, password, captchaToken);
+            RegisterUser registerUser = new RegisterUser(username, email, phoneNumber, fullname, password, captchaToken);
             RegisteredUser registeredUser = userRepositoryImpl.addUser(registerUser);
 
             Assertions.assertNotNull(registeredUser.getId());
@@ -98,10 +102,12 @@ public class UserRepositoryImplTest {
         @DisplayName("should return user detail correctly when user exists")
         public void shouldReturnUserDetailCorrectlyWhenUserExists() {
             String username = "user";
+            String email = "example@email.com";
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password";
 
-            UserJpaEntity userJpaEntity = new UserJpaEntity(username, fullname, password);
+            UserJpaEntity userJpaEntity = new UserJpaEntity(null, username, email, phoneNumber, fullname, password);
             UserJpaEntity savedUser = userJpaRepository.save(userJpaEntity);
 
             UserDetail result = userRepositoryImpl.getUserByUsername(username);
@@ -133,10 +139,12 @@ public class UserRepositoryImplTest {
         @DisplayName("should return user detail correctly when user exists")
         public void shouldReturnUserDetailCorrectlyWhenUserExists() {
             String username = "user";
+            String email = "example@email.com";
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password";
 
-            UserJpaEntity userJpaEntity = new UserJpaEntity(username, fullname, password);
+            UserJpaEntity userJpaEntity = new UserJpaEntity(null, username, email, phoneNumber, fullname, password);
             UserJpaEntity savedUser = userJpaRepository.save(userJpaEntity);
 
             UserDetail result = userRepositoryImpl.getUserById(savedUser.getId());
@@ -168,10 +176,12 @@ public class UserRepositoryImplTest {
         @DisplayName("should return user profile data correctly")
         public void shouldReturnUserProfileDataCorrectly() {
             String username = "user";
+            String email = "example@email.com";
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password";
 
-            UserJpaEntity userJpaEntity = new UserJpaEntity(username, fullname, password);
+            UserJpaEntity userJpaEntity = new UserJpaEntity(null, username, email, phoneNumber, fullname, password);
             UserJpaEntity savedUser = userJpaRepository.save(userJpaEntity);
 
             UserProfile result = userRepositoryImpl.getUserProfile(savedUser.getId());
@@ -202,10 +212,12 @@ public class UserRepositoryImplTest {
         @DisplayName("should not throw NotFoundException when user is found")
         public void shouldNotThrowNotFoundExceptionWhenUserIsFound() {
             String username = "user";
+            String email = "example@email.com";
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password";
 
-            UserJpaEntity userJpaEntity = new UserJpaEntity(username, fullname, password);
+            UserJpaEntity userJpaEntity = new UserJpaEntity(null, username, email, phoneNumber, fullname, password);
             UserJpaEntity savedUser = userJpaRepository.save(userJpaEntity);
 
             Assertions.assertDoesNotThrow(() -> userRepositoryImpl.checkAvailableUserById(savedUser.getId()));

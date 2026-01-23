@@ -18,6 +18,20 @@ public class UserRegisterRequest {
     )
     private String username;
 
+    @NotBlank(message = "Email is required")
+    @Pattern(
+            regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$",
+            message = "Invalid email format"
+    )
+    private String email;
+
+    @NotBlank(message = "Phone number is required")
+    @Pattern(
+            regexp = "^(?:\\+62|62|0)8[1-9][0-9]{6,10}$",
+            message = "Invalid Indonesian phone number format"
+    )
+    private String phoneNumber;
+
     @NotBlank(message = "Fullname is required")
     private String fullname;
 
