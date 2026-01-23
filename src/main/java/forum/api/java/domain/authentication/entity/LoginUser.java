@@ -12,17 +12,20 @@ public class LoginUser {
 
     private final String username;
     private final String password;
+    private final String captchaToken;
 
-    public LoginUser(String username, String password) {
-        verifyPayload(username, password);
+    public LoginUser(String username, String password, String captchaToken) {
+        verifyPayload(username, password, captchaToken);
 
         this.username = username;
         this.password = password;
+        this.captchaToken = captchaToken;
     }
 
-    private static void verifyPayload(String username, String password) {
+    private static void verifyPayload(String username, String password, String captchaToken) {
         ValidationUtils.requireNotBlank(username, notContainNeededPropertyErrorMessage);
         ValidationUtils.requireNotBlank(password, notContainNeededPropertyErrorMessage);
+        ValidationUtils.requireNotBlank(captchaToken, notContainNeededPropertyErrorMessage);
         ValidationUtils.usernameNotContainRestrictedCharacter(username, containRestrictedCharacterErrorMessage);
         ValidationUtils.usernameLimitCharacter(username, limitCharErrorMessage);
         ValidationUtils.passwordLimitCharacter(password, passwordLimitCharErrorMessage);
@@ -36,5 +39,9 @@ public class LoginUser {
 
     public String getPassword() {
         return password;
+    }
+
+    public String getCaptchaToken() {
+        return captchaToken;
     }
 }

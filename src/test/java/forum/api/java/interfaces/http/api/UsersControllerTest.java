@@ -3,17 +3,17 @@ package forum.api.java.interfaces.http.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
 import forum.api.java.infrastructure.persistence.users.entity.UserJpaEntity;
+import forum.api.java.infrastructure.security.GoogleCaptchaService;
 import forum.api.java.infrastructure.security.PasswordHashImpl;
 import forum.api.java.interfaces.http.api.authentications.dto.request.UserLoginRequest;
 import forum.api.java.interfaces.http.api.authentications.dto.response.UserLoginResponse;
 import forum.api.java.interfaces.http.api.users.dto.request.UserRegisterRequest;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -31,6 +31,8 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 @Transactional
 @DisplayName("UsersController")
 public class UsersControllerTest {
+    private final String captchaToken = "captcha-token";
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -42,6 +44,14 @@ public class UsersControllerTest {
 
     @Autowired
     private PasswordHashImpl passwordHashImpl;
+
+    @MockBean
+    private GoogleCaptchaService googleCaptchaService;
+
+    @BeforeEach
+    public void setUp() {
+        Mockito.doNothing().when(googleCaptchaService).verifyToken(captchaToken);
+    }
 
     @Nested
     @DisplayName("POST /api/users/register-account")
@@ -178,7 +188,7 @@ public class UsersControllerTest {
             String password = "password123";
             savedUser = userJpaRepository.save(new UserJpaEntity(username, fullname, passwordHashImpl.hashPassword(password)));
 
-            UserLoginRequest loginRequest = new UserLoginRequest(username, password);
+            UserLoginRequest loginRequest = new UserLoginRequest(username, password, captchaToken);
             String responseString = mockMvc.perform(post("/api/authentications/login-account")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(loginRequest)))
@@ -187,6 +197,11 @@ public class UsersControllerTest {
 
             UserLoginResponse userLoginResponse = objectMapper.readValue(responseString, UserLoginResponse.class);
             accessToken = userLoginResponse.getAccessToken();
+        }
+
+        @AfterEach
+        public void tearDown() {
+            Mockito.verify(googleCaptchaService, Mockito.times(1)).verifyToken(captchaToken);
         }
 
         @Test

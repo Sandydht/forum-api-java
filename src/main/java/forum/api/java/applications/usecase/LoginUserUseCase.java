@@ -1,6 +1,7 @@
 package forum.api.java.applications.usecase;
 
 import forum.api.java.applications.security.AuthenticationTokenManager;
+import forum.api.java.applications.security.CaptchaService;
 import forum.api.java.applications.security.PasswordHash;
 import forum.api.java.domain.authentication.AuthenticationRepository;
 import forum.api.java.domain.authentication.entity.LoginUser;
@@ -13,20 +14,25 @@ public class LoginUserUseCase {
     private final AuthenticationRepository authenticationRepository;
     private final PasswordHash passwordHash;
     private final AuthenticationTokenManager authenticationTokenManager;
+    private final CaptchaService captchaService;
 
     public LoginUserUseCase(
             UserRepository userRepository,
             AuthenticationRepository authenticationRepository,
             PasswordHash passwordHash,
-            AuthenticationTokenManager authenticationTokenManager
+            AuthenticationTokenManager authenticationTokenManager,
+            CaptchaService captchaService
     ) {
         this.userRepository = userRepository;
         this.authenticationRepository = authenticationRepository;
         this.passwordHash = passwordHash;
         this.authenticationTokenManager = authenticationTokenManager;
+        this.captchaService = captchaService;
     }
 
     public NewAuthentication execute(LoginUser loginUser) {
+        captchaService.verifyToken(loginUser.getCaptchaToken());
+
         UserDetail userDetail = userRepository.getUserByUsername(loginUser.getUsername());
         passwordHash.passwordCompare(loginUser.getPassword(), userDetail.getPassword());
 

@@ -6,14 +6,17 @@ import forum.api.java.infrastructure.persistence.authentications.AuthenticationJ
 import forum.api.java.infrastructure.persistence.authentications.entity.RefreshTokenJpaEntity;
 import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
 import forum.api.java.infrastructure.persistence.users.entity.UserJpaEntity;
+import forum.api.java.infrastructure.security.GoogleCaptchaService;
 import forum.api.java.infrastructure.security.PasswordHashImpl;
 import forum.api.java.interfaces.http.api.authentications.dto.request.RefreshAuthenticationRequest;
 import forum.api.java.interfaces.http.api.authentications.dto.request.UserLoginRequest;
 import forum.api.java.interfaces.http.api.authentications.dto.response.UserLoginResponse;
 import org.junit.jupiter.api.*;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -33,6 +36,7 @@ public class AuthenticationsControllerTest {
     private final String username = "username";
     private final String fullname = "Fullname";
     private final String password = "password123";
+    private final String captchaToken = "captcha-token";
 
     @Autowired
     private MockMvc mockMvc;
@@ -49,8 +53,12 @@ public class AuthenticationsControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @MockBean
+    private GoogleCaptchaService googleCaptchaService;
+
     @BeforeEach
     public void setUp() {
+        Mockito.doNothing().when(googleCaptchaService).verifyToken(captchaToken);
         userJpaRepository.save(new UserJpaEntity(username, fullname, passwordHashImpl.hashPassword(password)));
     }
 
@@ -62,31 +70,35 @@ public class AuthenticationsControllerTest {
         @Test
         @DisplayName("should login successfully with valid credentials")
         public void shouldLoginSuccessfullyWithValidCredentials() throws Exception {
-            UserLoginRequest request = new UserLoginRequest(username, password);
+            UserLoginRequest request = new UserLoginRequest(username, password, captchaToken);
             mockMvc.perform(post(urlTemplate)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)).with(csrf()))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.accessToken").exists())
                     .andExpect(jsonPath("$.refreshToken").exists());
+
+            Mockito.verify(googleCaptchaService, Mockito.times(1)).verifyToken(captchaToken);
         }
 
         @Test
-        @DisplayName("should throw error when login with invalid credentials")
+        @DisplayName("should return 401 if login with invalid credentials")
         public void shouldThrowErrorWhenLoginWithInvalidCredentials() throws Exception {
-            UserLoginRequest request = new UserLoginRequest(username, "invalidpassword123");
+            UserLoginRequest request = new UserLoginRequest(username, "invalidpassword123", captchaToken);
 
             mockMvc.perform(post(urlTemplate)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)).with(csrf()))
                     .andExpect(status().isUnauthorized())
                     .andExpect(jsonPath("$.message").value("Incorrect credentials"));
+
+            Mockito.verify(googleCaptchaService, Mockito.times(1)).verifyToken(captchaToken);
         }
 
         @Test
-        @DisplayName("should persist refresh token in database after successfull login")
-        public void shouldPersistRefreshTokenInDatabaseAfterSuccessfullLogin() throws Exception {
-            UserLoginRequest request = new UserLoginRequest(username, password);
+        @DisplayName("should persist refresh token in database after successfully login")
+        public void shouldPersistRefreshTokenInDatabaseAfterSuccessfullyLogin() throws Exception {
+            UserLoginRequest request = new UserLoginRequest(username, password, captchaToken);
 
             mockMvc.perform(post(urlTemplate)
                             .contentType(MediaType.APPLICATION_JSON)
@@ -99,6 +111,8 @@ public class AuthenticationsControllerTest {
 
             Assertions.assertNotNull(refreshToken.getToken());
             Assertions.assertEquals(request.getUsername(), refreshToken.getUser().getUsername());
+
+            Mockito.verify(googleCaptchaService, Mockito.times(1)).verifyToken(captchaToken);
         }
     }
 
@@ -110,7 +124,7 @@ public class AuthenticationsControllerTest {
         @Test
         @DisplayName("should return new access token successfully")
         public void shouldReturnNewAccessTokenSuccessfully() throws Exception {
-            UserLoginRequest userLoginRequest = new UserLoginRequest(username, password);
+            UserLoginRequest userLoginRequest = new UserLoginRequest(username, password, captchaToken);
             String loginResponseString = mockMvc.perform(post("/api/authentications/login-account")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(userLoginRequest)).with(csrf()))
@@ -125,6 +139,8 @@ public class AuthenticationsControllerTest {
                             .content(objectMapper.writeValueAsString(refreshAuthenticationRequest)))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.accessToken").exists());
+
+            Mockito.verify(googleCaptchaService, Mockito.times(1)).verifyToken(captchaToken);
         }
 
         @Test
@@ -144,7 +160,7 @@ public class AuthenticationsControllerTest {
         @Test
         @DisplayName("should success logout account successfully")
         public void shouldSuccessLogoutAccountSuccessfully() throws Exception {
-            UserLoginRequest userLoginRequest = new UserLoginRequest(username, password);
+            UserLoginRequest userLoginRequest = new UserLoginRequest(username, password, captchaToken);
             String responseString = mockMvc.perform(post("/api/authentications/login-account")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(userLoginRequest))
@@ -161,6 +177,8 @@ public class AuthenticationsControllerTest {
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.message").exists());
+
+            Mockito.verify(googleCaptchaService, Mockito.times(1)).verifyToken(captchaToken);
         }
     }
 }

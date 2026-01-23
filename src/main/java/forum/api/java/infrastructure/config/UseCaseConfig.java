@@ -10,6 +10,7 @@ import forum.api.java.infrastructure.repository.AuthenticationRepositoryImpl;
 import forum.api.java.infrastructure.repository.ThreadRepositoryImpl;
 import forum.api.java.infrastructure.repository.UserRepositoryImpl;
 import forum.api.java.infrastructure.security.AuthenticationTokenManagerImpl;
+import forum.api.java.infrastructure.security.GoogleCaptchaService;
 import forum.api.java.infrastructure.security.PasswordHashImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,13 +33,15 @@ public class UseCaseConfig {
             UserRepositoryImpl userRepositoryImpl,
             AuthenticationRepositoryImpl authenticationRepositoryImpl,
             PasswordHashImpl passwordHashImpl,
-            AuthenticationTokenManagerImpl authenticationTokenManagerImpl
+            AuthenticationTokenManagerImpl authenticationTokenManagerImpl,
+            GoogleCaptchaService googleCaptchaService
     ) {
         return new LoginUserUseCase(
                 userRepositoryImpl,
                 authenticationRepositoryImpl,
                 passwordHashImpl,
-                authenticationTokenManagerImpl
+                authenticationTokenManagerImpl,
+                googleCaptchaService
         );
     }
 

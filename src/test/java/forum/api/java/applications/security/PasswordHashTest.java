@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 @DisplayName("PasswordHash interface")
 public class PasswordHashTest {
-    private PasswordHash passwordHash = new PasswordHash() {};;
+    private final PasswordHash passwordHash = new PasswordHash() {};;
 
     @Test
     @DisplayName("should throw error when invoke abstract behavior")

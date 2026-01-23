@@ -14,21 +14,24 @@ public class LoginUserTest {
     private static Stream<Arguments> provideInvalidMissingData() {
         String username = "user";
         String password = "password123";
+        String captchaToken = "captcha-token";
 
         return Stream.of(
-                Arguments.of(null, password),
-                Arguments.of(username, null),
-                Arguments.of("  ", password),
-                Arguments.of(username, "  ")
+                Arguments.of(null, password, captchaToken),
+                Arguments.of(username, null, captchaToken),
+                Arguments.of(username, password, null),
+                Arguments.of("  ", password, captchaToken),
+                Arguments.of(username, "  ", captchaToken),
+                Arguments.of(username, password, "  ")
         );
     }
 
     @ParameterizedTest
     @DisplayName("should throw error when payload did not contain needed property")
     @MethodSource("provideInvalidMissingData")
-    public void shouldThrowErrorWhenPayloadDidNotContainNeededProperty(String username, String password) {
+    public void shouldThrowErrorWhenPayloadDidNotContainNeededProperty(String username, String password, String captchaToken) {
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            new LoginUser(username, password);
+            new LoginUser(username, password, captchaToken);
         });
 
         Assertions.assertEquals("LOGIN_USER.NOT_CONTAIN_NEEDED_PROPERTY", exception.getMessage());
@@ -39,9 +42,10 @@ public class LoginUserTest {
     public void shouldThrowErrorWhenUsernameContainsMoreThan50Character() {
         String invalidUsername = "user".repeat(51);
         String password = "password123";
+        String captchaToken = "captcha-token";
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            new LoginUser(invalidUsername, password);
+            new LoginUser(invalidUsername, password, captchaToken);
         });
 
         Assertions.assertEquals("LOGIN_USER.USERNAME_LIMIT_CHAR", exception.getMessage());
@@ -52,9 +56,10 @@ public class LoginUserTest {
     public void shouldThrowErrorWhenUsernameContainsRestrictedCharacter() {
         String invalidUsername = "Invalid Username";
         String password = "password123";
+        String captchaToken = "captcha-token";
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            new LoginUser(invalidUsername, password);
+            new LoginUser(invalidUsername, password, captchaToken);
         });
 
         Assertions.assertEquals("LOGIN_USER.USERNAME_CONTAIN_RESTRICTED_CHARACTER", exception.getMessage());
@@ -65,9 +70,10 @@ public class LoginUserTest {
     public void shouldThrowErrorIfPasswordIsLessThan8Characters() {
         String username = "user";
         String password = "secret1";
+        String captchaToken = "captcha-token";
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            new LoginUser(username, password);
+            new LoginUser(username, password, captchaToken);
         });
 
         Assertions.assertEquals("LOGIN_USER.PASSWORD_MUST_BE_AT_LEAST_8_CHARACTERS", exception.getMessage());
@@ -78,9 +84,10 @@ public class LoginUserTest {
     public void shouldThrowErrorIfThePasswordNotContainLettersAndNumbers() {
         String username = "user";
         String password = "password";
+        String captchaToken = "captcha-token";
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            new LoginUser(username, password);
+            new LoginUser(username, password, captchaToken);
         });
 
         Assertions.assertEquals("LOGIN_USER.PASSWORD_MUST_CONTAIN_LETTERS_AND_NUMBERS", exception.getMessage());
@@ -91,9 +98,10 @@ public class LoginUserTest {
     public void shouldThrowErrorIfThePasswordContainSpace() {
         String username = "user";
         String password = "pass word123";
+        String captchaToken = "captcha-token";
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            new LoginUser(username, password);
+            new LoginUser(username, password, captchaToken);
         });
 
         Assertions.assertEquals("LOGIN_USER.PASSWORD_MUST_NOT_CONTAIN_SPACE", exception.getMessage());
@@ -104,8 +112,9 @@ public class LoginUserTest {
     public void shouldCreateObjectCorrectly() {
         String username = "user";
         String password = "password123";
+        String captchaToken = "captcha-token";
 
-        LoginUser loginUser = new LoginUser(username, password);
+        LoginUser loginUser = new LoginUser(username, password, captchaToken);
 
         Assertions.assertEquals(username, loginUser.getUsername());
         Assertions.assertEquals(password, loginUser.getPassword());

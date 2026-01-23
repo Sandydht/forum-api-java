@@ -1,6 +1,7 @@
 package forum.api.java.applications.usecase;
 
 import forum.api.java.applications.security.AuthenticationTokenManager;
+import forum.api.java.applications.security.CaptchaService;
 import forum.api.java.applications.security.PasswordHash;
 import forum.api.java.domain.authentication.AuthenticationRepository;
 import forum.api.java.domain.authentication.entity.LoginUser;
@@ -35,6 +36,9 @@ public class LoginUserUseCaseTest {
     @Mock
     private AuthenticationTokenManager authenticationTokenManager;
 
+    @Mock
+    private CaptchaService captchaService;
+
     @InjectMocks
     private LoginUserUseCase loginUserUseCase;
 
@@ -45,13 +49,15 @@ public class LoginUserUseCaseTest {
         String username = "user";
         String fullname = "Fullname";
         String password = "password123";
+        String captchaToken = "captcha-token";
 
         String accessToken = "access-token";
         String refreshToken = "refresh-token";
 
-        LoginUser loginUser = new LoginUser(username, password);
+        LoginUser loginUser = new LoginUser(username, password, captchaToken);
         UserDetail userDetail = new UserDetail(userId, username, fullname, password);
 
+        Mockito.doNothing().when(captchaService).verifyToken(captchaToken);
         Mockito.when(userRepository.getUserByUsername(loginUser.getUsername())).thenReturn(userDetail);
         Mockito.doNothing().when(passwordHash).passwordCompare(loginUser.getPassword(), userDetail.getPassword());
         Mockito.when(authenticationTokenManager.createAccessToken(userId)).thenReturn(accessToken);
@@ -63,6 +69,7 @@ public class LoginUserUseCaseTest {
         Assertions.assertEquals(accessToken, loggedInUser.getAccessToken());
         Assertions.assertEquals(refreshToken, loggedInUser.getRefreshToken());
 
+        Mockito.verify(captchaService, Mockito.times(1)).verifyToken(captchaToken);
         Mockito.verify(userRepository, Mockito.times(1)).getUserByUsername(loginUser.getUsername());
         Mockito.verify(passwordHash, Mockito.times(1)).passwordCompare(loginUser.getPassword(), userDetail.getPassword());
         Mockito.verify(authenticationTokenManager, Mockito.times(1)).createAccessToken(userId);

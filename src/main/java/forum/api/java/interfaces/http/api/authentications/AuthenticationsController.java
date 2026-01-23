@@ -35,7 +35,7 @@ public class AuthenticationsController {
 
     @PostMapping("/login-account")
     public UserLoginResponse userLoginAccount(@RequestBody UserLoginRequest request) {
-        LoginUser loginUser = new LoginUser(request.getUsername(), request.getPassword());
+        LoginUser loginUser = new LoginUser(request.getUsername(), request.getPassword(), request.getCaptchaToken());
         NewAuthentication loggedInUser = loginUserUseCase.execute(loginUser);
         return new UserLoginResponse(loggedInUser.getAccessToken(), loggedInUser.getRefreshToken());
     }

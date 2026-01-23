@@ -5,17 +5,17 @@ import forum.api.java.infrastructure.persistence.threads.ThreadJpaRepository;
 import forum.api.java.infrastructure.persistence.threads.entity.ThreadJpaEntity;
 import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
 import forum.api.java.infrastructure.persistence.users.entity.UserJpaEntity;
+import forum.api.java.infrastructure.security.GoogleCaptchaService;
 import forum.api.java.infrastructure.security.PasswordHashImpl;
 import forum.api.java.interfaces.http.api.authentications.dto.request.UserLoginRequest;
 import forum.api.java.interfaces.http.api.authentications.dto.response.UserLoginResponse;
 import forum.api.java.interfaces.http.api.threadcomments.dto.request.AddThreadCommentRequest;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -34,6 +34,7 @@ public class ThreadCommentsControllerTest {
     private String accessToken;
     private UserJpaEntity savedUser;
     private ThreadJpaEntity savedThread;
+    private final String captchaToken = "captcha-token";
 
     @Autowired
     private MockMvc mockMvc;
@@ -50,14 +51,19 @@ public class ThreadCommentsControllerTest {
     @Autowired
     private PasswordHashImpl passwordHashImpl;
 
+    @MockBean
+    private GoogleCaptchaService googleCaptchaService;
+
     @BeforeEach
     public void setUp() throws Exception {
         String username = "user";
         String fullname = "Fullname";
         String password = "password123";
+
+        Mockito.doNothing().when(googleCaptchaService).verifyToken(captchaToken);
         savedUser = userJpaRepository.save(new UserJpaEntity(username, fullname, passwordHashImpl.hashPassword(password)));
 
-        UserLoginRequest loginRequest = new UserLoginRequest(username, password);
+        UserLoginRequest loginRequest = new UserLoginRequest(username, password, captchaToken);
         String responseString = mockMvc.perform(post("/api/authentications/login-account")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginRequest)))
@@ -70,6 +76,11 @@ public class ThreadCommentsControllerTest {
         String title = "Title";
         String body = "Body";
         savedThread = threadJpaRepository.save(new ThreadJpaEntity(savedUser, title, body));
+    }
+
+    @AfterEach
+    public void tearDown() {
+        Mockito.verify(googleCaptchaService, Mockito.times(1)).verifyToken(captchaToken);
     }
 
     @Nested
