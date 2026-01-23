@@ -6,6 +6,9 @@ public class RegisterUser {
     private static final String notContainNeededPropertyErrorMessage = "REGISTER_USER.NOT_CONTAIN_NEEDED_PROPERTY";
     private static final String containRestrictedCharacterErrorMessage = "REGISTER_USER.USERNAME_CONTAIN_RESTRICTED_CHARACTER";
     private static final String limitCharErrorMessage = "REGISTER_USER.USERNAME_LIMIT_CHAR";
+    private static final String passwordLimitCharErrorMessage = "REGISTER_USER.PASSWORD_MUST_BE_AT_LEAST_8_CHARACTERS";
+    private static final String passwordMustContainLettersAndNumbersErrorMessage = "REGISTER_USER.PASSWORD_MUST_CONTAIN_LETTERS_AND_NUMBERS";
+    private static final String passwordMustContainSpaceErrorMessage = "REGISTER_USER.PASSWORD_MUST_NOT_CONTAIN_SPACE";
 
     private final String username;
     private final String fullname;
@@ -23,8 +26,11 @@ public class RegisterUser {
         ValidationUtils.requireNotBlank(username, notContainNeededPropertyErrorMessage);
         ValidationUtils.requireNotBlank(fullname, notContainNeededPropertyErrorMessage);
         ValidationUtils.requireNotBlank(password, notContainNeededPropertyErrorMessage);
-        ValidationUtils.usernameLimitCharacter(username, limitCharErrorMessage);
         ValidationUtils.usernameNotContainRestrictedCharacter(username, containRestrictedCharacterErrorMessage);
+        ValidationUtils.usernameLimitCharacter(username, limitCharErrorMessage);
+        ValidationUtils.passwordLimitCharacter(password, passwordLimitCharErrorMessage);
+        ValidationUtils.passwordMustContainLettersAndNumber(password, passwordMustContainLettersAndNumbersErrorMessage);
+        ValidationUtils.passwordMustNotContainSpace(password, passwordMustContainSpaceErrorMessage);
     }
 
     public String getUsername() {

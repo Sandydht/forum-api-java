@@ -14,7 +14,7 @@ public class RegisterUserTest {
     private static Stream<Arguments> provideInvalidMissingData() {
         String username = "user";
         String fullname = "Fullname";
-        String password = "password";
+        String password = "password123";
 
         return Stream.of(
                 Arguments.of(null, fullname, password),
@@ -42,7 +42,7 @@ public class RegisterUserTest {
     public void shouldThrowErrorWhenUsernameContainsMoreThan50Character() {
         String invalidUsername = "invalidusernameinvalidusernameinvalidusernameinvalidusername";
         String fullname = "Fullname";
-        String password = "password";
+        String password = "password123";
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
             new RegisterUser(invalidUsername, fullname, password);
@@ -56,7 +56,7 @@ public class RegisterUserTest {
     public void shouldThrowErrorWhenUsernameContainsRestrictedCharacter() {
         String invalidUsername = "Invalid Username";
         String fullname = "Fullname";
-        String password = "password";
+        String password = "password123";
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
             new RegisterUser(invalidUsername, fullname, password);
@@ -66,11 +66,53 @@ public class RegisterUserTest {
     }
 
     @Test
+    @DisplayName("should throw error if the password is less than 8 characters")
+    public void shouldThrowErrorIfPasswordIsLessThan8Characters() {
+        String username = "user";
+        String fullname = "Fullname";
+        String password = "secret1";
+
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            new RegisterUser(username, fullname, password);
+        });
+
+        Assertions.assertEquals("REGISTER_USER.PASSWORD_MUST_BE_AT_LEAST_8_CHARACTERS", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("should throw error if the password not contain letters and numbers")
+    public void shouldThrowErrorIfThePasswordNotContainLettersAndNumbers() {
+        String username = "user";
+        String fullname = "Fullname";
+        String password = "password";
+
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            new RegisterUser(username, fullname, password);
+        });
+
+        Assertions.assertEquals("REGISTER_USER.PASSWORD_MUST_CONTAIN_LETTERS_AND_NUMBERS", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("should throw error if the password contain space")
+    public void shouldThrowErrorIfThePasswordContainSpace() {
+        String username = "user";
+        String fullname = "Fullname";
+        String password = "pass word123";
+
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            new RegisterUser(username, fullname, password);
+        });
+
+        Assertions.assertEquals("REGISTER_USER.PASSWORD_MUST_NOT_CONTAIN_SPACE", exception.getMessage());
+    }
+
+    @Test
     @DisplayName("should create object correctly")
     public void shouldCreateObjectCorrectly() {
         String username = "user";
         String fullname = "Fullname";
-        String password = "password";
+        String password = "password1234";
 
         RegisterUser registerUser = new RegisterUser(username, fullname, password);
 

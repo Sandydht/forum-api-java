@@ -23,6 +23,16 @@ public class DomainErrorTranslatorTest {
         }
 
         @Test
+        @DisplayName("should translate REGISTER_USER.USERNAME_CONTAIN_RESTRICTED_CHARACTER correctly")
+        public void shouldTranslateRegisterUserUsernameContainRestrictedCharacter() {
+            Exception error = new Exception("REGISTER_USER.USERNAME_CONTAIN_RESTRICTED_CHARACTER");
+            RuntimeException result = domainErrorTranslator.translate(error);
+
+            Assertions.assertInstanceOf(InvariantException.class, result);
+            Assertions.assertEquals("Cannot create a new user because the username contains prohibited characters", result.getMessage());
+        }
+
+        @Test
         @DisplayName("should translate REGISTER_USER.USERNAME_LIMIT_CHAR correctly")
         public void shouldTranslateRegisterUserUsernameLimit() {
             Exception error = new Exception("REGISTER_USER.USERNAME_LIMIT_CHAR");
@@ -33,23 +43,33 @@ public class DomainErrorTranslatorTest {
         }
 
         @Test
-        @DisplayName("should translate REGISTER_USER.NOT_MEET_DATA_TYPE_SPECIFICATION correctly")
-        public void shouldTranslateRegisterUserUsernameNotMeetDataTypeSpesification() {
-            Exception error = new Exception("REGISTER_USER.NOT_MEET_DATA_TYPE_SPECIFICATION");
+        @DisplayName("should translate REGISTER_USER.PASSWORD_MUST_BE_AT_LEAST_8_CHARACTERS correctly")
+        public void shouldTranslateRegisterUserMustBeAtLeast8Characters() {
+            Exception error = new Exception("REGISTER_USER.PASSWORD_MUST_BE_AT_LEAST_8_CHARACTERS");
             RuntimeException result = domainErrorTranslator.translate(error);
 
             Assertions.assertInstanceOf(InvariantException.class, result);
-            Assertions.assertEquals("Cannot create new user because data type does not match", result.getMessage());
+            Assertions.assertEquals("Cannot create a new user because the password less than 8 characters", result.getMessage());
         }
 
         @Test
-        @DisplayName("should translate REGISTER_USER.USERNAME_CONTAIN_RESTRICTED_CHARACTER correctly")
-        public void shouldTranslateRegisterUserUsernameContainRestrictedCharacter() {
-            Exception error = new Exception("REGISTER_USER.USERNAME_CONTAIN_RESTRICTED_CHARACTER");
+        @DisplayName("should translate REGISTER_USER.PASSWORD_MUST_CONTAIN_LETTERS_AND_NUMBERS correctly")
+        public void shouldTranslateRegisterUserPasswordMustContainLettersAndNumbers() {
+            Exception error = new Exception("REGISTER_USER.PASSWORD_MUST_CONTAIN_LETTERS_AND_NUMBERS");
             RuntimeException result = domainErrorTranslator.translate(error);
 
             Assertions.assertInstanceOf(InvariantException.class, result);
-            Assertions.assertEquals("Cannot create a new user because the username contains prohibited characters", result.getMessage());
+            Assertions.assertEquals("Cannot create a new user because the password not contain letters and numbers", result.getMessage());
+        }
+
+        @Test
+        @DisplayName("should translate REGISTER_USER.PASSWORD_MUST_NOT_CONTAIN_SPACE correctly")
+        public void shouldTranslateRegisterUserPasswordMusNotContainSpace() {
+            Exception error = new Exception("REGISTER_USER.PASSWORD_MUST_NOT_CONTAIN_SPACE");
+            RuntimeException result = domainErrorTranslator.translate(error);
+
+            Assertions.assertInstanceOf(InvariantException.class, result);
+            Assertions.assertEquals("Cannot create a new user because the password contain space", result.getMessage());
         }
     }
 

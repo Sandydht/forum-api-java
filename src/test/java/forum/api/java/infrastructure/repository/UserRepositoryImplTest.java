@@ -68,7 +68,7 @@ public class UserRepositoryImplTest {
         public void shouldPersistRegisterUserAndReturnRegisteredUserCorrectly() {
             String username = "user";
             String fullname = "Fullname";
-            String password = "password";
+            String password = "password123";
 
             RegisterUser registerUser = new RegisterUser(username, fullname, password);
             RegisteredUser registeredUser = userRepositoryImpl.addUser(registerUser);

@@ -54,7 +54,7 @@ public class ThreadsControllerTest {
     public void setUp() throws Exception {
         String username = "user";
         String fullname = "Fullname";
-        String password = "password";
+        String password = "password123";
         savedUser = userJpaRepository.save(new UserJpaEntity(username, fullname, passwordHashImpl.hashPassword(password)));
 
         UserLoginRequest loginRequest = new UserLoginRequest(username, password);

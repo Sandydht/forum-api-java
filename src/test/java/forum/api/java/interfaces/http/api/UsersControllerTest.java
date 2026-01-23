@@ -53,7 +53,7 @@ public class UsersControllerTest {
         public void shouldRegisterAccountSuccessfully() throws Exception {
             String username = "user";
             String fullname = "Fullname";
-            String password = "password";
+            String password = "password123";
 
             UserRegisterRequest request = new UserRegisterRequest(username, fullname, password);
 
@@ -67,11 +67,11 @@ public class UsersControllerTest {
         }
 
         @Test
-        @DisplayName("should return 400 when username is already exist")
-        public void shouldReturn400WhenUsernameIsAlreadyExist() throws Exception{
+        @DisplayName("should return 400 if the username is already exist")
+        public void shouldReturn400IfTheUsernameIsAlreadyExist() throws Exception{
             String username = "user";
             String fullname = "Fullname";
-            String password = "password";
+            String password = "password123";
 
             userJpaRepository.save(new UserJpaEntity(username, fullname, password));
 
@@ -85,11 +85,11 @@ public class UsersControllerTest {
         }
 
         @Test
-        @DisplayName("should return 400 when username contains restricted character")
-        public void shouldReturn400WhenUsernameContainsRestrictedCharacter() throws Exception {
+        @DisplayName("should return 400 if the username contains restricted character")
+        public void shouldReturn400IfTheUsernameContainsRestrictedCharacter() throws Exception {
             String username = "user 75";
             String fullname = "Fullname";
-            String password = "password";
+            String password = "password123";
 
             UserRegisterRequest request = new UserRegisterRequest(username, fullname, password);
 
@@ -101,9 +101,41 @@ public class UsersControllerTest {
         }
 
         @Test
-        @DisplayName("should return 400 when username contains more than 50 character")
-        public void shouldReturn400WhenUsernameContainsMoreThan50Character() throws Exception {
+        @DisplayName("should return 400 if the username contains more than 50 character")
+        public void shouldReturn400IfTheUsernameContainsMoreThan50Character() throws Exception {
             String username = "user".repeat(51);
+            String fullname = "Fullname";
+            String password = "password123";
+
+            UserRegisterRequest request = new UserRegisterRequest(username, fullname, password);
+
+            mockMvc.perform(post(urlTemplate)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)).with(csrf()))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.message").value("Cannot create a new user because the username character exceeds the limit"));
+        }
+
+        @Test
+        @DisplayName("should return 400 if the password less than 8 characters")
+        public void shouldReturn400IfThePasswordLessThan8Characters() throws Exception {
+            String username = "user";
+            String fullname = "Fullname";
+            String password = "secret1";
+
+            UserRegisterRequest request = new UserRegisterRequest(username, fullname, password);
+
+            mockMvc.perform(post(urlTemplate)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)).with(csrf()))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.message").value("Cannot create a new user because the password less than 8 characters"));
+        }
+
+        @Test
+        @DisplayName("should return 400 if the password not contain letters and numbers")
+        public void shouldReturn400IfThePasswordNotContainLettersAndNumbers() throws Exception {
+            String username = "user";
             String fullname = "Fullname";
             String password = "password";
 
@@ -113,7 +145,23 @@ public class UsersControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)).with(csrf()))
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.message").value("Cannot create a new user because the username character exceeds the limit"));
+                    .andExpect(jsonPath("$.message").value("Cannot create a new user because the password not contain letters and numbers"));
+        }
+
+        @Test
+        @DisplayName("should return 400 if the password contain space")
+        public void shouldReturn400IfThePasswordContainSpace() throws Exception {
+            String username = "user";
+            String fullname = "Fullname";
+            String password = "pass word123";
+
+            UserRegisterRequest request = new UserRegisterRequest(username, fullname, password);
+
+            mockMvc.perform(post(urlTemplate)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)).with(csrf()))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.message").value("Cannot create a new user because the password contain space"));
         }
     }
 
@@ -127,7 +175,7 @@ public class UsersControllerTest {
         public void setUp() throws Exception {
             String username = "user";
             String fullname = "Fullname";
-            String password = "password";
+            String password = "password123";
             savedUser = userJpaRepository.save(new UserJpaEntity(username, fullname, passwordHashImpl.hashPassword(password)));
 
             UserLoginRequest loginRequest = new UserLoginRequest(username, password);

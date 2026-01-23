@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AuthenticationsControllerTest {
     private final String username = "username";
     private final String fullname = "Fullname";
-    private final String password = "password";
+    private final String password = "password123";
 
     @Autowired
     private MockMvc mockMvc;
@@ -74,7 +74,7 @@ public class AuthenticationsControllerTest {
         @Test
         @DisplayName("should throw error when login with invalid credentials")
         public void shouldThrowErrorWhenLoginWithInvalidCredentials() throws Exception {
-            UserLoginRequest request = new UserLoginRequest(username, "invalid-password");
+            UserLoginRequest request = new UserLoginRequest(username, "invalidpassword123");
 
             mockMvc.perform(post(urlTemplate)
                             .contentType(MediaType.APPLICATION_JSON)

@@ -33,7 +33,7 @@ public class RegisterUserUseCaseTest {
         String id = UUID.randomUUID().toString();
         String username = "user";
         String fullname = "Fullname";
-        String password = "password";
+        String password = "password123";
         String hashedPassword = "hashedPassword";
 
         RegisterUser registerUser = new RegisterUser(username, fullname, password);

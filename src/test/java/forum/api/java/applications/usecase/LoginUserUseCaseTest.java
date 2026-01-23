@@ -44,7 +44,7 @@ public class LoginUserUseCaseTest {
         String userId = UUID.randomUUID().toString();
         String username = "user";
         String fullname = "Fullname";
-        String password = "password";
+        String password = "password123";
 
         String accessToken = "access-token";
         String refreshToken = "refresh-token";
