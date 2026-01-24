@@ -1,6 +1,5 @@
 package forum.api.java.infrastructure.repository;
 
-import forum.api.java.applications.service.PhoneNumberNormalizer;
 import forum.api.java.commons.exceptions.InvariantException;
 import forum.api.java.commons.exceptions.NotFoundException;
 import forum.api.java.domain.user.entity.RegisterUser;
@@ -38,7 +37,7 @@ public class UserRepositoryImplTest {
         public void shouldThrowInvariantExceptionWhenUsernameAvailable() {
             String username = "user";
             String email = "example@email.com";
-            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
+            String phoneNumber = "6281123123123";
             String password = "password";
             String fullname = "Fullname";
 
@@ -69,7 +68,7 @@ public class UserRepositoryImplTest {
         public void shouldPersistRegisterUserAndReturnRegisteredUserCorrectly() {
             String username = "user";
             String email = "example@email.com";
-            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password123";
             String captchaToken = "captcha-token";
@@ -104,7 +103,7 @@ public class UserRepositoryImplTest {
         public void shouldReturnUserDetailCorrectlyWhenUserExists() {
             String username = "user";
             String email = "example@email.com";
-            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password";
 
@@ -141,7 +140,7 @@ public class UserRepositoryImplTest {
         public void shouldReturnUserDetailCorrectlyWhenUserExists() {
             String username = "user";
             String email = "example@email.com";
-            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password";
 
@@ -178,7 +177,7 @@ public class UserRepositoryImplTest {
         public void shouldReturnUserProfileDataCorrectly() {
             String username = "user";
             String email = "example@email.com";
-            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password";
 
@@ -214,7 +213,7 @@ public class UserRepositoryImplTest {
         public void shouldNotThrowNotFoundExceptionWhenUserIsFound() {
             String username = "user";
             String email = "example@email.com";
-            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password";
 
@@ -233,7 +232,7 @@ public class UserRepositoryImplTest {
         public void shouldThrowInvariantExceptionWhenUsernameAvailable() {
             String username = "user";
             String email = "example@email.com";
-            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
+            String phoneNumber = "6281123123123";
             String password = "password";
             String fullname = "Fullname";
 

@@ -126,4 +126,166 @@ public class ValidationUtilsTest {
             Assertions.assertDoesNotThrow(() -> ValidationUtils.requireNonNull(input, errorMessage));
         }
     }
+
+    @Nested
+    @DisplayName("passwordLimitCharacter function")
+    public class PasswordLimitCharacterFunction {
+        @Test
+        @DisplayName("should throw IllegalArgumentException if the password less than 8 characters")
+        public void shouldThrowIllegalArgumentExceptionIfThePasswordLessThan8Characters() {
+            String password = "secret";
+            String errorMessage = "PASSWORD_MUST_BE_AT_LEAST_8_CHARACTERS";
+
+            IllegalArgumentException exception = Assertions.assertThrows(
+                    IllegalArgumentException.class,
+                    () -> ValidationUtils.passwordLimitCharacter(password, errorMessage)
+            );
+
+            Assertions.assertEquals(errorMessage, exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("should not throw IllegalArgumentException if the password more than 8 characters")
+        public void shouldNotThrowIllegalArgumentExceptionIfThePasswordMoreThan8Characters() {
+            String password = "secret".repeat(10);
+            String errorMessage = "PASSWORD_MUST_BE_AT_LEAST_8_CHARACTERS";
+
+            Assertions.assertDoesNotThrow(() -> ValidationUtils.passwordLimitCharacter(password, errorMessage));
+        }
+    }
+
+    @Nested
+    @DisplayName("passwordMustContainLettersAndNumber function")
+    public class PasswordMustContainLettersAndNumberFunction {
+        @Test
+        @DisplayName("should throw IllegalArgumentException if the password not contain letters and numbers")
+        public void shouldThrowIllegalArgumentExceptionIfThePasswordNotContainLettersAndNumbers() {
+            String password = "password";
+            String errorMessage = "PASSWORD_MUST_CONTAIN_LETTERS_AND_NUMBERS";
+
+            IllegalArgumentException exception = Assertions.assertThrows(
+                    IllegalArgumentException.class,
+                    () -> ValidationUtils.passwordMustContainLettersAndNumber(password, errorMessage)
+            );
+
+            Assertions.assertEquals(errorMessage, exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("should not throw IllegalArgumentException if the password contain letters and numbers")
+        public void shouldNotThrowIllegalArgumentExceptionIfThePasswordContainLettersAndNumbers() {
+            String password = "password123";
+            String errorMessage = "PASSWORD_MUST_CONTAIN_LETTERS_AND_NUMBERS";
+
+            Assertions.assertDoesNotThrow(() -> ValidationUtils.passwordMustContainLettersAndNumber(password, errorMessage));
+        }
+    }
+
+    @Nested
+    @DisplayName("passwordMustNotContainSpace function")
+    public class PasswordMustNotContainSpaceFunction {
+        @Test
+        @DisplayName("should throw IllegalArgumentException if the password contain space")
+        public void shouldThrowIllegalArgumentExceptionIfThePasswordContainSpace() {
+            String password = "password 123";
+            String errorMessage = "PASSWORD_MUST_NOT_CONTAIN_SPACE";
+
+            IllegalArgumentException exception = Assertions.assertThrows(
+                    IllegalArgumentException.class,
+                    () -> ValidationUtils.passwordMustNotContainSpace(password, errorMessage)
+            );
+
+            Assertions.assertEquals(errorMessage, exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("should not throw IllegalArgumentException if the password not contain space")
+        public void shouldNotThrowIllegalArgumentExceptionIfThePasswordNotContainSpace() {
+            String password = "password123";
+            String errorMessage = "PASSWORD_MUST_NOT_CONTAIN_SPACE";
+
+            Assertions.assertDoesNotThrow(() -> ValidationUtils.passwordMustNotContainSpace(password, errorMessage));
+        }
+    }
+
+    @Nested
+    @DisplayName("emailValidation function")
+    public class EmailValidationFunction {
+        @Test
+        @DisplayName("should throw IllegalArgumentException if the email is invalid")
+        public void shouldThrowIllegalArgumentExceptionIfTheEmailIsInvalid() {
+            String email = "Invalid Email";
+            String errorMessage = "EMAIL_IS_INVALID";
+
+            IllegalArgumentException exception = Assertions.assertThrows(
+                    IllegalArgumentException.class,
+                    () -> ValidationUtils.emailValidation(email, errorMessage)
+            );
+
+            Assertions.assertEquals(errorMessage, exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("should not throw IllegalArgumentException if the email is valid")
+        public void shouldNotThrowIllegalArgumentExceptionIfTheEmailIsValid() {
+            String email = "example@email.com";
+            String errorMessage = "EMAIL_IS_INVALID";
+
+            Assertions.assertDoesNotThrow(() -> ValidationUtils.emailValidation(email, errorMessage));
+        }
+    }
+
+    @Nested
+    @DisplayName("phoneNumberValidation function")
+    public class PhoneNumberValidationFunction {
+        @Test
+        @DisplayName("should throw IllegalArgumentException if the phone number is invalid")
+        public void shouldThrowIllegalArgumentExceptionIfThePhoneNumberIsInvalid() {
+            String phoneNumber = "Invalid Phone Number";
+            String errorMessage = "PHONE_NUMBER_IS_INVALID";
+
+            IllegalArgumentException exception = Assertions.assertThrows(
+                    IllegalArgumentException.class,
+                    () -> ValidationUtils.phoneNumberValidation(phoneNumber, errorMessage)
+            );
+
+            Assertions.assertEquals(errorMessage, exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("should not throw IllegalArgumentException if the phone number is valid")
+        public void shouldNotThrowIllegalArgumentExceptionIfThePhoneNumberIsValid() {
+            String phoneNumber = "081123123123";
+            String errorMessage = "PHONE_NUMBER_IS_INVALID";
+
+            Assertions.assertDoesNotThrow(() -> ValidationUtils.phoneNumberValidation(phoneNumber, errorMessage));
+        }
+    }
+
+    @Nested
+    @DisplayName("ipv4Validation function")
+    public class Ipv4ValidationFunction {
+        @Test
+        @DisplayName("should throw IllegalArgumentException if the ip request is invalid")
+        public void shouldThrowIllegalArgumentExceptionIfTheIpRequestIsInvalid() {
+            String ipRequest = "Invalid IP Request";
+            String errorMessage = "IP_REQUEST_IS_INVALID";
+
+            IllegalArgumentException exception = Assertions.assertThrows(
+                    IllegalArgumentException.class,
+                    () -> ValidationUtils.ipv4Validation(ipRequest, errorMessage)
+            );
+
+            Assertions.assertEquals(errorMessage, exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("should not throw IllegalArgumentException if the ip request is valid")
+        public void shouldNotThrowIllegalArgumentExceptionIfTheIpRequestIsValid() {
+            String ipRequest = "192.168.1.1";
+            String errorMessage = "IP_REQUEST_IS_INVALID";
+
+            Assertions.assertDoesNotThrow(() -> ValidationUtils.ipv4Validation(ipRequest, errorMessage));
+        }
+    }
 }

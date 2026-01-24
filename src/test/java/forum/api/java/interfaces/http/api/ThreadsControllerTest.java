@@ -1,7 +1,8 @@
 package forum.api.java.interfaces.http.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import forum.api.java.applications.service.PhoneNumberNormalizer;
+import forum.api.java.applications.service.PhoneNumberNormalizerService;
+import forum.api.java.infrastructure.service.PhoneNumberNormalizerServiceImpl;
 import forum.api.java.infrastructure.persistence.threads.ThreadJpaRepository;
 import forum.api.java.infrastructure.persistence.threads.entity.ThreadJpaEntity;
 import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
@@ -55,6 +56,9 @@ public class ThreadsControllerTest {
     @Autowired
     private PasswordHashImpl passwordHashImpl;
 
+    @Autowired
+    private PhoneNumberNormalizerService phoneNumberNormalizerServiceImpl;
+
     @MockBean
     private GoogleCaptchaService googleCaptchaService;
 
@@ -62,7 +66,7 @@ public class ThreadsControllerTest {
     public void setUp() throws Exception {
         String username = "user";
         String email = "example@email.com";
-        String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
+        String phoneNumber = phoneNumberNormalizerServiceImpl.normalize("6281123123123");;
         String fullname = "Fullname";
         String password = "password123";
 

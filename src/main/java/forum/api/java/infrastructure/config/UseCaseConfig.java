@@ -1,7 +1,6 @@
 package forum.api.java.infrastructure.config;
 
 import forum.api.java.applications.security.AuthenticationTokenManager;
-import forum.api.java.applications.security.CaptchaService;
 import forum.api.java.applications.usecase.*;
 import forum.api.java.domain.authentication.AuthenticationRepository;
 import forum.api.java.domain.thread.ThreadRepository;
@@ -13,6 +12,7 @@ import forum.api.java.infrastructure.repository.UserRepositoryImpl;
 import forum.api.java.infrastructure.security.AuthenticationTokenManagerImpl;
 import forum.api.java.infrastructure.security.GoogleCaptchaService;
 import forum.api.java.infrastructure.security.PasswordHashImpl;
+import forum.api.java.infrastructure.service.PhoneNumberNormalizerServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -22,12 +22,14 @@ public class UseCaseConfig {
     public RegisterUserUseCase registerUserUseCase(
             UserRepositoryImpl userRepositoryImpl,
             PasswordHashImpl passwordHashImpl,
-            CaptchaService captchaService
+            GoogleCaptchaService googleCaptchaService,
+            PhoneNumberNormalizerServiceImpl phoneNumberNormalizerServiceImpl
     ) {
         return new RegisterUserUseCase(
                 userRepositoryImpl,
                 passwordHashImpl,
-                captchaService
+                googleCaptchaService,
+                phoneNumberNormalizerServiceImpl
         );
     }
 

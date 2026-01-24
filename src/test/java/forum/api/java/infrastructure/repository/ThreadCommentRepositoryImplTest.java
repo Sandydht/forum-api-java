@@ -1,6 +1,5 @@
 package forum.api.java.infrastructure.repository;
 
-import forum.api.java.applications.service.PhoneNumberNormalizer;
 import forum.api.java.commons.exceptions.NotFoundException;
 import forum.api.java.domain.threadcomment.entity.AddThreadComment;
 import forum.api.java.domain.threadcomment.entity.AddedThreadComment;
@@ -65,7 +64,7 @@ public class ThreadCommentRepositoryImplTest {
         public void shouldThrowNotFoundExceptionWhenThreadNotFound() {
             String username = "user";
             String email = "example@email.com";
-            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password";
 
@@ -89,7 +88,7 @@ public class ThreadCommentRepositoryImplTest {
         public void shouldPersistAddThreadCommentAndReturnAddedThreadCommentCorrectly() {
             String username = "user";
             String email = "example@email.com";
-            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password";
 

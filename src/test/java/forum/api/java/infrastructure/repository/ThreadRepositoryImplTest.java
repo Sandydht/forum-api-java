@@ -1,6 +1,5 @@
 package forum.api.java.infrastructure.repository;
 
-import forum.api.java.applications.service.PhoneNumberNormalizer;
 import forum.api.java.commons.exceptions.NotFoundException;
 import forum.api.java.commons.models.PagedSearchResult;
 import forum.api.java.domain.thread.entity.AddThread;
@@ -66,7 +65,7 @@ public class ThreadRepositoryImplTest {
         public void shouldPersistAddThreadAndReturnAddedThreadCorrectly() {
             String username = "user";
             String email = "example@email.com";
-            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password";
 
@@ -105,7 +104,7 @@ public class ThreadRepositoryImplTest {
         public void shouldNotThrowNotFoundExceptionWhenThreadIsFound() {
             String username = "user";
             String email = "example@email.com";
-            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password";
 
@@ -139,7 +138,7 @@ public class ThreadRepositoryImplTest {
         public void shouldReturnPagedThreadsCorrectlyBasedOnTitleSearchAndPagination() {
             String username = "user";
             String email = "example@email.com";
-            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password";
             UserJpaEntity user = userJpaRepository.save(new UserJpaEntity(null, username, email, phoneNumber, fullname, password));
@@ -170,7 +169,7 @@ public class ThreadRepositoryImplTest {
         public void shouldReturnEmptyDataWhenTitleNoMatch() {
             String username = "user";
             String email = "example@email.com";
-            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password";
             UserJpaEntity user = userJpaRepository.save(new UserJpaEntity(null, username, email, phoneNumber, fullname, password));
@@ -192,7 +191,7 @@ public class ThreadRepositoryImplTest {
         public void shouldHandlePaginationCorrectly() {
             String username = "user";
             String email = "example@email.com";
-            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password";
             UserJpaEntity user = userJpaRepository.save(new UserJpaEntity(null, username, email, phoneNumber, fullname, password));
@@ -234,7 +233,7 @@ public class ThreadRepositoryImplTest {
         public void shouldUpdateThreadAndReturnUpdatedThreadCorrectly() {
             String username = "user";
             String email = "example@email.com";
-            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password";
 
@@ -285,7 +284,7 @@ public class ThreadRepositoryImplTest {
         public void shouldSoftDeleteThreadAndReturnThreadDataCorrectly() {
             String username = "user";
             String email = "example@email.com";
-            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password";
 
@@ -328,7 +327,7 @@ public class ThreadRepositoryImplTest {
         public void shouldNotThrowNotFoundExceptionWhenThreadIsFound() {
             String username = "user";
             String email = "example@email.com";
-            String phoneNumber = PhoneNumberNormalizer.normalize("6281123123123");;
+            String phoneNumber = "6281123123123";
             String fullname = "Fullname";
             String password = "password";
 

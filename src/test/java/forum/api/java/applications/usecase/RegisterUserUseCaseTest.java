@@ -2,6 +2,7 @@ package forum.api.java.applications.usecase;
 
 import forum.api.java.applications.security.CaptchaService;
 import forum.api.java.applications.security.PasswordHash;
+import forum.api.java.applications.service.PhoneNumberNormalizerService;
 import forum.api.java.domain.user.UserRepository;
 import forum.api.java.domain.user.entity.RegisterUser;
 import forum.api.java.domain.user.entity.RegisteredUser;
@@ -28,6 +29,9 @@ public class RegisterUserUseCaseTest {
     @Mock
     private CaptchaService captchaService;
 
+    @Mock
+    private PhoneNumberNormalizerService phoneNumberNormalizerService;
+
     @InjectMocks
     private RegisterUserUseCase registerUserUseCase;
 
@@ -45,6 +49,7 @@ public class RegisterUserUseCaseTest {
 
         RegisterUser registerUser = new RegisterUser(username, email, phoneNumber, fullname, password, captchaToken);
 
+        Mockito.when(phoneNumberNormalizerService.normalize(phoneNumber)).thenReturn("+6281123123123");
         Mockito.when(passwordHash.hashPassword(password)).thenReturn(hashedPassword);
         Mockito.doNothing().when(captchaService).verifyToken(captchaToken);
         Mockito.doNothing().when(userRepository).verifyAvailableUsername(username);
@@ -67,6 +72,7 @@ public class RegisterUserUseCaseTest {
         Assertions.assertEquals("+6281123123123", registerUser.getPhoneNumber());
         Assertions.assertEquals(hashedPassword, registerUser.getPassword());
 
+        Mockito.verify(phoneNumberNormalizerService, Mockito.times(1)).normalize(phoneNumber);
         Mockito.verify(passwordHash, Mockito.times(1)).hashPassword(password);
         Mockito.verify(captchaService, Mockito.times(1)).verifyToken(captchaToken);
         Mockito.verify(userRepository, Mockito.times(1)).verifyAvailableUsername(username);

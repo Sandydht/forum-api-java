@@ -1,7 +1,14 @@
-package forum.api.java.applications.service;
+package forum.api.java.infrastructure.service;
 
-public class PhoneNumberNormalizer {
-    public static String normalize(String phoneNumber) {
+import forum.api.java.applications.service.PhoneNumberNormalizerService;
+import org.springframework.stereotype.Service;
+
+@Service
+public class PhoneNumberNormalizerServiceImpl implements PhoneNumberNormalizerService {
+    public PhoneNumberNormalizerServiceImpl() {}
+
+    @Override
+    public String normalize(String phoneNumber) {
         if (phoneNumber == null) {
             return null;
         }
