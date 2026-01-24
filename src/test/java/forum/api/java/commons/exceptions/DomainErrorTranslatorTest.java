@@ -107,6 +107,16 @@ public class DomainErrorTranslatorTest {
         }
 
         @Test
+        @DisplayName("should translate LOGIN_USER.USERNAME_CONTAIN_RESTRICTED_CHARACTER correctly")
+        public void shouldTranslateLoginUserUsernameContainRestrictedCharacter() {
+            Exception error = new Exception("LOGIN_USER.USERNAME_CONTAIN_RESTRICTED_CHARACTER");
+            RuntimeException result = domainErrorTranslator.translate(error);
+
+            Assertions.assertInstanceOf(InvariantException.class, result);
+            Assertions.assertEquals("Username contains prohibited characters", result.getMessage());
+        }
+
+        @Test
         @DisplayName("should translate LOGIN_USER.USERNAME_LIMIT_CHAR correctly")
         public void shouldTranslateLoginUserUsernameLimit() {
             Exception error = new Exception("LOGIN_USER.USERNAME_LIMIT_CHAR");
@@ -117,13 +127,33 @@ public class DomainErrorTranslatorTest {
         }
 
         @Test
-        @DisplayName("should translate LOGIN_USER.USERNAME_CONTAIN_RESTRICTED_CHARACTER correctly")
-        public void shouldTranslateLoginUserUsernameContainRestrictedCharacter() {
-            Exception error = new Exception("LOGIN_USER.USERNAME_CONTAIN_RESTRICTED_CHARACTER");
+        @DisplayName("should translate LOGIN_USER.PASSWORD_MUST_BE_AT_LEAST_8_CHARACTERS correctly")
+        public void shouldTranslateLoginUserPasswordMustBeAtLeast8Characters() {
+            Exception error = new Exception("LOGIN_USER.PASSWORD_MUST_BE_AT_LEAST_8_CHARACTERS");
             RuntimeException result = domainErrorTranslator.translate(error);
 
             Assertions.assertInstanceOf(InvariantException.class, result);
-            Assertions.assertEquals("Username contains prohibited characters", result.getMessage());
+            Assertions.assertEquals("Password less than 8 characters", result.getMessage());
+        }
+
+        @Test
+        @DisplayName("should translate LOGIN_USER.PASSWORD_MUST_CONTAIN_LETTERS_AND_NUMBERS correctly")
+        public void shouldTranslateLoginUserPasswordMustContainLettersAndNumbers() {
+            Exception error = new Exception("LOGIN_USER.PASSWORD_MUST_CONTAIN_LETTERS_AND_NUMBERS");
+            RuntimeException result = domainErrorTranslator.translate(error);
+
+            Assertions.assertInstanceOf(InvariantException.class, result);
+            Assertions.assertEquals("Password not contain letters and numbers", result.getMessage());
+        }
+
+        @Test
+        @DisplayName("should translate LOGIN_USER.PASSWORD_MUST_NOT_CONTAIN_SPACE correctly")
+        public void shouldTranslateLoginUserPasswordMustNotContainSpace() {
+            Exception error = new Exception("LOGIN_USER.PASSWORD_MUST_NOT_CONTAIN_SPACE");
+            RuntimeException result = domainErrorTranslator.translate(error);
+
+            Assertions.assertInstanceOf(InvariantException.class, result);
+            Assertions.assertEquals("Password contain space", result.getMessage());
         }
     }
 

@@ -21,6 +21,9 @@ public class DomainErrorTranslator {
         directories.put("LOGIN_USER.NOT_CONTAIN_NEEDED_PROPERTY", new InvariantException("Must send username and password"));
         directories.put("LOGIN_USER.USERNAME_CONTAIN_RESTRICTED_CHARACTER", new InvariantException("Username contains prohibited characters"));
         directories.put("LOGIN_USER.USERNAME_LIMIT_CHAR", new InvariantException("Username character exceeds the limit"));
+        directories.put("LOGIN_USER.PASSWORD_MUST_BE_AT_LEAST_8_CHARACTERS", new InvariantException("Password less than 8 characters"));
+        directories.put("LOGIN_USER.PASSWORD_MUST_CONTAIN_LETTERS_AND_NUMBERS", new InvariantException("Password not contain letters and numbers"));
+        directories.put("LOGIN_USER.PASSWORD_MUST_NOT_CONTAIN_SPACE", new InvariantException("Password contain space"));
 
         // PASSWORD_HASH_IMPL
         directories.put("PASSWORD_HASH_IMPL.INCORRECT_CREDENTIALS", new AuthenticationException("Incorrect credentials"));

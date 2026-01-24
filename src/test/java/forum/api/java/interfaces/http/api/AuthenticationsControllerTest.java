@@ -117,6 +117,48 @@ public class AuthenticationsControllerTest {
 
             Mockito.verify(googleCaptchaService, Mockito.times(1)).verifyToken(captchaToken);
         }
+
+        @Test
+        @DisplayName("should return 400 if the password less than 8 characters")
+        public void shouldReturn400IfThePasswordLessThan8Characters() throws Exception {
+            String invalidPassword = "secret";
+
+            UserLoginRequest request = new UserLoginRequest(username, invalidPassword, captchaToken);
+
+            mockMvc.perform(post(urlTemplate)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)).with(csrf()))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.message").value("Password less than 8 characters"));
+        }
+
+        @Test
+        @DisplayName("should return 400 if the password not contain letters and numbers")
+        public void shouldReturn400IfThePasswordNotContainLettersAndNumbers() throws Exception {
+            String invalidPassword = "password";
+
+            UserLoginRequest request = new UserLoginRequest(username, invalidPassword, captchaToken);
+
+            mockMvc.perform(post(urlTemplate)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)).with(csrf()))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.message").value("Password not contain letters and numbers"));
+        }
+
+        @Test
+        @DisplayName("should return 400 if the password contain space")
+        public void shouldReturn400IfThePasswordContainSpace() throws Exception {
+            String invalidPassword = "password 123";
+
+            UserLoginRequest request = new UserLoginRequest(username, invalidPassword, captchaToken);
+
+            mockMvc.perform(post(urlTemplate)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)).with(csrf()))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.message").value("Password contain space"));
+        }
     }
 
     @Nested
