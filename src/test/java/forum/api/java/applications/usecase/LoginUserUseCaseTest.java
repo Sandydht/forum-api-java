@@ -47,6 +47,8 @@ public class LoginUserUseCaseTest {
     public void shouldOrchestratingTheGetAuthenticationActionCorrectly() {
         String userId = UUID.randomUUID().toString();
         String username = "user";
+        String email = "example@email.com";
+        String phoneNumber = "6281123123123";
         String fullname = "Fullname";
         String password = "password123";
         String captchaToken = "captcha-token";
@@ -55,7 +57,7 @@ public class LoginUserUseCaseTest {
         String refreshToken = "refresh-token";
 
         LoginUser loginUser = new LoginUser(username, password, captchaToken);
-        UserDetail userDetail = new UserDetail(userId, username, fullname, password);
+        UserDetail userDetail = new UserDetail(userId, username, email, phoneNumber, fullname, password);
 
         Mockito.doNothing().when(captchaService).verifyToken(captchaToken);
         Mockito.when(userRepository.getUserByUsername(loginUser.getUsername())).thenReturn(userDetail);

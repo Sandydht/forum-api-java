@@ -49,9 +49,9 @@ public class RegisterUserUseCaseTest {
 
         RegisterUser registerUser = new RegisterUser(username, email, phoneNumber, fullname, password, captchaToken);
 
+        Mockito.doNothing().when(captchaService).verifyToken(captchaToken);
         Mockito.when(phoneNumberNormalizerService.normalize(phoneNumber)).thenReturn("+6281123123123");
         Mockito.when(passwordHash.hashPassword(password)).thenReturn(hashedPassword);
-        Mockito.doNothing().when(captchaService).verifyToken(captchaToken);
         Mockito.doNothing().when(userRepository).verifyAvailableUsername(username);
         Mockito.doNothing().when(userRepository).verifyAvailableEmail(email);
         Mockito.doNothing().when(userRepository).verifyAvailablePhoneNumber(phoneNumber);
@@ -72,9 +72,9 @@ public class RegisterUserUseCaseTest {
         Assertions.assertEquals("+6281123123123", registerUser.getPhoneNumber());
         Assertions.assertEquals(hashedPassword, registerUser.getPassword());
 
+        Mockito.verify(captchaService, Mockito.times(1)).verifyToken(captchaToken);
         Mockito.verify(phoneNumberNormalizerService, Mockito.times(1)).normalize(phoneNumber);
         Mockito.verify(passwordHash, Mockito.times(1)).hashPassword(password);
-        Mockito.verify(captchaService, Mockito.times(1)).verifyToken(captchaToken);
         Mockito.verify(userRepository, Mockito.times(1)).verifyAvailableUsername(username);
         Mockito.verify(userRepository, Mockito.times(1)).verifyAvailableEmail(email);
         Mockito.verify(userRepository, Mockito.times(1)).verifyAvailablePhoneNumber(phoneNumber);

@@ -40,5 +40,11 @@ public class AuthenticationRepositoryTest {
                 () -> authenticationRepository.deleteTokenByUserId(null)
         );
         Assertions.assertEquals("AUTHENTICATION_REPOSITORY.METHOD_NOT_IMPLEMENTED", deleteTokenByUserIdError.getMessage());
+
+        UnsupportedOperationException addPasswordResetTokenError = Assertions.assertThrows(
+                UnsupportedOperationException.class,
+                () -> authenticationRepository.addPasswordResetToken(null, null, null, null)
+        );
+        Assertions.assertEquals("AUTHENTICATION_REPOSITORY.METHOD_NOT_IMPLEMENTED", addPasswordResetTokenError.getMessage());
     }
 }

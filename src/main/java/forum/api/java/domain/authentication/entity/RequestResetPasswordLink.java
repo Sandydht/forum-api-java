@@ -1,10 +1,11 @@
-package forum.api.java.domain.passwordresettoken.entity;
+package forum.api.java.domain.authentication.entity;
 
 import forum.api.java.domain.utils.ValidationUtils;
 
 public class RequestResetPasswordLink {
     private static final String notContainNeededPropertyErrorMessage = "REQUEST_RESET_PASSWORD_LINK.NOT_CONTAIN_NEEDED_PROPERTY";
     private static final String emailInvalidErrorMessage = "REQUEST_RESET_PASSWORD_LINK.EMAIL_IS_INVALID";
+    private static final String ipv4InvalidErrorMessage = "REQUEST_RESET_PASSWORD_LINK.IP_V4_IS_INVALID";
 
     private final String email;
     private final String ipRequest;
@@ -26,6 +27,7 @@ public class RequestResetPasswordLink {
         ValidationUtils.requireNotBlank(userAgent, notContainNeededPropertyErrorMessage);
         ValidationUtils.requireNotBlank(captchaToken, notContainNeededPropertyErrorMessage);
         ValidationUtils.emailValidation(email, emailInvalidErrorMessage);
+        ValidationUtils.ipv4Validation(ipRequest, ipv4InvalidErrorMessage);
     }
 
     public String getEmail() {

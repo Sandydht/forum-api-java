@@ -20,6 +20,8 @@ public class UserJpaMapper {
         return new UserDetail(
                 userJpaEntity.getId(),
                 userJpaEntity.getUsername(),
+                userJpaEntity.getEmail(),
+                userJpaEntity.getPhoneNumber(),
                 userJpaEntity.getFullname(),
                 userJpaEntity.getPassword()
         );

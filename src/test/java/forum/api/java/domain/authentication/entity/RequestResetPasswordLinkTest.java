@@ -1,4 +1,4 @@
-package forum.api.java.domain.passwordresettoken.entity;
+package forum.api.java.domain.authentication.entity;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -53,6 +53,21 @@ public class RequestResetPasswordLinkTest {
         });
 
         Assertions.assertEquals("REQUEST_RESET_PASSWORD_LINK.EMAIL_IS_INVALID", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("should throw error when ip request is invalid")
+    public void shouldThrowErrorWhenIpRequestIsInvalid() {
+        String email = "example@email.com";
+        String ipRequest = "Invalid Ip Request";
+        String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36";
+        String captchaToken = "captcha-token";
+
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            new RequestResetPasswordLink(email, ipRequest, userAgent, captchaToken);
+        });
+
+        Assertions.assertEquals("REQUEST_RESET_PASSWORD_LINK.IP_V4_IS_INVALID", exception.getMessage());
     }
 
     @Test

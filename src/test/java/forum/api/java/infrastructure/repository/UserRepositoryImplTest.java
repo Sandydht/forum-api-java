@@ -285,4 +285,41 @@ public class UserRepositoryImplTest {
             Assertions.assertDoesNotThrow(() -> userRepositoryImpl.verifyAvailablePhoneNumber(phoneNumber));
         }
     }
+
+    @Nested
+    @DisplayName("getUserByEmail function")
+    public class GetUserByEmailFunction {
+        @Test
+        @DisplayName("should throw NotFoundException when user not found")
+        public void shouldThrowNotFoundExceptionWhenUserNotFound() {
+            String email = "example@email.com";
+
+            NotFoundException exception = Assertions.assertThrows(
+                    NotFoundException.class,
+                    () -> userRepositoryImpl.getUserByEmail(email)
+            );
+
+            Assertions.assertEquals("USER_REPOSITORY_IMPL.USER_NOT_FOUND", exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("should return user detail correctly when user exists")
+        public void shouldReturnUserDetailCorrectlyWhenUserExists() {
+            String username = "user";
+            String email = "example@email.com";
+            String phoneNumber = "6281123123123";
+            String fullname = "Fullname";
+            String password = "password";
+
+            UserJpaEntity userJpaEntity = new UserJpaEntity(null, username, email, phoneNumber, fullname, password);
+            UserJpaEntity savedUser = userJpaRepository.save(userJpaEntity);
+
+            UserDetail result = userRepositoryImpl.getUserByEmail(savedUser.getEmail());
+
+            Assertions.assertEquals(savedUser.getId(), result.getId());
+            Assertions.assertEquals(savedUser.getUsername(), result.getUsername());
+            Assertions.assertEquals(savedUser.getFullname(), result.getFullname());
+            Assertions.assertEquals(savedUser.getPassword(), result.getPassword());
+        }
+    }
 }

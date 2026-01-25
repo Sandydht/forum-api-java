@@ -37,4 +37,8 @@ public interface UserRepository {
     default void verifyAvailablePhoneNumber(String phoneNumber) {
         throw new UnsupportedOperationException("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED");
     }
+
+    default UserDetail getUserByEmail(String email) {
+        throw new UnsupportedOperationException("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED");
+    }
 }

@@ -67,4 +67,9 @@ public class UserRepositoryImpl implements UserRepository {
             throw new InvariantException("USER_REPOSITORY_IMPL.PHONE_NUMBER_ALREADY_EXIST");
         }
     }
+
+    @Override
+    public UserDetail getUserByEmail(String email) {
+        return userJpaRepository.findByEmail(email).map(UserJpaMapper::toUserDetailDomain).orElseThrow(() -> new NotFoundException("USER_REPOSITORY_IMPL.USER_NOT_FOUND"));
+    }
 }
