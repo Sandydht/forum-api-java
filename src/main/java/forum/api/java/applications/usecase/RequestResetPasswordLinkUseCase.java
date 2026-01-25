@@ -4,10 +4,8 @@ import forum.api.java.applications.security.CaptchaService;
 import forum.api.java.applications.security.PasswordHash;
 import forum.api.java.applications.service.EmailService;
 import forum.api.java.domain.authentication.AuthenticationRepository;
-import forum.api.java.domain.authentication.entity.AddedPasswordResetToken;
 import forum.api.java.domain.authentication.entity.RequestResetPasswordLink;
 import forum.api.java.domain.user.UserRepository;
-import forum.api.java.domain.user.entity.UserDetail;
 import jakarta.mail.MessagingException;
 
 import java.security.SecureRandom;
@@ -15,45 +13,49 @@ import java.util.Base64;
 
 public class RequestResetPasswordLinkUseCase {
     private final CaptchaService captchaService;
-    private final UserRepository userRepository;
     private final PasswordHash passwordHash;
     private final AuthenticationRepository authenticationRepository;
+    private final UserRepository userRepository;
     private final EmailService emailService;
 
     public RequestResetPasswordLinkUseCase(
             CaptchaService captchaService,
-            UserRepository userRepository,
             PasswordHash passwordHash,
             AuthenticationRepository authenticationRepository,
+            UserRepository userRepository,
             EmailService emailService
     ) {
         this.captchaService = captchaService;
-        this.userRepository = userRepository;
         this.passwordHash = passwordHash;
         this.authenticationRepository = authenticationRepository;
+        this.userRepository = userRepository;
         this.emailService = emailService;
     }
 
-    public AddedPasswordResetToken execute(RequestResetPasswordLink requestResetPasswordLink) throws MessagingException {
+    public void execute(RequestResetPasswordLink requestResetPasswordLink) {
         captchaService.verifyToken(requestResetPasswordLink.getCaptchaToken());
-        UserDetail userDetail = userRepository.getUserByEmail(requestResetPasswordLink.getEmail());
 
-        SecureRandom random = new SecureRandom();
-        byte[] bytes = new byte[32]; // 32 bytes = 256 bit
-        random.nextBytes(bytes);
-        String rawToken = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
-        String tokenHash = passwordHash.hashPassword(rawToken);
+        userRepository.getUserByEmailForgotPassword(requestResetPasswordLink.getEmail())
+                .ifPresent(user -> {
+                    try {
+                        SecureRandom random = new SecureRandom();
+                        byte[] bytes = new byte[32]; // 32 bytes = 256 bit
+                        random.nextBytes(bytes);
+                        String rawToken = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
+                        String tokenHash = passwordHash.hashPassword(rawToken);
 
-        AddedPasswordResetToken result = authenticationRepository.addPasswordResetToken(
-                userDetail.getId(),
-                tokenHash,
-                requestResetPasswordLink.getIpRequest(),
-                requestResetPasswordLink.getUserAgent()
-        );
+                        authenticationRepository.addPasswordResetToken(
+                                user.getEmail(),
+                                tokenHash,
+                                requestResetPasswordLink.getIpRequest(),
+                                requestResetPasswordLink.getUserAgent()
+                        );
 
-        String emailLink = "http://localhost:5173/forgot-password?token=" + tokenHash;
-        emailService.sendForgotPasswordEmail(userDetail.getEmail(), userDetail.getFullname(), emailLink);
-
-        return result;
+                        String emailLink = "http://localhost:5173/forgot-password?token=" + tokenHash;
+                        emailService.sendForgotPasswordEmail(user.getEmail(), user.getFullname(), emailLink);
+                    } catch (MessagingException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
     }
 }

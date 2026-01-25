@@ -10,6 +10,7 @@ import forum.api.java.infrastructure.persistence.users.entity.UserJpaEntity;
 import forum.api.java.infrastructure.security.GoogleCaptchaService;
 import forum.api.java.infrastructure.security.PasswordHashImpl;
 import forum.api.java.interfaces.http.api.authentications.dto.request.RefreshAuthenticationRequest;
+import forum.api.java.interfaces.http.api.authentications.dto.request.ResetPasswordLinkRequest;
 import forum.api.java.interfaces.http.api.authentications.dto.request.UserLoginRequest;
 import forum.api.java.interfaces.http.api.authentications.dto.response.UserLoginResponse;
 import org.junit.jupiter.api.*;
@@ -229,6 +230,70 @@ public class AuthenticationsControllerTest {
                     .andExpect(jsonPath("$.message").exists());
 
             Mockito.verify(googleCaptchaService, Mockito.times(1)).verifyToken(captchaToken);
+        }
+    }
+
+    @Nested
+    @DisplayName("POST /api/authentications/request-reset-password-link")
+    public class RequestResetPasswordLinkAction {
+        private final String urlTemplate = "/api/authentications/request-reset-password-link";
+
+        @Test
+        @DisplayName("should return 400 if the email is invalid")
+        public void shouldReturn400IfTheEmailIsInvalid() throws Exception {
+            String invalidEmail = "Invalid Email";
+
+            ResetPasswordLinkRequest request = new ResetPasswordLinkRequest(invalidEmail, captchaToken);
+
+            mockMvc.perform(post(urlTemplate)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("User-Agent", "JUnit")
+                            .header("X-Forwarded-For", "127.0.0.1")
+                            .content(objectMapper.writeValueAsString(request)).with(csrf()))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.message").value("Email is invalid"));
+        }
+
+        @Test
+        @DisplayName("should return 400 if the ip address is invalid")
+        public void shouldReturn400IfTheIpAddressIsInvalid() throws Exception {
+            ResetPasswordLinkRequest request = new ResetPasswordLinkRequest(email, captchaToken);
+
+            mockMvc.perform(post(urlTemplate)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("User-Agent", "JUnit")
+                            .header("X-Forwarded-For", "Invalid Ip Address")
+                            .content(objectMapper.writeValueAsString(request)).with(csrf()))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.message").value("IP address is invalid"));
+        }
+
+        @Test
+        @DisplayName("should return 200 if the email is not found")
+        public void shouldReturn200IfTheEmailIsNotFound() throws Exception {
+            ResetPasswordLinkRequest request = new ResetPasswordLinkRequest("example2@email.com", captchaToken);
+
+            mockMvc.perform(post(urlTemplate)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("User-Agent", "JUnit")
+                            .header("X-Forwarded-For", "127.0.0.1")
+                            .content(objectMapper.writeValueAsString(request)).with(csrf()))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.message").value("If the email is registered, we will send password reset instructions"));
+        }
+
+        @Test
+        @DisplayName("should return 200 if the email is found")
+        public void shouldReturn200IfTheEmailIsFound() throws Exception {
+            ResetPasswordLinkRequest request = new ResetPasswordLinkRequest(email, captchaToken);
+
+            mockMvc.perform(post(urlTemplate)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("User-Agent", "JUnit")
+                            .header("X-Forwarded-For", "127.0.0.1")
+                            .content(objectMapper.writeValueAsString(request)).with(csrf()))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.message").value("If the email is registered, we will send password reset instructions"));
         }
     }
 }

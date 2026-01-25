@@ -12,6 +12,8 @@ import forum.api.java.infrastructure.persistence.users.entity.UserJpaEntity;
 import forum.api.java.infrastructure.persistence.users.mapper.UserJpaMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public class UserRepositoryImpl implements UserRepository {
     private final UserJpaRepository userJpaRepository;
@@ -69,7 +71,8 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public UserDetail getUserByEmail(String email) {
-        return userJpaRepository.findByEmail(email).map(UserJpaMapper::toUserDetailDomain).orElseThrow(() -> new NotFoundException("USER_REPOSITORY_IMPL.USER_NOT_FOUND"));
+    public Optional<UserDetail> getUserByEmailForgotPassword(String email) {
+        return userJpaRepository.findByEmail(email)
+                .map(UserJpaMapper::toUserDetailDomain);
     }
 }

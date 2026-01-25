@@ -5,6 +5,8 @@ import forum.api.java.domain.user.entity.RegisteredUser;
 import forum.api.java.domain.user.entity.UserDetail;
 import forum.api.java.domain.user.entity.UserProfile;
 
+import java.util.Optional;
+
 public interface UserRepository {
     default RegisteredUser addUser(RegisterUser registerUser) {
         throw new UnsupportedOperationException("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED");
@@ -38,7 +40,7 @@ public interface UserRepository {
         throw new UnsupportedOperationException("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED");
     }
 
-    default UserDetail getUserByEmail(String email) {
+    default Optional<UserDetail> getUserByEmailForgotPassword(String email) {
         throw new UnsupportedOperationException("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED");
     }
 }

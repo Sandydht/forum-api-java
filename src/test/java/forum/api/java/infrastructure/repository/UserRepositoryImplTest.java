@@ -16,6 +16,8 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @DataJpaTest
 @Transactional
 @Rollback
@@ -287,39 +289,36 @@ public class UserRepositoryImplTest {
     }
 
     @Nested
-    @DisplayName("getUserByEmail function")
-    public class GetUserByEmailFunction {
+    @DisplayName("getUserByEmailForgotPassword function")
+    public class GetUserByEmailForgotPasswordFunction {
         @Test
-        @DisplayName("should throw NotFoundException when user not found")
-        public void shouldThrowNotFoundExceptionWhenUserNotFound() {
+        @DisplayName("should not throw exception if the user is not found")
+        public void shouldNotThrowExceptionIfTheUserIsNotFound() {
             String email = "example@email.com";
-
-            NotFoundException exception = Assertions.assertThrows(
-                    NotFoundException.class,
-                    () -> userRepositoryImpl.getUserByEmail(email)
-            );
-
-            Assertions.assertEquals("USER_REPOSITORY_IMPL.USER_NOT_FOUND", exception.getMessage());
+            Assertions.assertDoesNotThrow(() -> userRepositoryImpl.getUserByEmailForgotPassword(email));
         }
 
         @Test
-        @DisplayName("should return user detail correctly when user exists")
-        public void shouldReturnUserDetailCorrectlyWhenUserExists() {
+        @DisplayName("should return user object correctly")
+        public void shouldReturnUserObjectCorrectly() {
             String username = "user";
             String email = "example@email.com";
-            String phoneNumber = "6281123123123";
+            String phoneNumber = "+6281123123123";
             String fullname = "Fullname";
             String password = "password";
 
             UserJpaEntity userJpaEntity = new UserJpaEntity(null, username, email, phoneNumber, fullname, password);
-            UserJpaEntity savedUser = userJpaRepository.save(userJpaEntity);
+            userJpaRepository.save(userJpaEntity);
 
-            UserDetail result = userRepositoryImpl.getUserByEmail(savedUser.getEmail());
-
-            Assertions.assertEquals(savedUser.getId(), result.getId());
-            Assertions.assertEquals(savedUser.getUsername(), result.getUsername());
-            Assertions.assertEquals(savedUser.getFullname(), result.getFullname());
-            Assertions.assertEquals(savedUser.getPassword(), result.getPassword());
+            userRepositoryImpl.getUserByEmailForgotPassword(email)
+                    .ifPresent(user -> {
+                        Assertions.assertNotNull(user.getId());
+                        Assertions.assertEquals(username, user.getUsername());
+                        Assertions.assertEquals(email, user.getEmail());
+                        Assertions.assertEquals(phoneNumber, user.getPhoneNumber());
+                        Assertions.assertEquals(fullname, user.getFullname());
+                        Assertions.assertEquals(password, user.getPassword());
+                    });
         }
     }
 }

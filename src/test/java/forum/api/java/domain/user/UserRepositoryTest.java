@@ -59,10 +59,10 @@ public class UserRepositoryTest {
         );
         Assertions.assertEquals("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED", verifyAvailablePhoneNumberError.getMessage());
 
-        UnsupportedOperationException getUserByEmailError = Assertions.assertThrows(
+        UnsupportedOperationException getUserByEmailForgotPasswordError = Assertions.assertThrows(
                 UnsupportedOperationException.class,
-                () -> userRepository.getUserByEmail(null)
+                () -> userRepository.getUserByEmailForgotPassword(null)
         );
-        Assertions.assertEquals("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED", getUserByEmailError.getMessage());
+        Assertions.assertEquals("USER_REPOSITORY.METHOD_NOT_IMPLEMENTED", getUserByEmailForgotPasswordError.getMessage());
     }
 }

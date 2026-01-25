@@ -4,7 +4,6 @@ import forum.api.java.applications.usecase.LoginUserUseCase;
 import forum.api.java.applications.usecase.LogoutUserUseCase;
 import forum.api.java.applications.usecase.RefreshAuthenticationUseCase;
 import forum.api.java.applications.usecase.RequestResetPasswordLinkUseCase;
-import forum.api.java.domain.authentication.entity.AddedPasswordResetToken;
 import forum.api.java.domain.authentication.entity.LoginUser;
 import forum.api.java.domain.authentication.entity.NewAuthentication;
 import forum.api.java.domain.authentication.entity.RequestResetPasswordLink;
@@ -15,7 +14,6 @@ import forum.api.java.interfaces.http.api.authentications.dto.response.RefreshAu
 import forum.api.java.interfaces.http.api.authentications.dto.response.ResetPasswordLinkResponse;
 import forum.api.java.interfaces.http.api.authentications.dto.response.UserLoginResponse;
 import forum.api.java.interfaces.http.api.authentications.dto.response.UserLogoutResponse;
-import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -63,24 +61,13 @@ public class AuthenticationsController {
     }
 
     @PostMapping("/request-reset-password-link")
-    public ResetPasswordLinkResponse requestResetPasswordLinkAction(@RequestBody ResetPasswordLinkRequest request, HttpServletRequest httpRequest) throws MessagingException {
+    public ResetPasswordLinkResponse requestResetPasswordLinkAction(@RequestBody ResetPasswordLinkRequest request, HttpServletRequest httpRequest) {
         String ip = (String) httpRequest.getAttribute("clientIp");
         String userAgent = (String) httpRequest.getAttribute("userAgent");
 
         RequestResetPasswordLink requestResetPasswordLink = new RequestResetPasswordLink(request.getEmail(), ip, userAgent, request.getCaptchaToken());
-        AddedPasswordResetToken addedPasswordResetToken = requestResetPasswordLinkUseCase.execute(requestResetPasswordLink);
+        requestResetPasswordLinkUseCase.execute(requestResetPasswordLink);
 
-        return new ResetPasswordLinkResponse(
-                addedPasswordResetToken.getId(),
-                addedPasswordResetToken.getUserId(),
-                addedPasswordResetToken.getTokenHash(),
-                addedPasswordResetToken.getExpiresAt(),
-                addedPasswordResetToken.getUsedAt(),
-                addedPasswordResetToken.getIpRequest(),
-                addedPasswordResetToken.getUserAgent(),
-                addedPasswordResetToken.getCreatedAt(),
-                addedPasswordResetToken.getUpdatedAt(),
-                addedPasswordResetToken.getDeletedAt()
-        );
+        return new ResetPasswordLinkResponse("If the email is registered, we will send password reset instructions");
     }
 }

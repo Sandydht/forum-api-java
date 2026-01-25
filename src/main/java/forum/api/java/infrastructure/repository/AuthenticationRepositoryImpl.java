@@ -75,14 +75,13 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
     }
 
     @Override
-    public AddedPasswordResetToken addPasswordResetToken(String userId, String tokenHash, String ipRequest, String userAgent) {
-        UserJpaEntity userJpaEntity = userJpaRepository
-                .findById(userId)
-                .orElseThrow(() -> new NotFoundException("AUTHENTICATION_REPOSITORY_IMPL.USER_NOT_FOUND"));
-
-        Instant expiresAt = Instant.now().plus(15, ChronoUnit.MINUTES);
-        PasswordResetTokenJpaEntity passwordResetTokenJpaEntity = new PasswordResetTokenJpaEntity(userJpaEntity, tokenHash, expiresAt, null, ipRequest, userAgent);
-        PasswordResetTokenJpaEntity savedPasswordResetToken = passwordResetTokenJpaRepository.save(passwordResetTokenJpaEntity);
-        return PasswordResetTokenJpaMapper.toAddedPasswordResetTokenDomain(savedPasswordResetToken);
+    public void addPasswordResetToken(String email, String tokenHash, String ipRequest, String userAgent) {
+        userJpaRepository
+                .findByEmail(email)
+                .ifPresent(user -> {
+                    Instant expiresAt = Instant.now().plus(15, ChronoUnit.MINUTES);
+                    PasswordResetTokenJpaEntity passwordResetTokenJpaEntity = new PasswordResetTokenJpaEntity(user, tokenHash, expiresAt, null, ipRequest, userAgent);
+                    passwordResetTokenJpaRepository.save(passwordResetTokenJpaEntity);
+                });
     }
 }

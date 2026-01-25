@@ -131,16 +131,16 @@ public class UseCaseConfig {
     @Bean
     public RequestResetPasswordLinkUseCase requestResetPasswordLinkUseCase(
             GoogleCaptchaService googleCaptchaService,
-            UserRepositoryImpl userRepositoryImpl,
             PasswordHashImpl passwordHashImpl,
             AuthenticationRepositoryImpl authenticationRepositoryImpl,
+            UserRepositoryImpl userRepositoryImpl,
             EmailServiceImpl emailServiceImpl
     ) {
         return new RequestResetPasswordLinkUseCase(
                 googleCaptchaService,
-                userRepositoryImpl,
                 passwordHashImpl,
                 authenticationRepositoryImpl,
+                userRepositoryImpl,
                 emailServiceImpl
         );
     }

@@ -41,6 +41,10 @@ public class DomainErrorTranslator {
         // THREAD_REPOSITORY_IMPL
         directories.put("THREAD_REPOSITORY_IMPL.USER_NOT_FOUND", new NotFoundException("User not found"));
         directories.put("THREAD_REPOSITORY_IMPL.THREAD_NOT_FOUND", new NotFoundException("Thread not found"));
+
+        // REQUEST_RESET_PASSWORD_LINK
+        directories.put("REQUEST_RESET_PASSWORD_LINK.EMAIL_IS_INVALID", new InvariantException("Email is invalid"));
+        directories.put("REQUEST_RESET_PASSWORD_LINK.IP_ADDRESS_IS_INVALID", new InvariantException("IP address is invalid"));
     }
 
     public RuntimeException translate(Exception error) {

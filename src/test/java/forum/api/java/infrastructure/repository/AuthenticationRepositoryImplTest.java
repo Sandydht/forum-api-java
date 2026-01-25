@@ -2,13 +2,12 @@ package forum.api.java.infrastructure.repository;
 
 import forum.api.java.commons.exceptions.NotFoundException;
 import forum.api.java.infrastructure.persistence.authentications.AuthenticationJpaRepository;
+import forum.api.java.infrastructure.persistence.authentications.PasswordResetTokenJpaRepository;
+import forum.api.java.infrastructure.persistence.authentications.entity.PasswordResetTokenJpaEntity;
 import forum.api.java.infrastructure.persistence.authentications.entity.RefreshTokenJpaEntity;
 import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
 import forum.api.java.infrastructure.persistence.users.entity.UserJpaEntity;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
@@ -18,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
 
 @DataJpaTest
@@ -35,6 +35,9 @@ public class AuthenticationRepositoryImplTest {
 
     @Autowired
     private AuthenticationRepositoryImpl authenticationRepositoryImpl;
+
+    @Autowired
+    private PasswordResetTokenJpaRepository passwordResetTokenJpaRepository;
 
     @Nested
     @DisplayName("addToken function")
@@ -194,6 +197,54 @@ public class AuthenticationRepositoryImplTest {
             authenticationRepositoryImpl.deleteTokenByUserId(savedUser.getId());
 
             Assertions.assertTrue(authenticationJpaRepository.findFirstByUserId(savedUser.getId()).isEmpty());
+        }
+    }
+
+    @Nested
+    @DisplayName("addPasswordResetToken function")
+    public class AddPasswordResetTokenFunction {
+        private UserJpaEntity savedUser;
+
+        @BeforeEach
+        public void setUp() {
+            String username = "user";
+            String email = "example@email.com";
+            String phoneNumber = "+6281123123123";
+            String fullname = "Fullname";
+            String password = "password";
+
+            UserJpaEntity userJpaEntity = new UserJpaEntity(null, username, email, phoneNumber, fullname, password);
+            savedUser = userJpaRepository.save(userJpaEntity);
+        }
+
+        @Test
+        @DisplayName("should persist password reset token if the user is found")
+        public void shouldPersistPasswordResetTokenIfTheUserIsFound() {
+            String tokenHash = "token-hash";
+            String ipAddress = "127.0.0.1";
+            String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36";
+
+            authenticationRepositoryImpl.addPasswordResetToken(savedUser.getEmail(), tokenHash, ipAddress, userAgent);
+
+            passwordResetTokenJpaRepository.findByUserId(savedUser.getId())
+                    .ifPresent(resetToken -> {
+                        Assertions.assertEquals(savedUser.getId(), resetToken.getUser().getId());
+                        Assertions.assertEquals(tokenHash, resetToken.getTokenHash());
+                        Assertions.assertEquals(ipAddress, resetToken.getIpRequest());
+                        Assertions.assertEquals(userAgent, resetToken.getUserAgent());
+                    });
+        }
+
+        @Test
+        @DisplayName("should not persist password reset token if the user is not found")
+        public void shouldNotPersistPasswordResetTokenIfTheUserIsNotFound() {
+            String tokenHash = "token-hash";
+            String ipAddress = "127.0.0.1";
+            String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36";
+
+            authenticationRepositoryImpl.addPasswordResetToken("example2@email.com", tokenHash, ipAddress, userAgent);
+
+            Assertions.assertEquals(Optional.empty(), passwordResetTokenJpaRepository.findByUserId(savedUser.getId()));
         }
     }
 }
