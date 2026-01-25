@@ -1,4 +1,4 @@
-package forum.api.java.infrastructure.persistence.passwordresettokens.entity;
+package forum.api.java.infrastructure.persistence.authentications.entity;
 
 import forum.api.java.infrastructure.persistence.users.entity.UserJpaEntity;
 import jakarta.persistence.*;

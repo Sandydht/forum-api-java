@@ -18,9 +18,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.security.SecureRandom;
 import java.time.Instant;
-import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -86,7 +84,7 @@ public class RequestResetPasswordLinkUseCaseTest {
                 updatedAt,
                 deletedAt
         ));
-        Mockito.doNothing().when(emailService).sendVerificationEmail(email, fullname, emailLink);
+        Mockito.doNothing().when(emailService).sendForgotPasswordEmail(email, fullname, emailLink);
 
         AddedPasswordResetToken result = requestResetPasswordLinkUseCase.execute(requestResetPasswordLink);
 
@@ -105,6 +103,6 @@ public class RequestResetPasswordLinkUseCaseTest {
         Mockito.verify(userRepository, Mockito.times(1)).getUserByEmail(requestResetPasswordLink.getEmail());
         Mockito.verify(passwordHash, Mockito.times(1)).hashPassword(Mockito.anyString());
         Mockito.verify(authenticationRepository, Mockito.times(1)).addPasswordResetToken(userId, tokenHash, requestResetPasswordLink.getIpRequest(), requestResetPasswordLink.getUserAgent());
-        Mockito.verify(emailService, Mockito.times(1)).sendVerificationEmail(email, fullname, emailLink);
+        Mockito.verify(emailService, Mockito.times(1)).sendForgotPasswordEmail(email, fullname, emailLink);
     }
 }

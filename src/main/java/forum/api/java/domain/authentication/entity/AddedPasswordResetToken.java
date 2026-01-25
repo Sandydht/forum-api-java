@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public class AddedPasswordResetToken {
     private static final String notContainNeededPropertyErrorMessage = "ADDED_PASSWORD_RESET_TOKEN.NOT_CONTAIN_NEEDED_PROPERTY";
-    private static final String ipv4InvalidErrorMessage = "ADDED_PASSWORD_RESET_TOKEN.IP_V4_IS_INVALID";
+    private static final String ipInvalidErrorMessage = "ADDED_PASSWORD_RESET_TOKEN.IP_ADDRESS_IS_INVALID";
 
     private final String id;
     private final String userId;
@@ -55,7 +55,7 @@ public class AddedPasswordResetToken {
         ValidationUtils.requireNonNull(expiresAt, notContainNeededPropertyErrorMessage);
         ValidationUtils.requireNonNull(createdAt, notContainNeededPropertyErrorMessage);
         ValidationUtils.requireNonNull(updatedAt, notContainNeededPropertyErrorMessage);
-        ValidationUtils.ipv4Validation(ipRequest, ipv4InvalidErrorMessage);
+        ValidationUtils.validateIpAddress(ipRequest, ipInvalidErrorMessage);
     }
 
     public String getId() {

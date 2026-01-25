@@ -1,5 +1,6 @@
 package forum.api.java.domain.utils;
 
+import java.net.InetAddress;
 import java.util.regex.Pattern;
 
 public class ValidationUtils {
@@ -8,7 +9,6 @@ public class ValidationUtils {
     private static final Pattern PASSWORD_MUST_NOT_CONTAIN_SPACE_PATTERN = Pattern.compile(".*\\s.*");
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
     private static final Pattern PHONE_NUMBER_PATTERN = Pattern.compile("^(?:\\+62|62|0)8[1-9][0-9]{6,10}$");
-    private static final Pattern IPV4_PATTERN = Pattern.compile("^([0-9]{1,3}\\.){3}[0-9]{1,3}$");
 
     public static void requireNotBlank(String value, String message) {
         if (value == null || value.isBlank()) {
@@ -64,8 +64,10 @@ public class ValidationUtils {
         }
     }
 
-    public static void ipv4Validation(String ipv4, String message) {
-        if (!IPV4_PATTERN.matcher(ipv4).matches()) {
+    public static void validateIpAddress(String ip, String message) {
+        try {
+            InetAddress.getByName(ip);
+        } catch (Exception e) {
             throw new IllegalArgumentException(message);
         }
     }

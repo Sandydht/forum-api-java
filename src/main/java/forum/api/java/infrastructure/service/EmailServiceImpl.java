@@ -20,20 +20,20 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendVerificationEmail(String to, String name, String link) throws MessagingException {
+    public void sendForgotPasswordEmail(String to, String name, String link) throws MessagingException {
         Context context = new Context();
         context.setVariable("name", name);
         context.setVariable("link", link);
 
-        String html = templateEngine.process("email/verification", context);
+        String html = templateEngine.process("email/forgot-password", context);
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
         helper.setTo(to);
-        helper.setSubject("Verifikasi Akun");
+        helper.setSubject("Reset Password");
         helper.setText(html, true);
-        helper.setFrom("your_email@gmail.com");
+        helper.setFrom("forum_app@gmail.com");
 
         mailSender.send(message);
     }

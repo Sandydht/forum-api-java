@@ -263,17 +263,17 @@ public class ValidationUtilsTest {
     }
 
     @Nested
-    @DisplayName("ipv4Validation function")
-    public class Ipv4ValidationFunction {
+    @DisplayName("validateIpAddress function")
+    public class ValidateIpAddressFunction {
         @Test
         @DisplayName("should throw IllegalArgumentException if the ip request is invalid")
         public void shouldThrowIllegalArgumentExceptionIfTheIpRequestIsInvalid() {
             String ipRequest = "Invalid IP Request";
-            String errorMessage = "IP_REQUEST_IS_INVALID";
+            String errorMessage = "IP_ADDRESS_IS_INVALID";
 
             IllegalArgumentException exception = Assertions.assertThrows(
                     IllegalArgumentException.class,
-                    () -> ValidationUtils.ipv4Validation(ipRequest, errorMessage)
+                    () -> ValidationUtils.validateIpAddress(ipRequest, errorMessage)
             );
 
             Assertions.assertEquals(errorMessage, exception.getMessage());
@@ -283,9 +283,9 @@ public class ValidationUtilsTest {
         @DisplayName("should not throw IllegalArgumentException if the ip request is valid")
         public void shouldNotThrowIllegalArgumentExceptionIfTheIpRequestIsValid() {
             String ipRequest = "192.168.1.1";
-            String errorMessage = "IP_REQUEST_IS_INVALID";
+            String errorMessage = "IP_ADDRESS_IS_INVALID";
 
-            Assertions.assertDoesNotThrow(() -> ValidationUtils.ipv4Validation(ipRequest, errorMessage));
+            Assertions.assertDoesNotThrow(() -> ValidationUtils.validateIpAddress(ipRequest, errorMessage));
         }
     }
 }

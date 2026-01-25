@@ -72,7 +72,7 @@ public class AddedPasswordResetTokenTest {
             new AddedPasswordResetToken(id, userId, tokenHash, expiresAt, usedAt, ipRequest, userAgent, createdAt, updatedAt, deletedAt);
         });
 
-        Assertions.assertEquals("ADDED_PASSWORD_RESET_TOKEN.IP_V4_IS_INVALID", exception.getMessage());
+        Assertions.assertEquals("ADDED_PASSWORD_RESET_TOKEN.IP_ADDRESS_IS_INVALID", exception.getMessage());
     }
 
     @Test

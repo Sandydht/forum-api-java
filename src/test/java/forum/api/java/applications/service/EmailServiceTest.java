@@ -11,10 +11,10 @@ public class EmailServiceTest {
     @Test
     @DisplayName("should throw error when invoke abstract behavior")
     public void shouldThrowErrorWhenInvokeAbstractBehavior() {
-        UnsupportedOperationException sendVerificationEmailError = Assertions.assertThrows(
+        UnsupportedOperationException sendForgotPasswordEmailError = Assertions.assertThrows(
                 UnsupportedOperationException.class,
-                () -> emailService.sendVerificationEmail(null, null, null)
+                () -> emailService.sendForgotPasswordEmail(null, null, null)
         );
-        Assertions.assertEquals("EMAIL_SERVICE.METHOD_NOT_IMPLEMENTED", sendVerificationEmailError.getMessage());
+        Assertions.assertEquals("EMAIL_SERVICE.METHOD_NOT_IMPLEMENTED", sendForgotPasswordEmailError.getMessage());
     }
 }

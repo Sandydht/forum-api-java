@@ -52,7 +52,7 @@ public class RequestResetPasswordLinkUseCase {
         );
 
         String emailLink = "http://localhost:5173/forgot-password?token=" + tokenHash;
-        emailService.sendVerificationEmail(userDetail.getEmail(), userDetail.getFullname(), emailLink);
+        emailService.sendForgotPasswordEmail(userDetail.getEmail(), userDetail.getFullname(), emailLink);
 
         return result;
     }

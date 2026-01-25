@@ -67,7 +67,7 @@ public class RequestResetPasswordLinkTest {
             new RequestResetPasswordLink(email, ipRequest, userAgent, captchaToken);
         });
 
-        Assertions.assertEquals("REQUEST_RESET_PASSWORD_LINK.IP_V4_IS_INVALID", exception.getMessage());
+        Assertions.assertEquals("REQUEST_RESET_PASSWORD_LINK.IP_ADDRESS_IS_INVALID", exception.getMessage());
     }
 
     @Test

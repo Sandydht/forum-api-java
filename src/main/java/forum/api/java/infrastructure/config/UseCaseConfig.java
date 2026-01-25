@@ -1,17 +1,14 @@
 package forum.api.java.infrastructure.config;
 
-import forum.api.java.applications.security.AuthenticationTokenManager;
 import forum.api.java.applications.usecase.*;
-import forum.api.java.domain.authentication.AuthenticationRepository;
-import forum.api.java.domain.thread.ThreadRepository;
-import forum.api.java.domain.threadcomment.ThreadCommentRepository;
-import forum.api.java.domain.user.UserRepository;
 import forum.api.java.infrastructure.repository.AuthenticationRepositoryImpl;
+import forum.api.java.infrastructure.repository.ThreadCommentRepositoryImpl;
 import forum.api.java.infrastructure.repository.ThreadRepositoryImpl;
 import forum.api.java.infrastructure.repository.UserRepositoryImpl;
 import forum.api.java.infrastructure.security.AuthenticationTokenManagerImpl;
 import forum.api.java.infrastructure.security.GoogleCaptchaService;
 import forum.api.java.infrastructure.security.PasswordHashImpl;
+import forum.api.java.infrastructure.service.EmailServiceImpl;
 import forum.api.java.infrastructure.service.PhoneNumberNormalizerServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,7 +48,9 @@ public class UseCaseConfig {
     }
 
     @Bean
-    public CleanupExpiredTokenUseCase cleanupExpiredTokenUseCase(AuthenticationRepositoryImpl authenticationRepositoryImpl) {
+    public CleanupExpiredTokenUseCase cleanupExpiredTokenUseCase(
+            AuthenticationRepositoryImpl authenticationRepositoryImpl
+    ) {
         return new CleanupExpiredTokenUseCase(authenticationRepositoryImpl);
     }
 
@@ -68,52 +67,81 @@ public class UseCaseConfig {
 
     @Bean
     public RefreshAuthenticationUseCase refreshAuthenticationUseCase(
-            AuthenticationRepository authenticationRepository,
-            AuthenticationTokenManager authenticationTokenManager
+            AuthenticationRepositoryImpl authenticationRepositoryImpl,
+            AuthenticationTokenManagerImpl authenticationTokenManagerImpl
     ) {
-        return new RefreshAuthenticationUseCase(authenticationRepository, authenticationTokenManager);
+        return new RefreshAuthenticationUseCase(authenticationRepositoryImpl, authenticationTokenManagerImpl);
     }
 
     @Bean
-    public LogoutUserUseCase logoutUserUseCase(AuthenticationRepository authenticationRepository) {
-        return new LogoutUserUseCase(authenticationRepository);
+    public LogoutUserUseCase logoutUserUseCase(
+            AuthenticationRepositoryImpl authenticationRepositoryImpl
+    ) {
+        return new LogoutUserUseCase(authenticationRepositoryImpl);
     }
 
     @Bean
-    public GetThreadDetailUseCase getThreadDetailUseCase(ThreadRepository threadRepository) {
-        return new GetThreadDetailUseCase(threadRepository);
+    public GetThreadDetailUseCase getThreadDetailUseCase(
+            ThreadRepositoryImpl threadRepositoryImpl
+    ) {
+        return new GetThreadDetailUseCase(threadRepositoryImpl);
     }
 
     @Bean
-    public GetThreadPaginationListUseCase getThreadPaginationListUseCase(ThreadRepository threadRepository) {
-        return new GetThreadPaginationListUseCase(threadRepository);
+    public GetThreadPaginationListUseCase getThreadPaginationListUseCase(
+            ThreadRepositoryImpl threadRepositoryImpl
+    ) {
+        return new GetThreadPaginationListUseCase(threadRepositoryImpl);
     }
 
     @Bean
-    public UpdateThreadUseCase updateThreadUseCase(ThreadRepository threadRepository) {
-        return new UpdateThreadUseCase(threadRepository);
+    public UpdateThreadUseCase updateThreadUseCase(
+            ThreadRepositoryImpl threadRepositoryImpl
+    ) {
+        return new UpdateThreadUseCase(threadRepositoryImpl);
     }
 
     @Bean
-    public DeleteThreadUseCase deleteThreadUseCase(ThreadRepository threadRepository) {
-        return new DeleteThreadUseCase(threadRepository);
+    public DeleteThreadUseCase deleteThreadUseCase(
+            ThreadRepositoryImpl threadRepositoryImpl
+    ) {
+        return new DeleteThreadUseCase(threadRepositoryImpl);
     }
 
     @Bean
-    public GetUserProfileUseCase getUserProfileUseCase(UserRepository userRepository) {
-        return new GetUserProfileUseCase(userRepository);
+    public GetUserProfileUseCase getUserProfileUseCase(
+            UserRepositoryImpl userRepositoryImpl
+    ) {
+        return new GetUserProfileUseCase(userRepositoryImpl);
     }
 
     @Bean
     public AddThreadCommentUseCase addThreadCommentUseCase(
-            ThreadRepository threadRepository,
-            UserRepository userRepository,
-            ThreadCommentRepository threadCommentRepository
+            ThreadRepositoryImpl threadRepositoryImpl,
+            UserRepositoryImpl userRepositoryImpl,
+            ThreadCommentRepositoryImpl threadCommentRepositoryImpl
     ) {
         return new AddThreadCommentUseCase(
-                threadRepository,
-                userRepository,
-                threadCommentRepository
+                threadRepositoryImpl,
+                userRepositoryImpl,
+                threadCommentRepositoryImpl
+        );
+    }
+
+    @Bean
+    public RequestResetPasswordLinkUseCase requestResetPasswordLinkUseCase(
+            GoogleCaptchaService googleCaptchaService,
+            UserRepositoryImpl userRepositoryImpl,
+            PasswordHashImpl passwordHashImpl,
+            AuthenticationRepositoryImpl authenticationRepositoryImpl,
+            EmailServiceImpl emailServiceImpl
+    ) {
+        return new RequestResetPasswordLinkUseCase(
+                googleCaptchaService,
+                userRepositoryImpl,
+                passwordHashImpl,
+                authenticationRepositoryImpl,
+                emailServiceImpl
         );
     }
 }
