@@ -22,5 +22,11 @@ public class PasswordHashTest {
                 () -> passwordHash.passwordCompare("", "")
         );
         Assertions.assertEquals("PASSWORD_HASH.METHOD_NOT_IMPLEMENTED", passwordCompareError.getMessage());
+
+        UnsupportedOperationException hashTokenError = Assertions.assertThrows(
+                UnsupportedOperationException.class,
+                () -> passwordHash.hashToken(null)
+        );
+        Assertions.assertEquals("PASSWORD_HASH.METHOD_NOT_IMPLEMENTED", hashTokenError.getMessage());
     }
 }

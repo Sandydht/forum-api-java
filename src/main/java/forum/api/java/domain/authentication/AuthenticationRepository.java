@@ -1,7 +1,5 @@
 package forum.api.java.domain.authentication;
 
-import forum.api.java.domain.authentication.entity.AddedPasswordResetToken;
-
 import java.time.Instant;
 
 public interface AuthenticationRepository {
@@ -26,6 +24,10 @@ public interface AuthenticationRepository {
     }
 
     default void addPasswordResetToken(String email, String tokenHash, String ipRequest, String userAgent) {
+        throw new UnsupportedOperationException("AUTHENTICATION_REPOSITORY.METHOD_NOT_IMPLEMENTED");
+    }
+
+    default void checkAvailabilityPasswordResetToken(String tokenHash) {
         throw new UnsupportedOperationException("AUTHENTICATION_REPOSITORY.METHOD_NOT_IMPLEMENTED");
     }
 }

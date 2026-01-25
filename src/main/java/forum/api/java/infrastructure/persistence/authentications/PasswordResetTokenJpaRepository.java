@@ -9,4 +9,5 @@ import java.util.Optional;
 @Transactional
 public interface PasswordResetTokenJpaRepository extends JpaRepository<PasswordResetTokenJpaEntity, String> {
     Optional<PasswordResetTokenJpaEntity> findByUserId(String userId);
+    Optional<PasswordResetTokenJpaEntity> findByTokenHash(String tokenHash);
 }

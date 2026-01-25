@@ -1,5 +1,6 @@
 package forum.api.java.infrastructure.repository;
 
+import forum.api.java.commons.exceptions.InvariantException;
 import forum.api.java.commons.exceptions.NotFoundException;
 import forum.api.java.infrastructure.persistence.authentications.AuthenticationJpaRepository;
 import forum.api.java.infrastructure.persistence.authentications.PasswordResetTokenJpaRepository;
@@ -27,6 +28,8 @@ import java.util.UUID;
 @Import(AuthenticationRepositoryImpl.class)
 @DisplayName("AuthenticationRepositoryImpl")
 public class AuthenticationRepositoryImplTest {
+    private UserJpaEntity savedUser;
+
     @Autowired
     private UserJpaRepository userJpaRepository;
 
@@ -39,6 +42,17 @@ public class AuthenticationRepositoryImplTest {
     @Autowired
     private PasswordResetTokenJpaRepository passwordResetTokenJpaRepository;
 
+    @BeforeEach
+    public void setUp() {
+        String username = "user";
+        String email = "example@email.com";
+        String phoneNumber = "6281123123123";
+        String fullname = "Fullname";
+        String password = "password";
+        UserJpaEntity userJpaEntity = new UserJpaEntity(null, username, email, phoneNumber, fullname, password);
+        savedUser = userJpaRepository.save(userJpaEntity);
+    }
+
     @Nested
     @DisplayName("addToken function")
     public class AddTokenFunction {
@@ -46,14 +60,7 @@ public class AuthenticationRepositoryImplTest {
         @DisplayName("should add token to database")
         public void testAddTokenToDatabase() {
             String username = "user";
-            String email = "example@email.com";
-            String phoneNumber = "6281123123123";
-            String fullname = "Fullname";
-            String password = "password";
             String fakeRefreshToken = "fake-refresh-token";
-
-            UserJpaEntity userJpaEntity = new UserJpaEntity(null, username, email, phoneNumber, fullname, password);
-            userJpaRepository.save(userJpaEntity);
 
             authenticationRepositoryImpl.addToken(username, fakeRefreshToken);
 
@@ -72,20 +79,12 @@ public class AuthenticationRepositoryImplTest {
         @Test
         @DisplayName("should delete expired tokens from database")
         public void testDeleteExpiredTokensFromDatabase() {
-            String username = "user";
-            String email = "example@email.com";
-            String phoneNumber = "6281123123123";
-            String fullname = "Fullname";
-            String password = "password";
-
             String expiredToken = "expired-token";
             String validToken = "valid-token";
             Instant now = Instant.now();
 
-            UserJpaEntity user = userJpaRepository.save(new UserJpaEntity(null, username, email, phoneNumber, fullname, password));
-
-            authenticationJpaRepository.save(new RefreshTokenJpaEntity(user, expiredToken, now.minus(Duration.ofDays(1))));
-            authenticationJpaRepository.save(new RefreshTokenJpaEntity(user, validToken, now.plus(Duration.ofDays(1))));
+            authenticationJpaRepository.save(new RefreshTokenJpaEntity(savedUser, expiredToken, now.minus(Duration.ofDays(1))));
+            authenticationJpaRepository.save(new RefreshTokenJpaEntity(savedUser, validToken, now.plus(Duration.ofDays(1))));
             authenticationRepositoryImpl.deleteExpiredTokens(now);
 
             Assertions.assertTrue(authenticationJpaRepository.findFirstByToken("expired-token").isEmpty());
@@ -112,15 +111,9 @@ public class AuthenticationRepositoryImplTest {
         @Test
         @DisplayName("should not throw NotFoundException when token is found")
         public void testShouldNotThrowNotFoundExceptionWhenTokenIsFound() {
-            String username = "username";
-            String email = "example@email.com";
-            String phoneNumber = "6281123123123";
-            String fullname = "Fullname";
-            String password = "password";
             String validToken = "valid-token";
 
-            UserJpaEntity user = userJpaRepository.save(new UserJpaEntity(null, username, email, phoneNumber, fullname, password));
-            authenticationJpaRepository.save(new RefreshTokenJpaEntity(user, validToken, Instant.now().plusSeconds(100)));
+            authenticationJpaRepository.save(new RefreshTokenJpaEntity(savedUser, validToken, Instant.now().plusSeconds(100)));
 
             Assertions.assertDoesNotThrow(() -> authenticationRepositoryImpl.checkAvailabilityToken(validToken));
         }
@@ -145,15 +138,7 @@ public class AuthenticationRepositoryImplTest {
         @Test
         @DisplayName("should delete token from database")
         public void testShouldDeleteTokenFromDatabase() {
-            String username = "user";
-            String email = "example@email.com";
-            String phoneNumber = "6281123123123";
-            String fullname = "Fullname";
-            String password = "password";
             String refreshToken = "refresh-token";
-
-            UserJpaEntity userJpaEntity = new UserJpaEntity(null, username, email, phoneNumber, fullname, password);
-            UserJpaEntity savedUser = userJpaRepository.save(userJpaEntity);
 
             RefreshTokenJpaEntity refreshTokenJpaEntity = new RefreshTokenJpaEntity(savedUser, refreshToken, Instant.now().plusSeconds(100));
             authenticationJpaRepository.save(refreshTokenJpaEntity);
@@ -182,15 +167,7 @@ public class AuthenticationRepositoryImplTest {
         @Test
         @DisplayName("should delete token from database")
         public void shouldDeleteTokenFromDatabase() {
-            String username = "user";
-            String email = "example@email.com";
-            String phoneNumber = "6281123123123";
-            String fullname = "Fullname";
-            String password = "password";
             String refreshToken = "refresh-token";
-
-            UserJpaEntity userJpaEntity = new UserJpaEntity(null, username, email, phoneNumber, fullname, password);
-            UserJpaEntity savedUser = userJpaRepository.save(userJpaEntity);
 
             RefreshTokenJpaEntity refreshTokenJpaEntity = new RefreshTokenJpaEntity(savedUser, refreshToken, Instant.now().plusSeconds(100));
             authenticationJpaRepository.save(refreshTokenJpaEntity);
@@ -203,20 +180,6 @@ public class AuthenticationRepositoryImplTest {
     @Nested
     @DisplayName("addPasswordResetToken function")
     public class AddPasswordResetTokenFunction {
-        private UserJpaEntity savedUser;
-
-        @BeforeEach
-        public void setUp() {
-            String username = "user";
-            String email = "example@email.com";
-            String phoneNumber = "+6281123123123";
-            String fullname = "Fullname";
-            String password = "password";
-
-            UserJpaEntity userJpaEntity = new UserJpaEntity(null, username, email, phoneNumber, fullname, password);
-            savedUser = userJpaRepository.save(userJpaEntity);
-        }
-
         @Test
         @DisplayName("should persist password reset token if the user is found")
         public void shouldPersistPasswordResetTokenIfTheUserIsFound() {
@@ -245,6 +208,78 @@ public class AuthenticationRepositoryImplTest {
             authenticationRepositoryImpl.addPasswordResetToken("example2@email.com", tokenHash, ipAddress, userAgent);
 
             Assertions.assertEquals(Optional.empty(), passwordResetTokenJpaRepository.findByUserId(savedUser.getId()));
+        }
+    }
+
+    @Nested
+    @DisplayName("checkAvailabilityPasswordResetToken function")
+    public class CheckAvailabilityPasswordResetTokenFunction {
+        @Test
+        @DisplayName("should throw exception when token not found")
+        public void shouldThrowExceptionWhenTokenNotFound() {
+            String tokenHash = "not-found-token-hash";
+
+            InvariantException exception = Assertions.assertThrows(
+                    InvariantException.class,
+                    () -> authenticationRepositoryImpl.checkAvailabilityPasswordResetToken(tokenHash)
+            );
+
+            Assertions.assertEquals("AUTHENTICATION_REPOSITORY_IMPL.RESET_PASSWORD_LINK_IS_INVALID_OR_HAS_EXPIRED", exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("should throw exception when token expired")
+        public void shouldThrowExceptionWhenTokenExpired() {
+            String tokenHash = "token-hash";
+            Instant expiresAt = Instant.now().minusSeconds(60);
+            Instant usedAt = null;
+            String ipRequest = "127.0.0.1";
+            String userAgent = "Google Chrome";
+
+            PasswordResetTokenJpaEntity passwordResetTokenJpaEntity = new PasswordResetTokenJpaEntity(savedUser, tokenHash, expiresAt, usedAt, ipRequest, userAgent);
+            PasswordResetTokenJpaEntity savedPasswordResetToken = passwordResetTokenJpaRepository.save(passwordResetTokenJpaEntity);
+
+            InvariantException exception = Assertions.assertThrows(
+                    InvariantException.class,
+                    () -> authenticationRepositoryImpl.checkAvailabilityPasswordResetToken(savedPasswordResetToken.getTokenHash())
+            );
+
+            Assertions.assertEquals("AUTHENTICATION_REPOSITORY_IMPL.RESET_PASSWORD_LINK_IS_INVALID_OR_HAS_EXPIRED", exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("should throw exception when token already used")
+        public void shouldThrowExceptionWhenTokenAlreadyUsed() {
+            String tokenHash = "token-hash";
+            Instant expiresAt = Instant.now().plusSeconds(3600);
+            Instant usedAt = Instant.now();
+            String ipRequest = "127.0.0.1";
+            String userAgent = "Google Chrome";
+
+            PasswordResetTokenJpaEntity passwordResetTokenJpaEntity = new PasswordResetTokenJpaEntity(savedUser, tokenHash, expiresAt, usedAt, ipRequest, userAgent);
+            PasswordResetTokenJpaEntity savedPasswordResetToken = passwordResetTokenJpaRepository.save(passwordResetTokenJpaEntity);
+
+            InvariantException exception = Assertions.assertThrows(
+                    InvariantException.class,
+                    () -> authenticationRepositoryImpl.checkAvailabilityPasswordResetToken(savedPasswordResetToken.getTokenHash())
+            );
+
+            Assertions.assertEquals("AUTHENTICATION_REPOSITORY_IMPL.TOKEN_ALREADY_USED", exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("should not throw exception when token is valid")
+        public void shouldNotThrowExceptionWhenTokenIsValid() {
+            String tokenHash = "token-hash";
+            Instant expiresAt = Instant.now().plusSeconds(3600);
+            Instant usedAt = null;
+            String ipRequest = "127.0.0.1";
+            String userAgent = "Google Chrome";
+
+            PasswordResetTokenJpaEntity passwordResetTokenJpaEntity = new PasswordResetTokenJpaEntity(savedUser, tokenHash, expiresAt, usedAt, ipRequest, userAgent);
+            PasswordResetTokenJpaEntity savedPasswordResetToken = passwordResetTokenJpaRepository.save(passwordResetTokenJpaEntity);
+
+            Assertions.assertDoesNotThrow(() -> authenticationRepositoryImpl.checkAvailabilityPasswordResetToken(savedPasswordResetToken.getTokenHash()));
         }
     }
 }

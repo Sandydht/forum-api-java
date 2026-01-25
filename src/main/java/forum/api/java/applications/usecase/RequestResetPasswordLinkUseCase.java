@@ -8,6 +8,8 @@ import forum.api.java.domain.authentication.entity.RequestResetPasswordLink;
 import forum.api.java.domain.user.UserRepository;
 import jakarta.mail.MessagingException;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
 
@@ -42,7 +44,8 @@ public class RequestResetPasswordLinkUseCase {
                         byte[] bytes = new byte[32]; // 32 bytes = 256 bit
                         random.nextBytes(bytes);
                         String rawToken = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
-                        String tokenHash = passwordHash.hashPassword(rawToken);
+
+                        String tokenHash = passwordHash.hashToken(rawToken);
 
                         authenticationRepository.addPasswordResetToken(
                                 user.getEmail(),
@@ -51,9 +54,9 @@ public class RequestResetPasswordLinkUseCase {
                                 requestResetPasswordLink.getUserAgent()
                         );
 
-                        String emailLink = "http://localhost:5173/forgot-password?token=" + tokenHash;
+                        String emailLink = "http://localhost:5173/forgot-password?token=" + rawToken;
                         emailService.sendForgotPasswordEmail(user.getEmail(), user.getFullname(), emailLink);
-                    } catch (MessagingException e) {
+                    } catch (MessagingException | NoSuchAlgorithmException | InvalidKeyException e) {
                         throw new RuntimeException(e);
                     }
                 });
