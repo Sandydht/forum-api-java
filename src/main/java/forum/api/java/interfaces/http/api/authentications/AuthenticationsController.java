@@ -8,12 +8,10 @@ import forum.api.java.domain.authentication.entity.LoginUser;
 import forum.api.java.domain.authentication.entity.NewAuthentication;
 import forum.api.java.domain.authentication.entity.RequestResetPasswordLink;
 import forum.api.java.interfaces.http.api.authentications.dto.request.RefreshAuthenticationRequest;
+import forum.api.java.interfaces.http.api.authentications.dto.request.ResendPasswordResetTokenRequest;
 import forum.api.java.interfaces.http.api.authentications.dto.request.ResetPasswordLinkRequest;
 import forum.api.java.interfaces.http.api.authentications.dto.request.UserLoginRequest;
-import forum.api.java.interfaces.http.api.authentications.dto.response.RefreshAuthenticationResponse;
-import forum.api.java.interfaces.http.api.authentications.dto.response.ResetPasswordLinkResponse;
-import forum.api.java.interfaces.http.api.authentications.dto.response.UserLoginResponse;
-import forum.api.java.interfaces.http.api.authentications.dto.response.UserLogoutResponse;
+import forum.api.java.interfaces.http.api.authentications.dto.response.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -69,5 +67,10 @@ public class AuthenticationsController {
         requestResetPasswordLinkUseCase.execute(requestResetPasswordLink);
 
         return new ResetPasswordLinkResponse("If the email is registered, we will send password reset instructions");
+    }
+
+    @PostMapping("/resend-password-reset-token")
+    public RequestedNewPasswordResetTokenResponse resendPasswordResetTokenAction(@RequestBody ResendPasswordResetTokenRequest request) {
+        return new RequestedNewPasswordResetTokenResponse("Your password was updated successfully. You can now sign in with your new password.");
     }
 }

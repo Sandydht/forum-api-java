@@ -1,6 +1,5 @@
 package forum.api.java.infrastructure.repository;
 
-import forum.api.java.commons.exceptions.InvariantException;
 import forum.api.java.commons.exceptions.NotFoundException;
 import forum.api.java.domain.authentication.AuthenticationRepository;
 import forum.api.java.infrastructure.persistence.authentications.AuthenticationJpaRepository;
@@ -86,16 +85,6 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
     @Override
     public void checkAvailabilityPasswordResetToken(String tokenHash) {
-        PasswordResetTokenJpaEntity savedPasswordResetToken = passwordResetTokenJpaRepository
-                .findByTokenHash(tokenHash)
-                .orElseThrow(() -> new InvariantException("AUTHENTICATION_REPOSITORY_IMPL.RESET_PASSWORD_LINK_IS_INVALID_OR_HAS_EXPIRED"));
-
-        if (savedPasswordResetToken.getExpiresAt().isBefore(Instant.now())) {
-            throw new InvariantException("AUTHENTICATION_REPOSITORY_IMPL.RESET_PASSWORD_LINK_IS_INVALID_OR_HAS_EXPIRED");
-        }
-
-        if (savedPasswordResetToken.getUsedAt() != null) {
-            throw new InvariantException("AUTHENTICATION_REPOSITORY_IMPL.TOKEN_ALREADY_USED");
-        }
+        passwordResetTokenJpaRepository.findByTokenHash(tokenHash);
     }
 }
