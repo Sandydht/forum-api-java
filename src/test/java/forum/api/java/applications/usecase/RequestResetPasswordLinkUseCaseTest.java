@@ -45,34 +45,33 @@ public class RequestResetPasswordLinkUseCaseTest {
     @Test
     @DisplayName("should orchestrating the request reset password link action correctly")
     public void shouldOrchestratingTheRequestResetPasswordLinkActionCorrectly() throws MessagingException, NoSuchAlgorithmException, InvalidKeyException {
+        String email = "example@email.com";
         String ipRequest = "192.168.1.1";
         String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36";
-
-        String tokenHash = "hashed-token";
+        String captchaToken = "captcha-token";
+        RequestResetPasswordLink requestResetPasswordLink = new RequestResetPasswordLink(email, ipRequest, userAgent, captchaToken);
 
         String userId = UUID.randomUUID().toString();
         String username = "user";
-        String email = "example@email.com";
         String phoneNumber = "+6281123123123";
         String fullname = "Fullname";
         String password = "password";
+        UserDetail userDetail = new UserDetail(userId, username, email, phoneNumber, fullname, password);
 
-        String captchaToken = "captcha-token";
-
-        RequestResetPasswordLink requestResetPasswordLink = new RequestResetPasswordLink(email, ipRequest, userAgent, captchaToken);
+        String tokenHash = "hashed-token";
 
         Mockito.doNothing().when(captchaService).verifyToken(requestResetPasswordLink.getCaptchaToken());
-        Mockito.when(userRepository.getUserByEmailForgotPassword(requestResetPasswordLink.getEmail())).thenReturn(Optional.of(new UserDetail(userId, username, email, phoneNumber, fullname, password)));
+        Mockito.when(userRepository.getUserByEmailForgotPassword(requestResetPasswordLink.getEmail())).thenReturn(Optional.of(userDetail));
         Mockito.when(passwordHash.hashToken(Mockito.anyString())).thenReturn(tokenHash);
         Mockito.doNothing().when(authenticationRepository).addPasswordResetToken(email, tokenHash, requestResetPasswordLink.getIpRequest(), requestResetPasswordLink.getUserAgent());
-        Mockito.doNothing().when(emailService).sendForgotPasswordEmail(Mockito.eq(email), Mockito.eq(fullname), Mockito.anyString());
+        Mockito.doNothing().when(emailService).sendForgotPasswordEmail(Mockito.eq(userDetail.getEmail()), Mockito.eq(userDetail.getFullname()), Mockito.anyString());
 
         requestResetPasswordLinkUseCase.execute(requestResetPasswordLink);
 
         Mockito.verify(captchaService, Mockito.times(1)).verifyToken(requestResetPasswordLink.getCaptchaToken());
         Mockito.verify(userRepository, Mockito.times(1)).getUserByEmailForgotPassword(requestResetPasswordLink.getEmail());
         Mockito.verify(passwordHash, Mockito.times(1)).hashToken(Mockito.anyString());
-        Mockito.verify(authenticationRepository, Mockito.times(1)).addPasswordResetToken(email, tokenHash, requestResetPasswordLink.getIpRequest(), requestResetPasswordLink.getUserAgent());
-        Mockito.verify(emailService, Mockito.times(1)).sendForgotPasswordEmail(Mockito.eq(email), Mockito.eq(fullname), Mockito.anyString());
+        Mockito.verify(authenticationRepository, Mockito.times(1)).addPasswordResetToken(userDetail.getEmail(), tokenHash, requestResetPasswordLink.getIpRequest(), requestResetPasswordLink.getUserAgent());
+        Mockito.verify(emailService, Mockito.times(1)).sendForgotPasswordEmail(Mockito.eq(userDetail.getEmail()), Mockito.eq(userDetail.getFullname()), Mockito.anyString());
     }
 }

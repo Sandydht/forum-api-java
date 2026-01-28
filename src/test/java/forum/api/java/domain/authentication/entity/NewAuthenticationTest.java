@@ -9,11 +9,13 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
-@DisplayName("New authentication entity")
+@DisplayName("NewAuthentication entity")
 public class NewAuthenticationTest {
+    private static final String accessToken = "accessToken";
+    private static final String refreshToken = "refreshToken";
+
     private static Stream<Arguments> provideInvalidMissingData() {
-        String accessToken = "accessToken";
-        String refreshToken = "refreshToken";
+
 
         return Stream.of(
                 Arguments.of(null, refreshToken),
@@ -37,9 +39,6 @@ public class NewAuthenticationTest {
     @Test
     @DisplayName("should create object correctly")
     public void shouldCreateObjectCorrectly() {
-        String accessToken = "accessToken";
-        String refreshToken = "refreshToken";
-
         NewAuthentication newAuthentication = new NewAuthentication(accessToken, refreshToken);
 
         Assertions.assertEquals(accessToken, newAuthentication.getAccessToken());

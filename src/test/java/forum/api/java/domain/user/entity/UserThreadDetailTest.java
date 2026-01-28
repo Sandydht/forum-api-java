@@ -10,13 +10,13 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-@DisplayName("User thread detail entity")
+@DisplayName("UserThreadDetail entity")
 public class UserThreadDetailTest {
-    private static Stream<Arguments> provideInvalidMissingData() {
-        String id = UUID.randomUUID().toString();
-        String username = "user";
-        String fullname = "Fullname";
+    private static final String id = UUID.randomUUID().toString();
+    private static final String username = "user";
+    private static final String fullname = "Fullname";
 
+    private static Stream<Arguments> provideInvalidMissingData() {
         return Stream.of(
                 Arguments.of(null, username, fullname),
                 Arguments.of(id, null, fullname),
@@ -41,12 +41,8 @@ public class UserThreadDetailTest {
     @Test
     @DisplayName("should throw error when username contains more than 50 character")
     public void shouldThrowErrorWhenUsernameContainsMoreThan50Character() {
-        String id = UUID.randomUUID().toString();
-        String invalidUsername = "invalidusernameinvalidusernameinvalidusernameinvalidusername";
-        String fullname = "Fullname";
-
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            new UserThreadDetail(id, invalidUsername, fullname);
+            new UserThreadDetail(id, "user".repeat(51), fullname);
         });
 
         Assertions.assertEquals("USER_THREAD_DETAIL.USERNAME_LIMIT_CHAR", exception.getMessage());
@@ -55,12 +51,8 @@ public class UserThreadDetailTest {
     @Test
     @DisplayName("should throw error when username contains restricted character")
     public void shouldThrowErrorWhenUsernameContainsRestrictedCharacter() {
-        String id = UUID.randomUUID().toString();
-        String invalidUsername = "Invalid Username";
-        String fullname = "Fullname";
-
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            new UserThreadDetail(id, invalidUsername, fullname);
+            new UserThreadDetail(id, "Invalid Username", fullname);
         });
 
         Assertions.assertEquals("USER_THREAD_DETAIL.USERNAME_CONTAIN_RESTRICTED_CHARACTER", exception.getMessage());
@@ -69,10 +61,6 @@ public class UserThreadDetailTest {
     @Test
     @DisplayName("should create object correctly")
     public void shouldCreateObjectCorrectly() {
-        String id = UUID.randomUUID().toString();
-        String username = "user";
-        String fullname = "Fullname";
-
         UserThreadDetail userThreadDetail = new UserThreadDetail(id, username, fullname);
 
         Assertions.assertEquals(id, userThreadDetail.getId());

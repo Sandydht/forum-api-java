@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 
 @Repository
 public class AuthenticationRepositoryImpl implements AuthenticationRepository {
@@ -49,42 +50,36 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
     @Override
     public void checkAvailabilityToken(String token) {
-        if (authenticationJpaRepository.findFirstByToken(token).isEmpty()) {
-            throw new NotFoundException("AUTHENTICATION_REPOSITORY_IMPL.TOKEN_NOT_FOUND");
-        }
+        authenticationJpaRepository
+                .findFirstByToken(token)
+                .orElseThrow(() -> new NotFoundException("AUTHENTICATION_REPOSITORY_IMPL.TOKEN_NOT_FOUND"));
     }
 
     @Override
     public void deleteToken(String token) {
-        if (authenticationJpaRepository.findFirstByToken(token).isEmpty()) {
-            throw new NotFoundException("AUTHENTICATION_REPOSITORY_IMPL.TOKEN_NOT_FOUND");
-        }
+        authenticationJpaRepository
+                .findFirstByToken(token)
+                .orElseThrow(() -> new NotFoundException("AUTHENTICATION_REPOSITORY_IMPL.TOKEN_NOT_FOUND"));
 
         authenticationJpaRepository.deleteByToken(token);
     }
 
     @Override
     public void deleteTokenByUserId(String userId) {
-        if (authenticationJpaRepository.findFirstByUserId(userId).isEmpty()) {
-            throw new NotFoundException("AUTHENTICATION_REPOSITORY_IMPL.TOKEN_NOT_FOUND");
-        }
+        authenticationJpaRepository
+                .findFirstByUserId(userId)
+                .orElseThrow(() -> new NotFoundException("AUTHENTICATION_REPOSITORY_IMPL.TOKEN_NOT_FOUND"));
 
         authenticationJpaRepository.deleteByUserId(userId);
     }
 
     @Override
     public void addPasswordResetToken(String email, String tokenHash, String ipRequest, String userAgent) {
-        userJpaRepository
-                .findByEmail(email)
-                .ifPresent(user -> {
-                    Instant expiresAt = Instant.now().plus(15, ChronoUnit.MINUTES);
-                    PasswordResetTokenJpaEntity passwordResetTokenJpaEntity = new PasswordResetTokenJpaEntity(user, tokenHash, expiresAt, null, ipRequest, userAgent);
-                    passwordResetTokenJpaRepository.save(passwordResetTokenJpaEntity);
-                });
-    }
+        Optional<UserJpaEntity> user = userJpaRepository.findByEmail(email);
+        if (user.isEmpty()) return;
 
-    @Override
-    public void checkAvailabilityPasswordResetToken(String tokenHash) {
-        passwordResetTokenJpaRepository.findByTokenHash(tokenHash);
+        Instant expiresAt = Instant.now().plus(15, ChronoUnit.MINUTES);
+        PasswordResetTokenJpaEntity passwordResetTokenJpaEntity = new PasswordResetTokenJpaEntity(user.get(), tokenHash, expiresAt, null, ipRequest, userAgent);
+        passwordResetTokenJpaRepository.save(passwordResetTokenJpaEntity);
     }
 }

@@ -9,13 +9,13 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
-@DisplayName("Login user entity")
+@DisplayName("LoginUser entity")
 public class LoginUserTest {
-    private static Stream<Arguments> provideInvalidMissingData() {
-        String username = "user";
-        String password = "password123";
-        String captchaToken = "captcha-token";
+    private static final String username = "user";
+    private static final String password = "password123";
+    private static final String captchaToken = "captcha-token";
 
+    private static Stream<Arguments> provideInvalidMissingData() {
         return Stream.of(
                 Arguments.of(null, password, captchaToken),
                 Arguments.of(username, null, captchaToken),
@@ -40,12 +40,8 @@ public class LoginUserTest {
     @Test
     @DisplayName("should throw error when username contains more than 50 character")
     public void shouldThrowErrorWhenUsernameContainsMoreThan50Character() {
-        String invalidUsername = "user".repeat(51);
-        String password = "password123";
-        String captchaToken = "captcha-token";
-
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            new LoginUser(invalidUsername, password, captchaToken);
+            new LoginUser("user".repeat(51), password, captchaToken);
         });
 
         Assertions.assertEquals("LOGIN_USER.USERNAME_LIMIT_CHAR", exception.getMessage());
@@ -54,12 +50,8 @@ public class LoginUserTest {
     @Test
     @DisplayName("should throw error when username contains restricted character")
     public void shouldThrowErrorWhenUsernameContainsRestrictedCharacter() {
-        String invalidUsername = "Invalid Username";
-        String password = "password123";
-        String captchaToken = "captcha-token";
-
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            new LoginUser(invalidUsername, password, captchaToken);
+            new LoginUser("Invalid Username", password, captchaToken);
         });
 
         Assertions.assertEquals("LOGIN_USER.USERNAME_CONTAIN_RESTRICTED_CHARACTER", exception.getMessage());
@@ -68,12 +60,8 @@ public class LoginUserTest {
     @Test
     @DisplayName("should throw error if the password is less than 8 characters")
     public void shouldThrowErrorIfPasswordIsLessThan8Characters() {
-        String username = "user";
-        String password = "secret1";
-        String captchaToken = "captcha-token";
-
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            new LoginUser(username, password, captchaToken);
+            new LoginUser(username, "secret1", captchaToken);
         });
 
         Assertions.assertEquals("LOGIN_USER.PASSWORD_MUST_BE_AT_LEAST_8_CHARACTERS", exception.getMessage());
@@ -82,12 +70,8 @@ public class LoginUserTest {
     @Test
     @DisplayName("should throw error if the password not contain letters and numbers")
     public void shouldThrowErrorIfThePasswordNotContainLettersAndNumbers() {
-        String username = "user";
-        String password = "password";
-        String captchaToken = "captcha-token";
-
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            new LoginUser(username, password, captchaToken);
+            new LoginUser(username, "password", captchaToken);
         });
 
         Assertions.assertEquals("LOGIN_USER.PASSWORD_MUST_CONTAIN_LETTERS_AND_NUMBERS", exception.getMessage());
@@ -96,12 +80,8 @@ public class LoginUserTest {
     @Test
     @DisplayName("should throw error if the password contain space")
     public void shouldThrowErrorIfThePasswordContainSpace() {
-        String username = "user";
-        String password = "pass word123";
-        String captchaToken = "captcha-token";
-
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            new LoginUser(username, password, captchaToken);
+            new LoginUser(username, "pass word123", captchaToken);
         });
 
         Assertions.assertEquals("LOGIN_USER.PASSWORD_MUST_NOT_CONTAIN_SPACE", exception.getMessage());
@@ -110,10 +90,6 @@ public class LoginUserTest {
     @Test
     @DisplayName("should create object correctly")
     public void shouldCreateObjectCorrectly() {
-        String username = "user";
-        String password = "password123";
-        String captchaToken = "captcha-token";
-
         LoginUser loginUser = new LoginUser(username, password, captchaToken);
 
         Assertions.assertEquals(username, loginUser.getUsername());

@@ -9,14 +9,14 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
-@DisplayName("Request reset password link entity")
+@DisplayName("RequestResetPasswordLink entity")
 public class RequestResetPasswordLinkTest {
-    private static Stream<Arguments> provideInvalidMissingData() {
-        String email = "example@email.com";
-        String ipRequest = "192.168.1.1";
-        String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36";
-        String captchaToken = "captcha-token";
+    private static final String email = "example@email.com";
+    private static final String ipRequest = "192.168.1.1";
+    private static final String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36";
+    private static final String captchaToken = "captcha-token";
 
+    private static Stream<Arguments> provideInvalidMissingData() {
         return Stream.of(
                 Arguments.of(null, ipRequest, userAgent, captchaToken),
                 Arguments.of(email, null, userAgent, captchaToken),
@@ -43,13 +43,8 @@ public class RequestResetPasswordLinkTest {
     @Test
     @DisplayName("should throw error when email is invalid")
     public void shouldThrowErrorWhenEmailIsInvalid() {
-        String email = "invalid email";
-        String ipRequest = "192.168.1.1";
-        String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36";
-        String captchaToken = "captcha-token";
-
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            new RequestResetPasswordLink(email, ipRequest, userAgent, captchaToken);
+            new RequestResetPasswordLink("invalid email", ipRequest, userAgent, captchaToken);
         });
 
         Assertions.assertEquals("REQUEST_RESET_PASSWORD_LINK.EMAIL_IS_INVALID", exception.getMessage());
@@ -58,13 +53,8 @@ public class RequestResetPasswordLinkTest {
     @Test
     @DisplayName("should throw error when ip request is invalid")
     public void shouldThrowErrorWhenIpRequestIsInvalid() {
-        String email = "example@email.com";
-        String ipRequest = "Invalid Ip Request";
-        String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36";
-        String captchaToken = "captcha-token";
-
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            new RequestResetPasswordLink(email, ipRequest, userAgent, captchaToken);
+            new RequestResetPasswordLink(email, "Invalid Ip Request", userAgent, captchaToken);
         });
 
         Assertions.assertEquals("REQUEST_RESET_PASSWORD_LINK.IP_ADDRESS_IS_INVALID", exception.getMessage());
@@ -73,11 +63,6 @@ public class RequestResetPasswordLinkTest {
     @Test
     @DisplayName("should create object correctly")
     public void shouldCreateObjectCorrectly() {
-        String email = "example@email.com";
-        String ipRequest = "192.168.1.1";
-        String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36";
-        String captchaToken = "captcha-token";
-
         RequestResetPasswordLink requestResetPasswordLink = new RequestResetPasswordLink(email, ipRequest, userAgent,  captchaToken);
 
         Assertions.assertEquals(email, requestResetPasswordLink.getEmail());

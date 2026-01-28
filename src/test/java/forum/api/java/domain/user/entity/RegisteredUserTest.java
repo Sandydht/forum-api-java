@@ -10,15 +10,15 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-@DisplayName("Registered user entity")
+@DisplayName("RegisteredUser entity")
 public class RegisteredUserTest {
-    private static Stream<Arguments> provideInvalidMissingData() {
-        String id = UUID.randomUUID().toString();
-        String username = "user";
-        String email = "example@email.com";
-        String phoneNumber = "6281123123123";
-        String fullname = "Fullname";
+    private static final String id = UUID.randomUUID().toString();
+    private static final String username = "user";
+    private static final String email = "example@email.com";
+    private static final String phoneNumber = "6281123123123";
+    private static final String fullname = "Fullname";
 
+    private static Stream<Arguments> provideInvalidMissingData() {
         return Stream.of(
                 Arguments.of(null, username, email, phoneNumber, fullname),
                 Arguments.of(id, null, email, phoneNumber, fullname),
@@ -47,14 +47,8 @@ public class RegisteredUserTest {
     @Test
     @DisplayName("should throw error when username contains more than 50 character")
     public void shouldThrowErrorWhenUsernameContainsMoreThan50Character() {
-        String id = UUID.randomUUID().toString();
-        String invalidUsername = "invalidusernameinvalidusernameinvalidusernameinvalidusername";
-        String email = "example@email.com";
-        String phoneNumber = "6281123123123";
-        String fullname = "Fullname";
-
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            new RegisteredUser(id, invalidUsername, email, phoneNumber, fullname);
+            new RegisteredUser(id, "invalidusernameinvalidusernameinvalidusernameinvalidusername", email, phoneNumber, fullname);
         });
 
         Assertions.assertEquals("REGISTERED_USER.USERNAME_LIMIT_CHAR", exception.getMessage());
@@ -63,14 +57,8 @@ public class RegisteredUserTest {
     @Test
     @DisplayName("should throw error when username contains restricted character")
     public void shouldThrowErrorWhenUsernameContainsRestrictedCharacter() {
-        String id = UUID.randomUUID().toString();
-        String invalidUsername = "Invalid Username";
-        String email = "example@email.com";
-        String phoneNumber = "6281123123123";
-        String fullname = "Fullname";
-
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            new RegisteredUser(id, invalidUsername, email, phoneNumber, fullname);
+            new RegisteredUser(id, "Invalid Username", email, phoneNumber, fullname);
         });
 
         Assertions.assertEquals("REGISTERED_USER.USERNAME_CONTAIN_RESTRICTED_CHARACTER", exception.getMessage());
@@ -79,14 +67,8 @@ public class RegisteredUserTest {
     @Test
     @DisplayName("should throw error when email is invalid")
     public void shouldThrowErrorWhenEmailIsInvalid() {
-        String id = UUID.randomUUID().toString();
-        String username = "user";
-        String email = "invalid email";
-        String phoneNumber = "6281123123123";
-        String fullname = "Fullname";
-
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            new RegisteredUser(id, username, email, phoneNumber, fullname);
+            new RegisteredUser(id, username, "invalid email", phoneNumber, fullname);
         });
 
         Assertions.assertEquals("REGISTERED_USER.EMAIL_IS_INVALID", exception.getMessage());
@@ -95,14 +77,8 @@ public class RegisteredUserTest {
     @Test
     @DisplayName("should throw error when phone number is invalid")
     public void shouldThrowErrorWhenPhoneNumberIsInvalid() {
-        String id = UUID.randomUUID().toString();
-        String username = "user";
-        String email = "example@email.com";
-        String phoneNumber = "invalid phone number";
-        String fullname = "Fullname";
-
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            new RegisteredUser(id, username, email, phoneNumber, fullname);
+            new RegisteredUser(id, username, email, "invalid phone number", fullname);
         });
 
         Assertions.assertEquals("REGISTERED_USER.PHONE_NUMBER_IS_INVALID", exception.getMessage());
@@ -111,12 +87,6 @@ public class RegisteredUserTest {
     @Test
     @DisplayName("should create object correctly")
     public void shouldCreateObjectCorrectly() {
-        String id = UUID.randomUUID().toString();
-        String username = "user";
-        String email = "example@email.com";
-        String phoneNumber = "6281123123123";
-        String fullname = "Fullname";
-
         RegisteredUser registeredUser = new RegisteredUser(id, username, email, phoneNumber, fullname);
 
         Assertions.assertEquals(id, registeredUser.getId());

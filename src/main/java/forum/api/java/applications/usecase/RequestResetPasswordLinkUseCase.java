@@ -6,12 +6,14 @@ import forum.api.java.applications.service.EmailService;
 import forum.api.java.domain.authentication.AuthenticationRepository;
 import forum.api.java.domain.authentication.entity.RequestResetPasswordLink;
 import forum.api.java.domain.user.UserRepository;
+import forum.api.java.domain.user.entity.UserDetail;
 import jakarta.mail.MessagingException;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
+import java.util.Optional;
 
 public class RequestResetPasswordLinkUseCase {
     private final CaptchaService captchaService;
@@ -35,30 +37,30 @@ public class RequestResetPasswordLinkUseCase {
     }
 
     public void execute(RequestResetPasswordLink requestResetPasswordLink) {
-        captchaService.verifyToken(requestResetPasswordLink.getCaptchaToken());
+        try {
+            captchaService.verifyToken(requestResetPasswordLink.getCaptchaToken());
 
-        userRepository.getUserByEmailForgotPassword(requestResetPasswordLink.getEmail())
-                .ifPresent(user -> {
-                    try {
-                        SecureRandom random = new SecureRandom();
-                        byte[] bytes = new byte[32]; // 32 bytes = 256 bit
-                        random.nextBytes(bytes);
-                        String rawToken = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
+            Optional<UserDetail> userDetail = userRepository.getUserByEmailForgotPassword(requestResetPasswordLink.getEmail());
+            if (userDetail.isEmpty()) return;
 
-                        String tokenHash = passwordHash.hashToken(rawToken);
+            SecureRandom random = new SecureRandom();
+            byte[] bytes = new byte[32]; // 32 bytes = 256 bit
+            random.nextBytes(bytes);
+            String rawToken = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
 
-                        authenticationRepository.addPasswordResetToken(
-                                user.getEmail(),
-                                tokenHash,
-                                requestResetPasswordLink.getIpRequest(),
-                                requestResetPasswordLink.getUserAgent()
-                        );
+            String tokenHash = passwordHash.hashToken(rawToken);
 
-                        String emailLink = "http://localhost:5173/forgot-password?token=" + rawToken;
-                        emailService.sendForgotPasswordEmail(user.getEmail(), user.getFullname(), emailLink);
-                    } catch (MessagingException | NoSuchAlgorithmException | InvalidKeyException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
+            authenticationRepository.addPasswordResetToken(
+                    requestResetPasswordLink.getEmail(),
+                    tokenHash,
+                    requestResetPasswordLink.getIpRequest(),
+                    requestResetPasswordLink.getUserAgent()
+            );
+
+            String emailLink = "http://localhost:5173/forgot-password?token=" + rawToken;
+            emailService.sendForgotPasswordEmail(userDetail.get().getEmail(), userDetail.get().getFullname(), emailLink);
+        } catch (MessagingException | NoSuchAlgorithmException | InvalidKeyException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

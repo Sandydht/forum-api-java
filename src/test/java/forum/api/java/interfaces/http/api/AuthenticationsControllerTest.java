@@ -296,4 +296,10 @@ public class AuthenticationsControllerTest {
                     .andExpect(jsonPath("$.message").value("If the email is registered, we will send password reset instructions"));
         }
     }
+
+    @Nested
+    @DisplayName("POST /api/authentications/resend-password-reset-token")
+    public class ResendPasswordResetTokenAction {
+
+    }
 }

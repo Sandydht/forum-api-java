@@ -1,10 +1,8 @@
 package forum.api.java.infrastructure.repository;
 
-import forum.api.java.commons.exceptions.InvariantException;
 import forum.api.java.commons.exceptions.NotFoundException;
 import forum.api.java.infrastructure.persistence.authentications.AuthenticationJpaRepository;
 import forum.api.java.infrastructure.persistence.authentications.PasswordResetTokenJpaRepository;
-import forum.api.java.infrastructure.persistence.authentications.entity.PasswordResetTokenJpaEntity;
 import forum.api.java.infrastructure.persistence.authentications.entity.RefreshTokenJpaEntity;
 import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
 import forum.api.java.infrastructure.persistence.users.entity.UserJpaEntity;
