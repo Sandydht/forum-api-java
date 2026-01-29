@@ -144,4 +144,17 @@ public class UseCaseConfig {
                 emailServiceImpl
         );
     }
+
+    @Bean
+    public ResendPasswordResetTokenUseCase resendPasswordResetTokenUseCase(
+            PasswordHashImpl passwordHashImpl,
+            AuthenticationRepositoryImpl authenticationRepositoryImpl,
+            EmailServiceImpl emailServiceImpl
+    ) {
+        return new ResendPasswordResetTokenUseCase(
+                passwordHashImpl,
+                authenticationRepositoryImpl,
+                emailServiceImpl
+        );
+    }
 }

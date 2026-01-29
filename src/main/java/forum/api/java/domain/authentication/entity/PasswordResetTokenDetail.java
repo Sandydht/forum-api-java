@@ -11,10 +11,10 @@ public class PasswordResetTokenDetail {
     private static final String ipInvalidErrorMessage = "PASSWORD_RESET_TOKEN_DETAIL.IP_ADDRESS_IS_INVALID";
 
     private final String id;
-    private final UserDetail user;
+    private UserDetail user;
     private final String tokenHash;
     private final Instant expiresAt;
-    private final Optional<Instant> usedAt;
+    private Optional<Instant> usedAt;
     private final String ipRequest;
     private final String userAgent;
     private final Instant createdAt;
@@ -77,6 +77,10 @@ public class PasswordResetTokenDetail {
         return user;
     }
 
+    public void setUserDetail(UserDetail user) {
+        this.user = user;
+    }
+
     public String getTokenHash() {
         return tokenHash;
     }
@@ -87,6 +91,10 @@ public class PasswordResetTokenDetail {
 
     public Optional<Instant> getUsedAt() {
         return usedAt;
+    }
+
+    public void setUsedAt(Instant usedAt) {
+        this.usedAt = Optional.ofNullable(usedAt);
     }
 
     public String getIpRequest() {

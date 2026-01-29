@@ -1,12 +1,10 @@
 package forum.api.java.interfaces.http.api.authentications;
 
-import forum.api.java.applications.usecase.LoginUserUseCase;
-import forum.api.java.applications.usecase.LogoutUserUseCase;
-import forum.api.java.applications.usecase.RefreshAuthenticationUseCase;
-import forum.api.java.applications.usecase.RequestResetPasswordLinkUseCase;
+import forum.api.java.applications.usecase.*;
 import forum.api.java.domain.authentication.entity.LoginUser;
 import forum.api.java.domain.authentication.entity.NewAuthentication;
 import forum.api.java.domain.authentication.entity.RequestResetPasswordLink;
+import forum.api.java.domain.authentication.entity.ResendPasswordResetToken;
 import forum.api.java.interfaces.http.api.authentications.dto.request.RefreshAuthenticationRequest;
 import forum.api.java.interfaces.http.api.authentications.dto.request.ResendPasswordResetTokenRequest;
 import forum.api.java.interfaces.http.api.authentications.dto.request.ResetPasswordLinkRequest;
@@ -19,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+
 @RestController
 @RequestMapping("/api/authentications")
 public class AuthenticationsController {
@@ -26,17 +27,20 @@ public class AuthenticationsController {
     private final RefreshAuthenticationUseCase refreshAuthenticationUseCase;
     private final LogoutUserUseCase logoutUserUseCase;
     private final RequestResetPasswordLinkUseCase requestResetPasswordLinkUseCase;
+    private final ResendPasswordResetTokenUseCase resendPasswordResetTokenUseCase;
 
     public AuthenticationsController(
             LoginUserUseCase loginUserUseCase,
             RefreshAuthenticationUseCase refreshAuthenticationUseCase,
             LogoutUserUseCase logoutUserUseCase,
-            RequestResetPasswordLinkUseCase requestResetPasswordLinkUseCase
+            RequestResetPasswordLinkUseCase requestResetPasswordLinkUseCase,
+            ResendPasswordResetTokenUseCase resendPasswordResetTokenUseCase
     ) {
         this.loginUserUseCase = loginUserUseCase;
         this.refreshAuthenticationUseCase = refreshAuthenticationUseCase;
         this.logoutUserUseCase = logoutUserUseCase;
         this.requestResetPasswordLinkUseCase = requestResetPasswordLinkUseCase;
+        this.resendPasswordResetTokenUseCase = resendPasswordResetTokenUseCase;
     }
 
     @PostMapping("/login-account")
@@ -70,7 +74,20 @@ public class AuthenticationsController {
     }
 
     @PostMapping("/resend-password-reset-token")
-    public RequestedNewPasswordResetTokenResponse resendPasswordResetTokenAction(@RequestBody ResendPasswordResetTokenRequest request) {
-        return new RequestedNewPasswordResetTokenResponse("Your password was updated successfully. You can now sign in with your new password.");
+    public RequestedNewPasswordResetTokenResponse resendPasswordResetTokenAction(
+            @RequestBody ResendPasswordResetTokenRequest request,
+            HttpServletRequest httpRequest
+    ) throws NoSuchAlgorithmException, InvalidKeyException {
+        String ip = (String) httpRequest.getAttribute("clientIp");
+        String userAgent = (String) httpRequest.getAttribute("userAgent");
+
+        ResendPasswordResetToken resendPasswordResetToken = new ResendPasswordResetToken(
+                request.getToken(),
+                ip,
+                userAgent
+        );
+        resendPasswordResetTokenUseCase.execute(resendPasswordResetToken);
+
+        return new RequestedNewPasswordResetTokenResponse("If the email is registered, we will send password reset instructions");
     }
 }

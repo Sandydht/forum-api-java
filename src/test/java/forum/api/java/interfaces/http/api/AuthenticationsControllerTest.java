@@ -10,6 +10,7 @@ import forum.api.java.infrastructure.persistence.users.entity.UserJpaEntity;
 import forum.api.java.infrastructure.security.GoogleCaptchaService;
 import forum.api.java.infrastructure.security.PasswordHashImpl;
 import forum.api.java.interfaces.http.api.authentications.dto.request.RefreshAuthenticationRequest;
+import forum.api.java.interfaces.http.api.authentications.dto.request.ResendPasswordResetTokenRequest;
 import forum.api.java.interfaces.http.api.authentications.dto.request.ResetPasswordLinkRequest;
 import forum.api.java.interfaces.http.api.authentications.dto.request.UserLoginRequest;
 import forum.api.java.interfaces.http.api.authentications.dto.response.UserLoginResponse;
@@ -300,6 +301,48 @@ public class AuthenticationsControllerTest {
     @Nested
     @DisplayName("POST /api/authentications/resend-password-reset-token")
     public class ResendPasswordResetTokenAction {
+        private final String urlTemplate = "/api/authentications/resend-password-reset-token";
 
+        @Test
+        @DisplayName("should return 400 if the ip address is invalid")
+        public void shouldReturn400IfTheIpAddressIsInvalid() throws Exception {
+            ResendPasswordResetTokenRequest request = new ResendPasswordResetTokenRequest("token");
+
+            mockMvc.perform(post(urlTemplate)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("User-Agent", "JUnit")
+                            .header("X-Forwarded-For", "Invalid Ip Address")
+                            .content(objectMapper.writeValueAsString(request)).with(csrf()))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.message").value("IP address is invalid"));
+        }
+
+        @Test
+        @DisplayName("should return 200 if the token is not found")
+        public void shouldReturn200IfTheTokenIsNotFound() throws Exception {
+            ResendPasswordResetTokenRequest request = new ResendPasswordResetTokenRequest("token");
+
+            mockMvc.perform(post(urlTemplate)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("User-Agent", "JUnit")
+                            .header("X-Forwarded-For", "127.0.0.1")
+                            .content(objectMapper.writeValueAsString(request)).with(csrf()))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.message").value("If the email is registered, we will send password reset instructions"));
+        }
+
+        @Test
+        @DisplayName("should return 200 if the token is found")
+        public void shouldReturn200IfTheTokenIsFound() throws Exception {
+            ResendPasswordResetTokenRequest request = new ResendPasswordResetTokenRequest("token");
+
+            mockMvc.perform(post(urlTemplate)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("User-Agent", "JUnit")
+                            .header("X-Forwarded-For", "127.0.0.1")
+                            .content(objectMapper.writeValueAsString(request)).with(csrf()))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.message").value("If the email is registered, we will send password reset instructions"));
+        }
     }
 }

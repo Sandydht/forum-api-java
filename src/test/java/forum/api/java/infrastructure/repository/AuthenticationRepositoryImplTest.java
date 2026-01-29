@@ -1,9 +1,12 @@
 package forum.api.java.infrastructure.repository;
 
 import forum.api.java.commons.exceptions.NotFoundException;
+import forum.api.java.domain.authentication.entity.PasswordResetTokenDetail;
 import forum.api.java.infrastructure.persistence.authentications.AuthenticationJpaRepository;
 import forum.api.java.infrastructure.persistence.authentications.PasswordResetTokenJpaRepository;
+import forum.api.java.infrastructure.persistence.authentications.entity.PasswordResetTokenJpaEntity;
 import forum.api.java.infrastructure.persistence.authentications.entity.RefreshTokenJpaEntity;
+import forum.api.java.infrastructure.persistence.authentications.mapper.PasswordResetTokenJpaMapper;
 import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
 import forum.api.java.infrastructure.persistence.users.entity.UserJpaEntity;
 import org.junit.jupiter.api.*;
@@ -206,6 +209,64 @@ public class AuthenticationRepositoryImplTest {
             authenticationRepositoryImpl.addPasswordResetToken("example2@email.com", tokenHash, ipAddress, userAgent);
 
             Assertions.assertEquals(Optional.empty(), passwordResetTokenJpaRepository.findByUserId(savedUser.getId()));
+        }
+    }
+
+    @Nested
+    @DisplayName("findPasswordResetTokenByTokenHash function")
+    public class FindPasswordResetTokenByTokenHashFunction {
+        @Test
+        @DisplayName("should return Optional with detail when token hash exists")
+        public void shouldReturnOptionalWithDetailWhenTokenHashExists() {
+            String tokenHash = "token-hash";
+            Instant expiresAt = Instant.now().plusSeconds(3600);
+            String ipRequest = "192.168.1.1";
+            String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36";
+
+            PasswordResetTokenJpaEntity passwordResetTokenJpaEntity = new PasswordResetTokenJpaEntity(savedUser, tokenHash, expiresAt, null, ipRequest, userAgent);
+            passwordResetTokenJpaRepository.save(passwordResetTokenJpaEntity);
+
+            Optional<PasswordResetTokenDetail> passwordResetTokenDetail = authenticationRepositoryImpl.findPasswordResetTokenByTokenHash(tokenHash);
+
+            Assertions.assertTrue(passwordResetTokenDetail.isPresent());
+        }
+
+        @Test
+        @DisplayName("should return empty Optional when token hash does not exist")
+        public void shouldReturnEmptyOptionalWhenTokenHashDoesNotExist() {
+            String tokenHash = "token-hash";
+
+            Optional<PasswordResetTokenDetail> passwordResetTokenDetail = authenticationRepositoryImpl.findPasswordResetTokenByTokenHash(tokenHash);
+
+            Assertions.assertFalse(passwordResetTokenDetail.isPresent());
+        }
+    }
+
+    @Nested
+    @DisplayName("invalidatePasswordResetToken function")
+    public class InvalidatePasswordResetTokenFunction {
+        @Test
+        @DisplayName("should update usedAt timestamp and save the token")
+        public void shouldUpdateUsedAtTimestampAndSaveTheToken() {
+            String tokenHash = "token-hash";
+            Instant expiresAt = Instant.now().plusSeconds(3600);
+            String ipRequest = "192.168.1.1";
+            String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36";
+
+            PasswordResetTokenJpaEntity passwordResetTokenJpaEntity = new PasswordResetTokenJpaEntity(savedUser, tokenHash, expiresAt, null, ipRequest, userAgent);
+            PasswordResetTokenJpaEntity savedPasswordResetToken = passwordResetTokenJpaRepository.save(passwordResetTokenJpaEntity);
+
+            PasswordResetTokenDetail tokenDetail = PasswordResetTokenJpaMapper.toPasswordResetTokenDetailDomain(savedPasswordResetToken);
+            authenticationRepositoryImpl.invalidatePasswordResetToken(tokenDetail);
+
+            PasswordResetTokenJpaEntity updatedToken = passwordResetTokenJpaRepository.findById(savedPasswordResetToken.getId())
+                    .orElseThrow(() -> new RuntimeException("Token not found"));
+
+            Assertions.assertNotNull(updatedToken.getUsedAt());
+            Assertions.assertEquals(tokenHash, updatedToken.getTokenHash());
+            Assertions.assertEquals(savedUser.getId(), updatedToken.getUser().getId());
+            Assertions.assertEquals(ipRequest, updatedToken.getIpRequest());
+            Assertions.assertEquals(userAgent, updatedToken.getUserAgent());
         }
     }
 }

@@ -45,6 +45,9 @@ public class DomainErrorTranslator {
         // REQUEST_RESET_PASSWORD_LINK
         directories.put("REQUEST_RESET_PASSWORD_LINK.EMAIL_IS_INVALID", new InvariantException("Email is invalid"));
         directories.put("REQUEST_RESET_PASSWORD_LINK.IP_ADDRESS_IS_INVALID", new InvariantException("IP address is invalid"));
+
+        // RESEND_PASSWORD_RESET_TOKEN
+        directories.put("RESEND_PASSWORD_RESET_TOKEN.IP_ADDRESS_IS_INVALID", new InvariantException("IP address is invalid"));
     }
 
     public RuntimeException translate(Exception error) {

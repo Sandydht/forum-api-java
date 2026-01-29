@@ -243,6 +243,44 @@ public class DomainErrorTranslatorTest {
         }
     }
 
+    @Nested
+    @DisplayName("REQUEST_RESET_PASSWORD_LINK")
+    public class RequestResetPasswordLinkErrorMessages {
+        @Test
+        @DisplayName("should translate REQUEST_RESET_PASSWORD_LINK.EMAIL_IS_INVALID correctly")
+        public void shouldTranslateRequestResetPasswordLinkEmailIsInvalidCorrectly() {
+            Exception error = new Exception("REQUEST_RESET_PASSWORD_LINK.EMAIL_IS_INVALID");
+            RuntimeException result = domainErrorTranslator.translate(error);
+
+            Assertions.assertInstanceOf(InvariantException.class, result);
+            Assertions.assertEquals("Email is invalid", result.getMessage());
+        }
+
+        @Test
+        @DisplayName("should translate REQUEST_RESET_PASSWORD_LINK.IP_ADDRESS_IS_INVALID correctly")
+        public void shouldTranslateRequestResetPasswordLinkIpAddressIsInvalidCorrectly() {
+            Exception error = new Exception("REQUEST_RESET_PASSWORD_LINK.IP_ADDRESS_IS_INVALID");
+            RuntimeException result = domainErrorTranslator.translate(error);
+
+            Assertions.assertInstanceOf(InvariantException.class, result);
+            Assertions.assertEquals("IP address is invalid", result.getMessage());
+        }
+    }
+
+    @Nested
+    @DisplayName("RESEND_PASSWORD_RESET_TOKEN")
+    public class ResendPasswordResetTokenErrorMessages {
+        @Test
+        @DisplayName("should translate RESEND_PASSWORD_RESET_TOKEN.IP_ADDRESS_IS_INVALID correctly")
+        public void shouldTranslateResendPasswordResetTokenIpAddressIsInvalidCorrectly() {
+            Exception error = new Exception("RESEND_PASSWORD_RESET_TOKEN.IP_ADDRESS_IS_INVALID");
+            RuntimeException result = domainErrorTranslator.translate(error);
+
+            Assertions.assertInstanceOf(InvariantException.class, result);
+            Assertions.assertEquals("IP address is invalid", result.getMessage());
+        }
+    }
+
     @Test
     @DisplayName("should return original exception when error message is not in directories")
     public void shouldReturnOriginalWhenNotMapped() {

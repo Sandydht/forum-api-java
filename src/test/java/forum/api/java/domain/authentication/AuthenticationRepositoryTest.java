@@ -46,5 +46,17 @@ public class AuthenticationRepositoryTest {
                 () -> authenticationRepository.addPasswordResetToken(null, null, null, null)
         );
         Assertions.assertEquals("AUTHENTICATION_REPOSITORY.METHOD_NOT_IMPLEMENTED", addPasswordResetTokenError.getMessage());
+
+        UnsupportedOperationException findPasswordResetTokenByTokenHashError = Assertions.assertThrows(
+                UnsupportedOperationException.class,
+                () -> authenticationRepository.findPasswordResetTokenByTokenHash(null)
+        );
+        Assertions.assertEquals("AUTHENTICATION_REPOSITORY.METHOD_NOT_IMPLEMENTED", findPasswordResetTokenByTokenHashError.getMessage());
+
+        UnsupportedOperationException invalidatePasswordResetTokenError = Assertions.assertThrows(
+                UnsupportedOperationException.class,
+                () -> authenticationRepository.invalidatePasswordResetToken(null)
+        );
+        Assertions.assertEquals("AUTHENTICATION_REPOSITORY.METHOD_NOT_IMPLEMENTED", invalidatePasswordResetTokenError.getMessage());
     }
 }

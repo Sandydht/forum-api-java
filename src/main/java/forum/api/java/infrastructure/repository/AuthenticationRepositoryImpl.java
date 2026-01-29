@@ -2,10 +2,12 @@ package forum.api.java.infrastructure.repository;
 
 import forum.api.java.commons.exceptions.NotFoundException;
 import forum.api.java.domain.authentication.AuthenticationRepository;
+import forum.api.java.domain.authentication.entity.PasswordResetTokenDetail;
 import forum.api.java.infrastructure.persistence.authentications.AuthenticationJpaRepository;
 import forum.api.java.infrastructure.persistence.authentications.entity.RefreshTokenJpaEntity;
 import forum.api.java.infrastructure.persistence.authentications.PasswordResetTokenJpaRepository;
 import forum.api.java.infrastructure.persistence.authentications.entity.PasswordResetTokenJpaEntity;
+import forum.api.java.infrastructure.persistence.authentications.mapper.PasswordResetTokenJpaMapper;
 import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
 import forum.api.java.infrastructure.persistence.users.entity.UserJpaEntity;
 import org.springframework.stereotype.Repository;
@@ -81,5 +83,22 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
         Instant expiresAt = Instant.now().plus(15, ChronoUnit.MINUTES);
         PasswordResetTokenJpaEntity passwordResetTokenJpaEntity = new PasswordResetTokenJpaEntity(user.get(), tokenHash, expiresAt, null, ipRequest, userAgent);
         passwordResetTokenJpaRepository.save(passwordResetTokenJpaEntity);
+    }
+
+    @Override
+    public Optional<PasswordResetTokenDetail> findPasswordResetTokenByTokenHash(String tokenHash) {
+        return passwordResetTokenJpaRepository
+                .findByTokenHash(tokenHash)
+                .map(PasswordResetTokenJpaMapper::toPasswordResetTokenDetailDomain);
+    }
+
+    @Override
+    public void invalidatePasswordResetToken(PasswordResetTokenDetail passwordResetTokenDetail) {
+        passwordResetTokenJpaRepository
+                .findById(passwordResetTokenDetail.getId())
+                .ifPresent(oldToken -> {
+                    oldToken.setUsedAt(Instant.now());
+                    passwordResetTokenJpaRepository.save(oldToken);
+                });
     }
 }
