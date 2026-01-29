@@ -62,6 +62,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/authentications/refresh-authentication").permitAll()
                         .requestMatchers("/api/authentications/request-reset-password-link").permitAll()
                         .requestMatchers("/api/authentications/resend-password-reset-token").permitAll()
+                        .requestMatchers("/api/authentications/validate-password-reset-token").permitAll()
                         .requestMatchers("/api/users/register-account").permitAll()
                         .anyRequest().authenticated()
                 )

@@ -1,5 +1,6 @@
 package forum.api.java.infrastructure.repository;
 
+import forum.api.java.commons.exceptions.InvariantException;
 import forum.api.java.commons.exceptions.NotFoundException;
 import forum.api.java.domain.authentication.AuthenticationRepository;
 import forum.api.java.domain.authentication.entity.PasswordResetTokenDetail;
@@ -100,5 +101,24 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
                     oldToken.setUsedAt(Instant.now());
                     passwordResetTokenJpaRepository.save(oldToken);
                 });
+    }
+
+    @Override
+    public void validatePasswordResetToken(String tokenHash) {
+        PasswordResetTokenJpaEntity token = passwordResetTokenJpaRepository
+                .findByTokenHash(tokenHash)
+                .orElseThrow(() -> new InvariantException("AUTHENTICATION_REPOSITORY_IMPL.INVALID_OR_EXPIRED_PASSWORD_RESET_TOKEN"));
+
+        if (token.getUsedAt() != null) {
+            throw new InvariantException("AUTHENTICATION_REPOSITORY_IMPL.INVALID_OR_EXPIRED_PASSWORD_RESET_TOKEN");
+        }
+
+        if (token.getExpiresAt().isBefore(Instant.now())) {
+            throw new InvariantException("AUTHENTICATION_REPOSITORY_IMPL.INVALID_OR_EXPIRED_PASSWORD_RESET_TOKEN");
+        }
+
+        if (token.getUser() == null) {
+            throw new InvariantException("AUTHENTICATION_REPOSITORY_IMPL.INVALID_OR_EXPIRED_PASSWORD_RESET_TOKEN");
+        }
     }
 }

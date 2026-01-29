@@ -217,6 +217,16 @@ public class DomainErrorTranslatorTest {
             Assertions.assertInstanceOf(NotFoundException.class, result);
             Assertions.assertEquals("Token not found", result.getMessage());
         }
+
+        @Test
+        @DisplayName("should translate AUTHENTICATION_REPOSITORY_IMPL.INVALID_OR_EXPIRED_PASSWORD_RESET_TOKEN correctly")
+        public void shouldTranslateAuthenticationRepositoryImplInvalidOrExpiredPasswordResetTokenCorrectly() {
+            Exception error = new Exception("AUTHENTICATION_REPOSITORY_IMPL.INVALID_OR_EXPIRED_PASSWORD_RESET_TOKEN");
+            RuntimeException result = domainErrorTranslator.translate(error);
+
+            Assertions.assertInstanceOf(InvariantException.class, result);
+            Assertions.assertEquals("This password reset link is invalid or has expired. Please request a new one", result.getMessage());
+        }
     }
 
     @Nested

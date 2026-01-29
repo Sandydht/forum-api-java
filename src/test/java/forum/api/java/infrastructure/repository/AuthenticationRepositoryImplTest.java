@@ -1,5 +1,6 @@
 package forum.api.java.infrastructure.repository;
 
+import forum.api.java.commons.exceptions.InvariantException;
 import forum.api.java.commons.exceptions.NotFoundException;
 import forum.api.java.domain.authentication.entity.PasswordResetTokenDetail;
 import forum.api.java.infrastructure.persistence.authentications.AuthenticationJpaRepository;
@@ -267,6 +268,98 @@ public class AuthenticationRepositoryImplTest {
             Assertions.assertEquals(savedUser.getId(), updatedToken.getUser().getId());
             Assertions.assertEquals(ipRequest, updatedToken.getIpRequest());
             Assertions.assertEquals(userAgent, updatedToken.getUserAgent());
+        }
+    }
+
+    @Nested
+    @DisplayName("validatePasswordResetToken function")
+    public class ValidatePasswordResetTokenFunction {
+        @Test
+        @DisplayName("should throw exception when token is not found")
+        public void shouldThrowExceptionWhenTokenIsNotFound() {
+            String tokenHash = "invalid-token-hash";
+
+            InvariantException exception = Assertions.assertThrows(
+                    InvariantException.class,
+                    () -> authenticationRepositoryImpl.validatePasswordResetToken(tokenHash)
+            );
+
+            Assertions.assertEquals("AUTHENTICATION_REPOSITORY_IMPL.INVALID_OR_EXPIRED_PASSWORD_RESET_TOKEN", exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("should throw exception when token already used")
+        public void shouldThrowExceptionWhenTokenAlreadyUsed() {
+            String tokenHash = "token-hash";
+            Instant expiresAt = Instant.now().plusSeconds(3600);
+            Instant usedAt = Instant.now();
+            String ipRequest = "192.168.1.1";
+            String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36";
+
+            PasswordResetTokenJpaEntity passwordResetTokenJpaEntity = new PasswordResetTokenJpaEntity(
+                    savedUser,
+                    tokenHash,
+                    expiresAt,
+                    usedAt,
+                    ipRequest,
+                    userAgent
+            );
+            passwordResetTokenJpaRepository.save(passwordResetTokenJpaEntity);
+
+            InvariantException exception = Assertions.assertThrows(
+                    InvariantException.class,
+                    () -> authenticationRepositoryImpl.validatePasswordResetToken(tokenHash)
+            );
+
+            Assertions.assertEquals("AUTHENTICATION_REPOSITORY_IMPL.INVALID_OR_EXPIRED_PASSWORD_RESET_TOKEN", exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("should throw exception when token is expired")
+        public void shouldThrowExceptionWhenTokenIsExpired() {
+            String tokenHash = "token-hash";
+            Instant expiresAt = Instant.now().minusSeconds(60);
+            Instant usedAt = Instant.now();
+            String ipRequest = "192.168.1.1";
+            String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36";
+
+            PasswordResetTokenJpaEntity passwordResetTokenJpaEntity = new PasswordResetTokenJpaEntity(
+                    savedUser,
+                    tokenHash,
+                    expiresAt,
+                    usedAt,
+                    ipRequest,
+                    userAgent
+            );
+            passwordResetTokenJpaRepository.save(passwordResetTokenJpaEntity);
+
+            InvariantException exception = Assertions.assertThrows(
+                    InvariantException.class,
+                    () -> authenticationRepositoryImpl.validatePasswordResetToken(tokenHash)
+            );
+
+            Assertions.assertEquals("AUTHENTICATION_REPOSITORY_IMPL.INVALID_OR_EXPIRED_PASSWORD_RESET_TOKEN", exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("should not throw exception when token is valid")
+        public void shouldNotThrowExceptionWhenTokenIsValid() {
+            String tokenHash = "token-hash";
+            Instant expiresAt = Instant.now().plusSeconds(3600);
+            String ipRequest = "192.168.1.1";
+            String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36";
+
+            PasswordResetTokenJpaEntity passwordResetTokenJpaEntity = new PasswordResetTokenJpaEntity(
+                    savedUser,
+                    tokenHash,
+                    expiresAt,
+                    null,
+                    ipRequest,
+                    userAgent
+            );
+            passwordResetTokenJpaRepository.save(passwordResetTokenJpaEntity);
+
+            Assertions.assertDoesNotThrow(() -> authenticationRepositoryImpl.validatePasswordResetToken(tokenHash));
         }
     }
 }

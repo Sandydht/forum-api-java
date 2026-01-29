@@ -37,4 +37,8 @@ public interface AuthenticationRepository {
     default void invalidatePasswordResetToken(PasswordResetTokenDetail passwordResetTokenDetail) {
         throw new UnsupportedOperationException("AUTHENTICATION_REPOSITORY.METHOD_NOT_IMPLEMENTED");
     }
+
+    default void validatePasswordResetToken(String tokenHash) {
+        throw new UnsupportedOperationException("AUTHENTICATION_REPOSITORY.METHOD_NOT_IMPLEMENTED");
+    }
 }

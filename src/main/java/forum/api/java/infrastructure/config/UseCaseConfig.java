@@ -157,4 +157,12 @@ public class UseCaseConfig {
                 emailServiceImpl
         );
     }
+
+    @Bean
+    public ValidatePasswordResetTokenUseCase validatePasswordResetTokenUseCase(
+        PasswordHashImpl passwordHashImpl,
+        AuthenticationRepositoryImpl authenticationRepositoryImpl
+    ) {
+        return new ValidatePasswordResetTokenUseCase(passwordHashImpl, authenticationRepositoryImpl);
+    }
 }

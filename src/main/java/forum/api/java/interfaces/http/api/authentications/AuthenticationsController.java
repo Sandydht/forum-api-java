@@ -5,10 +5,7 @@ import forum.api.java.domain.authentication.entity.LoginUser;
 import forum.api.java.domain.authentication.entity.NewAuthentication;
 import forum.api.java.domain.authentication.entity.RequestResetPasswordLink;
 import forum.api.java.domain.authentication.entity.ResendPasswordResetToken;
-import forum.api.java.interfaces.http.api.authentications.dto.request.RefreshAuthenticationRequest;
-import forum.api.java.interfaces.http.api.authentications.dto.request.ResendPasswordResetTokenRequest;
-import forum.api.java.interfaces.http.api.authentications.dto.request.ResetPasswordLinkRequest;
-import forum.api.java.interfaces.http.api.authentications.dto.request.UserLoginRequest;
+import forum.api.java.interfaces.http.api.authentications.dto.request.*;
 import forum.api.java.interfaces.http.api.authentications.dto.response.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -28,19 +25,22 @@ public class AuthenticationsController {
     private final LogoutUserUseCase logoutUserUseCase;
     private final RequestResetPasswordLinkUseCase requestResetPasswordLinkUseCase;
     private final ResendPasswordResetTokenUseCase resendPasswordResetTokenUseCase;
+    private final ValidatePasswordResetTokenUseCase validatePasswordResetTokenUseCase;
 
     public AuthenticationsController(
             LoginUserUseCase loginUserUseCase,
             RefreshAuthenticationUseCase refreshAuthenticationUseCase,
             LogoutUserUseCase logoutUserUseCase,
             RequestResetPasswordLinkUseCase requestResetPasswordLinkUseCase,
-            ResendPasswordResetTokenUseCase resendPasswordResetTokenUseCase
+            ResendPasswordResetTokenUseCase resendPasswordResetTokenUseCase,
+            ValidatePasswordResetTokenUseCase validatePasswordResetTokenUseCase
     ) {
         this.loginUserUseCase = loginUserUseCase;
         this.refreshAuthenticationUseCase = refreshAuthenticationUseCase;
         this.logoutUserUseCase = logoutUserUseCase;
         this.requestResetPasswordLinkUseCase = requestResetPasswordLinkUseCase;
         this.resendPasswordResetTokenUseCase = resendPasswordResetTokenUseCase;
+        this.validatePasswordResetTokenUseCase = validatePasswordResetTokenUseCase;
     }
 
     @PostMapping("/login-account")
@@ -89,5 +89,10 @@ public class AuthenticationsController {
         resendPasswordResetTokenUseCase.execute(resendPasswordResetToken);
 
         return new RequestedNewPasswordResetTokenResponse("If the email is registered, we will send password reset instructions");
+    }
+
+    @PostMapping("/validate-password-reset-token")
+    public void validatePasswordResetTokenAction(@RequestBody ValidatePasswordResetTokenRequest request) throws NoSuchAlgorithmException, InvalidKeyException {
+        validatePasswordResetTokenUseCase.execute(request.getToken());
     }
 }

@@ -1,7 +1,10 @@
 package forum.api.java.interfaces.http.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
+import forum.api.java.infrastructure.persistence.authentications.PasswordResetTokenJpaRepository;
+import forum.api.java.infrastructure.persistence.authentications.entity.PasswordResetTokenJpaEntity;
 import forum.api.java.infrastructure.service.PhoneNumberNormalizerServiceImpl;
 import forum.api.java.infrastructure.persistence.authentications.AuthenticationJpaRepository;
 import forum.api.java.infrastructure.persistence.authentications.entity.RefreshTokenJpaEntity;
@@ -9,10 +12,7 @@ import forum.api.java.infrastructure.persistence.users.UserJpaRepository;
 import forum.api.java.infrastructure.persistence.users.entity.UserJpaEntity;
 import forum.api.java.infrastructure.security.GoogleCaptchaService;
 import forum.api.java.infrastructure.security.PasswordHashImpl;
-import forum.api.java.interfaces.http.api.authentications.dto.request.RefreshAuthenticationRequest;
-import forum.api.java.interfaces.http.api.authentications.dto.request.ResendPasswordResetTokenRequest;
-import forum.api.java.interfaces.http.api.authentications.dto.request.ResetPasswordLinkRequest;
-import forum.api.java.interfaces.http.api.authentications.dto.request.UserLoginRequest;
+import forum.api.java.interfaces.http.api.authentications.dto.request.*;
 import forum.api.java.interfaces.http.api.authentications.dto.response.UserLoginResponse;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
@@ -24,6 +24,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Instant;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -42,12 +44,16 @@ public class AuthenticationsControllerTest {
     private final String fullname = "Fullname";
     private final String password = "password123";
     private final String captchaToken = "captcha-token";
+    private UserJpaEntity savedUser;
 
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
     private UserJpaRepository userJpaRepository;
+
+    @Autowired
+    private PasswordResetTokenJpaRepository passwordResetTokenJpaRepository;
 
     @Autowired
     private AuthenticationJpaRepository authenticationJpaRepository;
@@ -69,7 +75,8 @@ public class AuthenticationsControllerTest {
         Mockito.doNothing().when(googleCaptchaService).verifyToken(captchaToken);
 
         phoneNumber = phoneNumberNormalizerServiceImpl.normalize(phoneNumber);
-        userJpaRepository.save(new UserJpaEntity(null, username, email, phoneNumber, fullname, passwordHashImpl.hashPassword(password)));
+        String hashedPassword = passwordHashImpl.hashPassword(password);
+        savedUser = userJpaRepository.save(new UserJpaEntity(null, username, email, phoneNumber, fullname, hashedPassword));
     }
 
     @Nested
@@ -343,6 +350,116 @@ public class AuthenticationsControllerTest {
                             .content(objectMapper.writeValueAsString(request)).with(csrf()))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.message").value("If the email is registered, we will send password reset instructions"));
+        }
+    }
+
+    @Nested
+    @DisplayName("POST /api/authentications/validate-password-reset-token")
+    public class ValidatePasswordResetTokenAction {
+        private final String urlTemplate = "/api/authentications/validate-password-reset-token";
+
+        @Test
+        @DisplayName("should return 400 if the token is not found")
+        public void shouldReturn400IfTheTokenIsNotFound() throws Exception {
+            ValidatePasswordResetTokenRequest request = new ValidatePasswordResetTokenRequest("token");
+
+            mockMvc.perform(post(urlTemplate)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("User-Agent", "JUnit")
+                            .header("X-Forwarded-For", "127.0.0.1")
+                            .content(objectMapper.writeValueAsString(request)).with(csrf()))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.message").value("This password reset link is invalid or has expired. Please request a new one"));
+        }
+
+        @Test
+        @DisplayName("should return 400 if the token is expired")
+        public void shouldReturn400IfTheTokenIsExpired() throws Exception {
+            String rawToken = "raw-token";
+            String tokenHash = passwordHashImpl.hashToken(rawToken);
+            Instant expiresAt = Instant.now().minusSeconds(60);
+            String ipRequest = "192.168.1.1";
+            String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36";
+
+            PasswordResetTokenJpaEntity passwordResetTokenJpaEntity = new PasswordResetTokenJpaEntity(
+                    savedUser,
+                    tokenHash,
+                    expiresAt,
+                    null,
+                    ipRequest,
+                    userAgent
+            );
+            passwordResetTokenJpaRepository.save(passwordResetTokenJpaEntity);
+
+            ValidatePasswordResetTokenRequest request = new ValidatePasswordResetTokenRequest(rawToken);
+
+            mockMvc.perform(post(urlTemplate)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("User-Agent", "JUnit")
+                            .header("X-Forwarded-For", "127.0.0.1")
+                            .content(objectMapper.writeValueAsString(request)).with(csrf()))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.message").value("This password reset link is invalid or has expired. Please request a new one"));
+        }
+
+        @Test
+        @DisplayName("should return 400 if the token is used")
+        public void shouldReturn400IfTheTokenIsUsed() throws Exception {
+            String rawToken = "raw-token";
+            String tokenHash = passwordHashImpl.hashToken(rawToken);
+            Instant expiresAt = Instant.now().plusSeconds(3600);
+            Instant usedAt = Instant.now();
+            String ipRequest = "192.168.1.1";
+            String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36";
+
+            PasswordResetTokenJpaEntity passwordResetTokenJpaEntity = new PasswordResetTokenJpaEntity(
+                    savedUser,
+                    tokenHash,
+                    expiresAt,
+                    usedAt,
+                    ipRequest,
+                    userAgent
+            );
+            passwordResetTokenJpaRepository.save(passwordResetTokenJpaEntity);
+
+            ValidatePasswordResetTokenRequest request = new ValidatePasswordResetTokenRequest(rawToken);
+
+            mockMvc.perform(post(urlTemplate)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("User-Agent", "JUnit")
+                            .header("X-Forwarded-For", "127.0.0.1")
+                            .content(objectMapper.writeValueAsString(request)).with(csrf()))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.message").value("This password reset link is invalid or has expired. Please request a new one"));
+        }
+
+        @Test
+        @DisplayName("should return 200 if the token is valid")
+        public void shouldReturn200IfTheTokenIsValid() throws Exception {
+            String rawToken = "raw-token";
+            String tokenHash = passwordHashImpl.hashToken(rawToken);
+            Instant expiresAt = Instant.now().plusSeconds(3600);
+            String ipRequest = "192.168.1.1";
+            String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36";
+
+            PasswordResetTokenJpaEntity passwordResetTokenJpaEntity = new PasswordResetTokenJpaEntity(
+                    savedUser,
+                    tokenHash,
+                    expiresAt,
+                    null,
+                    ipRequest,
+                    userAgent
+            );
+            passwordResetTokenJpaRepository.save(passwordResetTokenJpaEntity);
+
+            ValidatePasswordResetTokenRequest request = new ValidatePasswordResetTokenRequest(rawToken);
+
+            mockMvc.perform(post(urlTemplate)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("User-Agent", "JUnit")
+                            .header("X-Forwarded-For", "127.0.0.1")
+                            .content(objectMapper.writeValueAsString(request)).with(csrf()))
+                    .andExpect(status().isOk());
         }
     }
 }

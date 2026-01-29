@@ -37,6 +37,7 @@ public class DomainErrorTranslator {
         // AUTHENTICATION_REPOSITORY_IMPL
         directories.put("AUTHENTICATION_REPOSITORY_IMPL.USER_NOT_FOUND", new NotFoundException("User not found"));
         directories.put("AUTHENTICATION_REPOSITORY_IMPL.TOKEN_NOT_FOUND", new NotFoundException("Token not found"));
+        directories.put("AUTHENTICATION_REPOSITORY_IMPL.INVALID_OR_EXPIRED_PASSWORD_RESET_TOKEN", new InvariantException("This password reset link is invalid or has expired. Please request a new one"));
 
         // THREAD_REPOSITORY_IMPL
         directories.put("THREAD_REPOSITORY_IMPL.USER_NOT_FOUND", new NotFoundException("User not found"));
